@@ -76,6 +76,7 @@ $$
 
 - **Effect** - de-bunched cosines, dynamic range up 3.2x (DR 0.057 → 0.180) at zero ordinality violations (E01)
 - **Metric preserved** - re-normalized vectors keep Euclidean = metric-safe cosine, so the distance stays a metric
+- **Corpus-level step** - the shared direction is estimated from the pooled statements of all documents compared, so it sharpens a batch or corpus; an isolated document pair (~two dozen vectors) is too small to estimate it reliably, so a single pairwise comparison uses raw embeddings, on which the tier ordering is already perfect (`0/24`)
 
 ## Performance
 
@@ -155,9 +156,10 @@ Single core, full pipeline, AMD Ryzen Threadripper PRO 7975WX.
 
 - **Notebooks** - `notebooks/01-kj-document-segmentation.ipynb` (segment), `notebooks/04-kj-wmd-document-distance.ipynb` (the distance, validated end-to-end)
 - **Experiments** - `docs/experiments/wmd-docdistance-experiments.md` (batch E01: five contrast levers, one promoted, four refuted)
-- **Functions** (in nb04) - `smd` (`ot.emd2`), `wcd` (centroid norm), `rwmd` (one-sided relaxation), `closeness` (`1 − SMD/√2`); threshold = max gold-vs-gold SMD
+- **Functions** - `smd` (`ot.emd2`), `wcd` (centroid norm), `rwmd` (one-sided relaxation), `closeness` (`1 − SMD/√2`), `all_but_the_top` (anisotropy); pairwise verdict threshold is a heuristic closeness cutoff, calibrate per corpus
 - **References** - WMD (Kusner et al. 2015) and all-but-the-top postprocessing (Mu & Viswanath, ICLR 2018); digests under `../references/papers/`
-- **Pending src port** - lift `smd` / `wcd` / `rwmd`, the anisotropy postprocessing, and the verdict layer into `src/docdistance_estimator/distance.py` for the pipeline
+- **Library** - shipped as the `docdistance` package: `src/docdistance/distance.py` (pure-numpy OT core), `encoders.py` (SAT + mmBERT INT8 / torch backends), `pipeline.py` (`document_distance`, `source_conditioned_distance`, the reusable `DocDistance` class), and a `docdistance` CLI (`distance`, `distance-wrt-source`, `install`)
+- **Library validation** - `notebooks/05-kj-library-validation.ipynb` reproduces the `0/24` ordinality through the public API and confirms openvino-vs-torch backend agreement (Pearson 0.9991)
 
 ## Conclusions
 

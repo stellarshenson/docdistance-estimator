@@ -17,6 +17,8 @@ Eleven executive summaries of one IBM AI-adoption article, three quality tiers, 
 
 ## Executive summary
 
+Two distances ship from this work. **Solution 1 - symmetric SMD** answers "how far apart are two documents" with one source-blind, metric scalar (E01); it orders every tier on this fixture at 0.08 ms/pair but cannot say *why* two documents differ. **Solution 2 - source-conditioned d(A,B|S)** re-bases the comparison on the shared source and splits the distance into `D_sel` (selection - does it cover the same content) and `D_grd` (grounding - is what it says supported), separating the two adversarial failure modes the symmetric scalar conflates (E02/E03). The converged design runs in `notebooks/05-kj-source-conditioned-distance.ipynb` (CPU INT8 or GPU) and the shipped library is validated end-to-end in `notebooks/09-kj-docdistance-api-e2e.ipynb`.
+
 Five levers, one promoted (E01-H2 anisotropy removal), five variants refuted. The baseline exact SMD already orders every tier without error (`d' = 2.70`, `V = 0/24`) at 0.08 ms/pair, and no lever manufactures separation the embedding geometry does not already support.
 
 | hypothesis | lever | mechanism | predicted | result | verdict |
@@ -310,6 +312,7 @@ CPU INT8, the 11-document reranker grid plus the per-lever micro-benchmarks; the
 - **H3 cascade reranker** - full grid 910 pairs 63.9 s → cosine top-10 shortlist 130 pairs 11.7 s, an 82% latency cut, but the ranking shifts (Spearman 0.545) so the cut does not ship
 - **H4 reranker-free chain** - 0.9 s end-to-end (embed + cosine + joint-premise NLI, no reranker), ~120x faster than the 109 s E02 chain, but grounding is corrupted (5 gold intrusions)
 - **H2 / H5 post-processing** - sub-ms on the already-computed signals; the relevance-gate and the blend add no measurable cost over the R2 grounding axis
+- **GPU vs CPU INT8 (grounding chain)** - the reranker full grid runs ~63x faster on the RTX 5000 Ada fp16 (107.5 s CPU INT8 → 1.72 s), and the whole 11-document signal build drops from 534 s to ~16 s; the tier verdicts (`D_sel` 0 violations, `D_grd` 0 gold intrusions, blend Set2>Set1) are identical on both devices despite different absolute fp16-vs-INT8 values (nb05)
 - **Reading** - the only cheap, faithful win is the relevance-gate (free re-weighting of existing signals); the two levers that actually remove the reranker cost both break the grounding ranking
 
 ## Lessons learned

@@ -7,6 +7,7 @@ Background-job and notebook-execution logs for this project.
 - `Q02-deberta-quantization.log` - nbconvert execution log for `notebooks/model-quantization/Q02-kj-deberta-int8-smoothquant.ipynb` (mDeBERTa NLI INT8 SmoothQuant for the source-conditioned grounding axis: calibrate on source-vs-summary statement pairs, gate on distance fidelity)
 - `03-mmbert-throughput-saturation.log` - nbconvert execution log for `notebooks/03-kj-mmbert-throughput-saturation.ipynb` (GPU batch-saturation throughput sweep)
 - `04-wmd-document-distance.log` - nbconvert execution log for `notebooks/04-kj-wmd-document-distance.ipynb` (WMD/SMD distance on the executive-summary fixtures: segment, embed, score vs gold, separability, latency)
+- `05-source-conditioned-distance.log` - nbconvert execution log for `notebooks/05-kj-source-conditioned-distance.ipynb` (source-conditioned distance `d(A,B|S)` design: D_sel + reranker×NLI D_grd with E03-H2 gate + E03-H5 blend, CPU INT8 vs GPU torch benchmark)
 - `E01-wmd-contrast-hypotheses.log` - execution of the R1 tier-contrast hypothesis sweep (notebooks/experiments/E01)
 - `09-docdistance-api-e2e.log` - nbconvert execution log for `notebooks/09-kj-docdistance-api-e2e.ipynb` (docdistance library validated end-to-end through the public API on the executive-summary fixtures)
 - `E02-source-conditioned-grounding.log` - nbconvert execution of the E02 source-conditioned grounding experiment (reranker x NLI grounding axis over the fixtures, two rounds)

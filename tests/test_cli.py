@@ -1,0 +1,48 @@
+"""CLI smoke tests - help, version and command structure render without loading any model.
+
+The real end-to-end behaviour (segment -> embed -> distance) is exercised in
+``notebooks/05-kj-library-validation.ipynb`` and by running the CLI against the fixtures.
+"""
+
+from typer.testing import CliRunner
+
+from docdistance.cli import app
+
+runner = CliRunner()
+_WIDE = {"COLUMNS": "200"}  # widen so option / command names are not wrapped in the help panels
+
+
+def test_app_help_lists_subcommands():
+    res = runner.invoke(app, ["--help"], env=_WIDE)
+    assert res.exit_code == 0
+    assert "distance" in res.output
+    assert "distance-wrt-source" in res.output
+    assert "install" in res.output
+
+
+def test_distance_help_has_flags_and_examples():
+    res = runner.invoke(app, ["distance", "--help"], env=_WIDE)
+    assert res.exit_code == 0
+    assert "--json" in res.output
+    assert "--result-only" in res.output
+    assert "--backend" in res.output
+    assert "Examples" in res.output
+
+
+def test_wrt_source_help_has_source_option():
+    res = runner.invoke(app, ["distance-wrt-source", "--help"], env=_WIDE)
+    assert res.exit_code == 0
+    assert "--source" in res.output
+    assert "--result-only" in res.output
+
+
+def test_install_help_has_backend():
+    res = runner.invoke(app, ["install", "--help"], env=_WIDE)
+    assert res.exit_code == 0
+    assert "--backend" in res.output
+
+
+def test_version():
+    res = runner.invoke(app, ["--version"], env=_WIDE)
+    assert res.exit_code == 0
+    assert "docdistance" in res.output

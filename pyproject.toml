@@ -3,8 +3,8 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "docdistance_estimator"
-version = "0.1.0"
+name = "docdistance"
+version = "1.0.14"
 description = "Project that uses theory of From Word Embeddings To Document Distances / Optimal Transport to give meaningful distance from one document to another, useful if building agentic projects that convert or extract information from one document to another using frontier models but without the ability to calculate KL divergence from logits"
 authors = [
     { name = "Stellars Henson \u003ckonrad.jelen+github@gmail.com\u003e" },
@@ -12,16 +12,47 @@ authors = [
 license = "MIT"
 readme = "README.md"
 requires-python = "~=3.13.0"
+keywords = [
+    "optimal-transport",
+    "word-movers-distance",
+    "statement-movers-distance",
+    "document-similarity",
+    "document-distance",
+    "embeddings",
+    "mmbert",
+    "nlp",
+]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: Linguistic",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
 ]
 
 dependencies = [
     "loguru",
     "tqdm",
     "typer",
+    "rich",
     "python-dotenv",
+    "numpy",
+    "pot",
+    "transformers",
+    "wtpsplit",
+    "openvino",
+    "torch",
 ]
+
+[project.urls]
+Homepage = "https://github.com/stellarshenson/docdistance"
+Repository = "https://github.com/stellarshenson/docdistance"
+Issues = "https://github.com/stellarshenson/docdistance/issues"
+
+[project.scripts]
+docdistance = "docdistance.cli:app"
 
 [project.optional-dependencies]
 dev = [
@@ -33,6 +64,9 @@ dev = [
     "pytest",
     "pytest-cov",
     "ruff",
+    "twine",
+    "matplotlib",
+    "seaborn",
 ]
 
 [tool.setuptools]
@@ -40,17 +74,17 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["docdistance_estimator*"]
+include = ["docdistance*"]
 exclude = ["tests*"]
 
 [tool.ruff]
 line-length = 99
-src = ["src/docdistance_estimator"]
-include = ["pyproject.toml", "src/docdistance_estimator/**/*.py"]
+src = ["src/docdistance"]
+include = ["pyproject.toml", "src/docdistance/**/*.py"]
 
 [tool.ruff.lint]
 extend-select = ["I"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["docdistance_estimator"]
+known-first-party = ["docdistance"]
 force-sort-within-sections = true

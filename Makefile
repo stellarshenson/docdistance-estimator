@@ -5,8 +5,8 @@
 #################################################################################
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-PROJECT_NAME = docdistance-estimator
-MODULE_NAME = docdistance_estimator
+PROJECT_NAME = docdistance
+MODULE_NAME = docdistance
 PYTHON_VERSION = 3.13
 PYTHON_INTERPRETER = python
 
@@ -31,7 +31,7 @@ NO_STYLE = \033[0m
 #################################################################################
 
 # unified environment name for all managers
-ENV_NAME = docdistance-estimator
+ENV_NAME = docdistance
 # uv configuration
 VENV_PATH = $(PROJECT_DIR)/.venv
 UV_OPTS =
@@ -177,6 +177,16 @@ build: clean install test
 	@echo "$(MSG_PREFIX) building $(MODULE_NAME)"
 	$(PROJECT_DIR)/.venv/bin/python -m build --wheel
 
+## Publish to PyPI with twine (full gate: build -> install -> test, then upload)
+.PHONY: publish
+publish: build install test
+	@echo "$(MSG_PREFIX) building sdist for $(MODULE_NAME)"
+	$(PROJECT_DIR)/.venv/bin/python -m build --sdist
+	@echo "$(MSG_PREFIX) validating distributions with twine"
+	$(PROJECT_DIR)/.venv/bin/python -m twine check dist/*
+	@echo "$(MSG_PREFIX) uploading $(MODULE_NAME) to PyPI with twine"
+	$(PROJECT_DIR)/.venv/bin/python -m twine upload dist/*
+
 ## Increment build number (skip with SKIP_VERSION_INCREMENT=1)
 increment_version_number:
 	@if [ "$(SKIP_VERSION_INCREMENT)" = "1" ]; then \
@@ -192,7 +202,7 @@ increment_version_number:
 ## Make dataset
 data: requirements
 	@echo "$(MSG_PREFIX) generating dataset"
-	$(PYTHON_INTERPRETER) src/docdistance_estimator/dataset.py
+	$(PYTHON_INTERPRETER) src/docdistance/dataset.py
 
 #################################################################################
 # Self Documenting Commands                                                     #

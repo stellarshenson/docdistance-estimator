@@ -1,4 +1,4 @@
-# docdistance-estimator
+# docdistance
 
 Compute a meaningful semantic distance between two documents using Word Mover's Distance (WMD) and Optimal Transport, following Kusner et al. 2015 (*From Word Embeddings To Document Distances*). The intended use is agentic document conversion and extraction pipelines that run through frontier models, where token-level logits are unavailable and KL divergence cannot be computed directly - WMD provides an embedding-grounded distance instead.
 
@@ -19,6 +19,61 @@ Position-invariance, statement-level granularity, and an interpretable alignment
 ## Validation
 
 The distance is implemented in `notebooks/04-kj-wmd-document-distance.ipynb` and validated on an executive-summary fixture set built from one IBM AI-adoption article - a gold tier (faithful summaries written under shared rules) plus two adversarial tiers (information loss and information noise). Statement Mover's Distance ranks every gold summary closer to the anchor than every adversarial one with zero ordering mistakes. The design and conclusions are in `docs/wmd-docdistance-solution-sota.md`, with a source-conditioned variant (`d(A,B|S)`) in `docs/wmd-wrt-source-docdistance-solution.md`.
+
+## Library
+
+The package exposes a small API for dropping the distance into a pipeline. A document argument is
+either raw text or a path to a text/markdown file - paths are auto-detected.
+
+```python
+from docdistance import document_distance
+
+result = document_distance("report_v1.md", "report_v2.md")
+print(result.smd)        # the distance - lower is more similar
+print(result.closeness)  # 0..1 similarity (1 - SMD/sqrt(2))
+print(result.verdict)    # "similar" | "not similar"
+print(result.to_dict())  # full result as a plain dict (JSON-ready)
+```
+
+For repeated comparisons load the models once and reuse them:
+
+```python
+from docdistance import DocDistance
+
+dd = DocDistance(backend="openvino")     # models load here, once
+ab = dd.distance("a.md", "b.md")
+ac = dd.distance("a.md", "c.md")
+```
+
+Source-conditioned distance `d(A, B | S)` - two documents derived from a common source:
+
+```python
+from docdistance import source_conditioned_distance
+
+r = source_conditioned_distance("summary_a.md", "summary_b.md", "article.md")
+print(r.d_sel)                      # selection divergence over the shared source
+print(r.residual_a, r.residual_b)   # each document's distance to the source
+```
+
+Models are not downloaded on first use - run `docdistance install` (or `DocDistance(...)` after
+installing) once; the distance calls then run fully offline.
+
+## Command line
+
+```bash
+docdistance install                                  # download + cache the models (once)
+docdistance distance a.md b.md                       # rich, coloured verdict
+docdistance distance "first text" "second text"      # raw text works too
+docdistance distance a.md b.md --json                # machine-readable JSON
+docdistance distance a.md b.md --result-only         # just the distance number
+docdistance distance a.md b.md --backend torch -v    # torch encoder, verbose logs
+docdistance distance-wrt-source a.md b.md --source article.md
+docdistance distance-wrt-source a.md b.md -s s.md --result-only   # D_sel,res_a,res_b
+```
+
+Every command has `--help` with examples. The `install` command is the only one that touches the
+network; `distance` and `distance-wrt-source` run offline and raise a clear error if a model is
+missing. The encoder backend is selectable (`--backend openvino|torch`, default `openvino`).
 
 ## Notebooks
 
@@ -53,6 +108,8 @@ make install
 - `make test` - Run tests
 - `make lint` / `make format` - Check / fix code style
 - `make build` - Build distributable wheel
+- `make dist` - Build sdist + wheel into `dist/`
+- `make publish` - Validate and upload to PyPI with twine
 - `make clean` - Remove compiled files and caches
 - `make .env` / `make .env.enc` - Decrypt / encrypt environment secrets
 - `make help` - Show all available targets
@@ -61,7 +118,7 @@ make install
 
 - **Notebooks**: Name with number prefix, initials, description - `01-jqp-data-exploration.ipynb`
 - **Data**: Keep `raw/` immutable, use `interim/` for transforms, `processed/` for final datasets
-- **Source code**: Refactor reusable notebook code into `src/docdistance_estimator/` modules
+- **Source code**: Refactor reusable notebook code into `src/docdistance/` modules
 - **Models**: Store trained models in `models/` with clear naming
 
 ## References
@@ -89,7 +146,7 @@ make install
 │   └── figures        <- Generated graphics and figures
 ├── tests              <- Test files
 └── src
-    └── docdistance_estimator   <- Source code for this project
+    └── docdistance   <- Source code for this project
         ├── __init__.py
         ├── config.py      <- Configuration variables
         ├── dataset.py     <- Data download/generation scripts

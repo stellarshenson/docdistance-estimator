@@ -22,6 +22,11 @@ import numpy as np
 
 from docdistance import config
 
+# keep transformers quiet before it is ever imported - it otherwise prints a model LOAD REPORT
+# and advisory warnings (e.g. dropped LM-head keys) that leak past stderr redirection
+os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+os.environ.setdefault("TRANSFORMERS_NO_ADVISORY_WARNINGS", "1")
+
 EMBED_BATCH = 64
 MAX_TOKENS = 128
 
@@ -35,10 +40,15 @@ class ModelsNotInstalled(RuntimeError):
 
 def _require_models_extra() -> None:
     try:
-        import transformers  # noqa: F401
+        import transformers
         import wtpsplit  # noqa: F401
     except ModuleNotFoundError as exc:
         raise ModelsNotInstalled(_EXTRA_HINT) from exc
+    # belt-and-suspenders alongside the env vars: silence the LOAD REPORT / modeling logger
+    import logging as _logging
+
+    transformers.logging.set_verbosity_error()
+    _logging.getLogger("transformers.modeling_utils").setLevel(_logging.ERROR)
 
 
 def _set_hf_token() -> None:

@@ -6,9 +6,10 @@ from loguru import logger
 
 ########### SETUP ###############
 
-# set up logger - sink to stderr so stdout stays clean for --json / --result-only output
+# set up logger - INFO by default (DEBUG only via the CLI --verbose flag), sink to stderr so
+# stdout stays clean for --json / --result-only output
 logger.remove()
-logger.add(sys.stderr, colorize=True)
+logger.add(sys.stderr, colorize=True, level="INFO")
 
 # If tqdm is installed, configure loguru with tqdm.write
 # https://github.com/Delgan/loguru/issues/135
@@ -16,7 +17,7 @@ try:
     from tqdm import tqdm
 
     logger.remove()
-    logger.add(lambda msg: tqdm.write(msg, end="", file=sys.stderr), colorize=True)
+    logger.add(lambda msg: tqdm.write(msg, end="", file=sys.stderr), colorize=True, level="INFO")
 except ModuleNotFoundError:
     pass
 

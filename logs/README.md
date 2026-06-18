@@ -7,3 +7,4 @@ Background-job and notebook-execution logs for this project.
 - `03-mmbert-throughput-saturation.log` - nbconvert execution log for `notebooks/03-kj-mmbert-throughput-saturation.ipynb` (GPU batch-saturation throughput sweep)
 - `04-wmd-document-distance.log` - nbconvert execution log for `notebooks/04-kj-wmd-document-distance.ipynb` (WMD/SMD distance on the executive-summary fixtures: segment, embed, score vs gold, separability, latency)
 - `E01-wmd-contrast-hypotheses.log` - execution of the R1 tier-contrast hypothesis sweep (notebooks/experiments/E01)
+- `09-docdistance-api-e2e.log` - nbconvert execution log for `notebooks/09-kj-docdistance-api-e2e.ipynb` (docdistance library validated end-to-end through the public API on the executive-summary fixtures)

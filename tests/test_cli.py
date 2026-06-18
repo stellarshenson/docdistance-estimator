@@ -1,7 +1,7 @@
 """CLI smoke tests - help, version and command structure render without loading any model.
 
 The real end-to-end behaviour (segment -> embed -> distance) is exercised in
-``notebooks/05-kj-library-validation.ipynb`` and by running the CLI against the fixtures.
+``notebooks/09-kj-docdistance-api-e2e.ipynb`` and by running the CLI against the fixtures.
 """
 
 from typer.testing import CliRunner

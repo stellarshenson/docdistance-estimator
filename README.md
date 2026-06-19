@@ -38,11 +38,11 @@ Three stages; the transport plan is the interpretable by-product.
 
 ## Which distance
 
-Two methods, picked by what the comparison must tell you.
+Both compare two documents; they differ in what the answer tells you and what you must supply.
 
-- **Method 1 - symmetric distance (robust, fast)** - the production default: sub-millisecond, a true metric, separates faithful from degraded documents with one source-blind scalar
-- **Method 2 - source-conditioned `d(A, B | S)` (slower, experimental)** - re-bases the comparison on a shared source `S` and splits it into a selection axis (cheap, metric) and a grounding axis (a heavy cross-encoder × NLI diagnostic, ~seconds on GPU and far slower on CPU) that name whether the difference is dropped content or unsupported content
-- **Caveat** - Method 2 is experimental: its gain is interpretation and the correct ordering of the failure modes, not a higher pass rate, and it is validated on a single fixture; reach for Method 1 for a robust similarity number, Method 2 only when you need to know *why* two documents of a shared source diverge - validate on your own sources first
+- **Method 1 - symmetric distance (robust, fast)** - answers *how far apart are A and B?* as one number (a 0..1 closeness plus a similar / not-similar verdict). Sub-millisecond, needs only the two documents, and is a true metric - the distance is symmetric and obeys the triangle inequality, so the numbers are consistent enough to threshold, rank and cache. The production default; use it whenever you need a reliable similarity score - dedup, drift detection, "did this conversion change the meaning?"
+- **Method 2 - source-conditioned `d(A, B | S)` (slower, experimental)** - answers *why do A and B differ, given a shared source S?* You supply `S`, and instead of one number it returns two axes: a selection axis (did A and B pick different parts of the source?) and a grounding axis (did one drift from the source - dropped content vs unsupported or fabricated content?). It runs a cross-encoder × NLI pass (~seconds on GPU, far slower on CPU). Use it to audit a summary or an extraction against its source, when "how far" is not enough and you need to name the failure
+- **Which to pick** - default to Method 1 for a similarity number; reach for Method 2 only when you hold the shared source and need to know *why* two documents derived from it diverge. Method 2's value is interpretation and ordering the failure modes correctly, not a higher pass rate, and it is validated on a single fixture so far - validate on your own sources first
 
 ## Usage
 
@@ -51,10 +51,26 @@ The quickest way to a result is the CLI - install once, then run it.
 ```bash
 make install                                   # environment, package, Jupyter kernel
 docdistance install                            # download + cache the models (once)
+
+# method 1 - symmetric distance (robust, fast, the default)
 docdistance distance a.md b.md                 # rich, coloured verdict
 docdistance distance a.md b.md --json          # machine-readable JSON
 docdistance distance a.md b.md --result-only   # bare SMD scalar, for scripts
+
+# method 2 - source-conditioned d(A,B|S) (slower, experimental)
+docdistance distance-wrt-source a.md b.md --source s.md          # rich, two-axis verdict
+docdistance distance-wrt-source a.md b.md -s s.md --json         # machine-readable JSON
 ```
+
+### CLI reference
+
+| Command | Does | Key flags |
+|---|---|---|
+| `docdistance install` | download + cache the models, once | `--backend openvino\|torch\|both` |
+| `docdistance distance A B` | method 1 - symmetric SMD distance + verdict | `--backend`, `--gpu`, `--anisotropy`, `--threshold`, `--json`, `--result-only` |
+| `docdistance distance-wrt-source A B -s S` | method 2 - source-conditioned `d(A,B\|S)` | `--source/-s` (required), `--backend`, `--gpu`, `--json`, `--result-only` |
+
+`A` / `B` / `S` are file paths or raw text. Run `docdistance --help` or `docdistance <command> --help` for the full flag list; the [API reference](docs/api-reference.md) covers the library.
 
 The same thing is one function from Python:
 
@@ -64,6 +80,22 @@ from docdistance import document_distance
 result = document_distance("report_v1.md", "report_v2.md")
 print(result.closeness)  # 0..1 similarity, 1 - SMD/sqrt(2)
 print(result.verdict)    # "similar" | "not similar"
+```
+
+### Source-conditioned - why two documents of one source diverge
+
+When A and B share a known source `S`, the symmetric distance tells you *how far* apart they are but not *why*. The source-conditioned distance `d(A, B | S)` re-bases both onto `S` and splits the difference into a selection axis (what each picked from the source) and a grounding axis (how far each drifts from it) - so dropped content reads differently from unsupported content. Reach for it to audit a summary or extraction against its source; it is slower and experimental, so validate on your own sources.
+
+```bash
+docdistance distance-wrt-source summary_a.md summary_b.md --source article.md
+```
+
+```python
+from docdistance import source_conditioned_distance
+
+r = source_conditioned_distance("summary_a.md", "summary_b.md", source="article.md")
+print(r.d_sel)                     # how differently A and B select from the source
+print(r.residual_a, r.residual_b)  # each summary's distance to the source
 ```
 
 - **Offline after install** - distance calls run fully offline once the models are cached

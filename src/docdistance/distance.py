@@ -18,6 +18,8 @@ from dataclasses import asdict, dataclass
 import numpy as np
 import ot
 
+from docdistance import config
+
 # orthogonal statement clouds -> closeness 0; cos >= 0 for these embeddings so distance lands in [0, sqrt(2)]
 SMD_MAX = float(np.sqrt(2.0))
 
@@ -101,7 +103,7 @@ def all_but_the_top(emb: dict[str, np.ndarray], k: int = 1) -> dict[str, np.ndar
     return out
 
 
-# --- source-conditioned core (metric parts only; reranker/NLI grounding deferred to E02) ---
+# --- source-conditioned core: metric selection axis + reranker/NLI grounding residual (D_grd) ---
 
 
 COVERAGE_TEMPERATURE = 0.1
@@ -146,13 +148,40 @@ def selection_divergence(cov_a: np.ndarray, cov_b: np.ndarray, S: np.ndarray) ->
 
 
 def ungrounded_residual(X: np.ndarray, S: np.ndarray) -> float:
-    """Per-document grounding proxy: the transport cost SMD(X, S) (distance of X to the source).
+    """Per-document geometric grounding proxy: the transport cost SMD(X, S) (distance of X to S).
 
     A coarse, metric stand-in for the grounding residual - higher means the document drifts
-    further from any source statement. The reranker + NLI grade that separates contradiction from
-    omission is deferred to E02; this is the geometric distance-to-source only.
+    further from any source statement. The model-graded :func:`grounding_residual` (reranker + NLI)
+    is the sharper signal; this is the geometric distance-to-source fallback when no models scored.
     """
     return smd(X, S)
+
+
+def grounding_residual(reranker: np.ndarray, entail: np.ndarray) -> float:
+    """D_grd residual (E03-H11 relevance-gated ungrounded mass): how much of a document is unsupported.
+
+    ``mean_i (1 - entail_i) * (1 - max_j reranker[i, j])`` - each statement's ungrounded mass
+    ``1 - P(entail)`` gated by ``1 - max relevance``, so a statement that strongly matches some source
+    (likely grounded but not entailed by the fused premise) is down-weighted. Lower = better grounded.
+    ``reranker`` is the ``[n_statements, n_source]`` relevance grid (or its per-statement max);
+    ``entail`` the per-statement entailment probability.
+    """
+    reranker = np.asarray(reranker, dtype=np.float64)
+    entail = np.asarray(entail, dtype=np.float64)
+    max_rel = reranker.max(axis=1) if reranker.ndim == 2 else reranker
+    return float(np.mean((1.0 - entail) * (1.0 - max_rel)))
+
+
+def grounding_blend(
+    d_sel: float, d_grd: float, *, alpha: float = config.GROUNDING_BLEND_ALPHA
+) -> float:
+    """E03-H14 two-axis blend ``alpha * d_sel + (1 - alpha) * d_grd`` (default alpha 0.75).
+
+    The notebook min-maxes each axis over a candidate set before blending, so pass comparably-scaled
+    inputs; for a single A-vs-B pair the raw ``d_sel`` / ``d_grd`` axes are the primary signal and
+    this blend is the documented set-level aggregation.
+    """
+    return float(alpha * d_sel + (1.0 - alpha) * d_grd)
 
 
 @dataclass
@@ -175,7 +204,13 @@ class DistanceResult:
 
 @dataclass
 class SourceConditionedResult:
-    """Source-conditioned result: selection divergence plus each document's distance to the source."""
+    """Source-conditioned result: the selection axis, each document's grounding residual, distances to S.
+
+    ``grd_a`` / ``grd_b`` are the reranker x NLI grounding residuals (E03-H11), present only when the
+    grounding models scored; ``d_grd`` is the grounding-axis separation ``|grd_a - grd_b|``. They stay
+    ``None`` on the metric-only path (no models), where ``residual_a`` / ``residual_b`` (geometric
+    distance-to-source) carry the grounding proxy.
+    """
 
     d_sel: float
     residual_a: float
@@ -187,6 +222,9 @@ class SourceConditionedResult:
     n_statements_source: int
     coverage_a: list[float]
     coverage_b: list[float]
+    grd_a: float | None = None
+    grd_b: float | None = None
+    d_grd: float | None = None
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -230,12 +268,21 @@ def compute_source_conditioned(
     emb_source: np.ndarray,
     *,
     anisotropy: bool = True,
+    reranker_a: np.ndarray | None = None,
+    reranker_b: np.ndarray | None = None,
+    entail_a: np.ndarray | None = None,
+    entail_b: np.ndarray | None = None,
 ) -> SourceConditionedResult:
     """Assemble a :class:`SourceConditionedResult` from A, B and source statement embeddings.
 
     Anisotropy removal (all-but-the-top, k=1) is on by default: the source supplies the corpus the
     shared direction is estimated from, and removing it widens the ``D_sel`` dynamic range ~7.4x at
     0 ordinality violations (E04-H15). Pass ``anisotropy=False`` to opt out.
+
+    When the grounding arrays are supplied (``reranker_*`` the doc x source relevance grid,
+    ``entail_*`` the per-statement entailment probability), the E03-H11 grounding residual is computed
+    per document into ``grd_a`` / ``grd_b`` and ``d_grd = |grd_a - grd_b|``; without them those stay
+    ``None`` and only the metric selection axis + geometric residuals are returned.
     """
     n_a, n_b, n_s = len(emb_a), len(emb_b), len(emb_source)
     if anisotropy:
@@ -245,6 +292,17 @@ def compute_source_conditioned(
     cov_b = coverage_profile(emb_b, emb_source)
     res_a = ungrounded_residual(emb_a, emb_source)
     res_b = ungrounded_residual(emb_b, emb_source)
+    grd_a = (
+        grounding_residual(reranker_a, entail_a)
+        if reranker_a is not None and entail_a is not None
+        else None
+    )
+    grd_b = (
+        grounding_residual(reranker_b, entail_b)
+        if reranker_b is not None and entail_b is not None
+        else None
+    )
+    d_grd = abs(grd_a - grd_b) if grd_a is not None and grd_b is not None else None
     return SourceConditionedResult(
         d_sel=selection_divergence(cov_a, cov_b, emb_source),
         residual_a=res_a,
@@ -256,4 +314,7 @@ def compute_source_conditioned(
         n_statements_source=n_s,
         coverage_a=cov_a.tolist(),
         coverage_b=cov_b.tolist(),
+        grd_a=grd_a,
+        grd_b=grd_b,
+        d_grd=d_grd,
     )

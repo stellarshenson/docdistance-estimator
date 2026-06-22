@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "docdistance"
-version = "1.0.17"
+version = "1.1.0"
 description = "Project that uses theory of From Word Embeddings To Document Distances / Optimal Transport to give meaningful distance from one document to another, useful if building agentic projects that convert or extract information from one document to another using frontier models but without the ability to calculate KL divergence from logits"
 authors = [
     { name = "Stellars Henson \u003ckonrad.jelen+github@gmail.com\u003e" },
@@ -73,6 +73,11 @@ dev = [
 gpu = [
     "accelerate",
 ]
+# S3 model provisioning - `docdistance init --source s3://...` pulls model IRs via botocore directly
+# (no boto3); only needed when resolving models from an S3 bucket, not for HuggingFace / local sources.
+s3 = [
+    "botocore",
+]
 # Quantization toolchain - OpenVINO/NNCF SmoothQuant for the INT8 model-quantization notebooks
 # (Q01 mmBERT, Q02 mDeBERTa). optimum-intel pins transformers to the 5.0.x line.
 quant = [
@@ -81,7 +86,7 @@ quant = [
     "datasets",
 ]
 all = [
-    "docdistance[dev,gpu,quant]",
+    "docdistance[dev,gpu,quant,s3]",
 ]
 
 [tool.setuptools]

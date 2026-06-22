@@ -46,44 +46,77 @@ Both compare two documents; they differ in what the answer tells you and what yo
 
 ## Usage
 
-The quickest way to a result is the CLI - install once, then run it.
+The quickest way to a result is the CLI - init once, then run it.
 
 ```bash
-pip install docdistance                        # from PyPI
-docdistance install                            # download + cache the models (once)
+pip install docdistance                        # from PyPI ('docdistance[s3]' to pull models from S3)
+docdistance init wmd                           # provision the symmetric-distance models (once)
+docdistance init wmd-wrt-source                # + the reranker + NLI grounding models
 docdistance --help                             # full reference (or <command> --help)
 
 # method 1 - symmetric distance (robust, fast, the default)
 docdistance distance a.md b.md                 # rich verdict (add --json for machine-readable)
 docdistance distance a.md b.md --transport-map-json map.json   # + statement → statement map
 
-# method 2 - source-conditioned d(A,B|S) (slower, experimental)
+# method 2 - source-conditioned d(A,B|S) (slower, runs the reranker × NLI grounding)
 docdistance distance-wrt-source a.md b.md --source s.md                       # two-axis verdict
 docdistance distance-wrt-source a.md b.md -s s.md --source-map-json map.json   # + statement → source map
 ```
 
+`init` provisions a mode's models from HuggingFace by default, or from S3 (`--source s3://general-purpose/docdistance --aws-profile stellars-tech`) or a local mirror (`--source /path/to/models`), and records readiness in a `docdistance.json` written to `$DOCDISTANCE_HOME` or the current folder. A distance run whose mode was never init'd exits with a clear "run `docdistance init <mode>`" error.
+
 Or from Python:
 
 ```python
+import docdistance
 from docdistance import document_distance, source_conditioned_distance
 
+docdistance.init("wmd")                                         # provision once (writes docdistance.json)
 r = document_distance("report_v1.md", "report_v2.md")           # method 1
 print(r.closeness, r.verdict)               # 0..1 closeness, "similar" | "not similar"
 
+docdistance.init("wmd-wrt-source")                              # + reranker + NLI grounding models
 s = source_conditioned_distance("sum_a.md", "sum_b.md", source="article.md")  # method 2
-print(s.d_sel, s.residual_a, s.residual_b)  # selection divergence + each doc's distance to S
+print(s.d_sel, s.grd_a, s.grd_b)            # selection divergence + each doc's grounding residual
 ```
 
 ### Reading the result
 
 - **Method 1 - closeness 0..1** - `1.0` identical, `0.0` unrelated. Good (same meaning): closeness near 1, verdict `similar` (default cutoff `0.725`, set with `--threshold`). Bad (meaning changed): closeness falls toward 0, verdict flips to `not similar`
-- **Method 2 - two distances, lower is closer** - `d_sel` near 0 means A and B drew on the same source content, high means they picked different parts; a low `residual` means a document stays grounded in `S`, a high one flags drift (dropped or unsupported content). Good: both residuals and `d_sel` low. Bad: a residual spikes for the document that drifted
+- **Method 2 - two axes, lower is closer** - `d_sel` near 0 means A and B drew on the same source content, high means they picked different parts; `grd_a` / `grd_b` are each document's reranker x NLI grounding residual (E03-H11 relevance-gated ungrounded mass) - low means it stays grounded in `S`, high flags drift (dropped or unsupported content). Good: both grounding residuals and `d_sel` low. Bad: a grounding residual spikes for the document that drifted
 
 - **Transport map** - add `--transport-map-json map.json` to `distance` to also write the optimal-transport map: for every statement of A, which statements of B its mass flows to, with the `weight` (fraction of that statement's mass) and the match `cost` - the interpretable statement-to-statement alignment behind the distance, readable by a human or a machine (the same map is returned in Python by `DocDistance.distance_with_map`)
 - **Source map** - add `--source-map-json map.json` to `distance-wrt-source` to also write, for every statement of A and B, the top-3 source statements it covers with their weights - a per-statement alignment showing *which part of the source* each statement draws on
-- **Offline after install** - distance calls run fully offline once the models are cached
+- **Offline after init** - distance calls run fully offline once `docdistance init <mode>` has provisioned the mode (from HuggingFace, S3, or a local mirror) and written `docdistance.json`
 - **Backend** - `--backend openvino|torch`, default `openvino` (CPU INT8)
 - **Full reference** - the [CLI reference](docs/cli-reference.md) and the [API reference](docs/api-reference.md)
+
+### Transport map output
+
+`--transport-map-json` writes the exact optimal-transport coupling behind the distance - for each statement of A, the statements of B its probability mass moves to (one flow shown, a clean 1:1 match):
+
+```json
+{
+  "smd": 0.286827,
+  "anisotropy": false,
+  "n_statements": { "a": 12, "b": 11 },
+  "flows": [
+    {
+      "index": 1,
+      "text": "Among large organizations with more than 1,000 …",
+      "matches": [
+        { "target_index": 1, "target_text": "About 42% of organizations with more than 1,000 …", "weight": 1.0, "cost": 0.2237 }
+      ]
+    }
+  ]
+}
+```
+
+- **flows** - one entry per statement of A; `index` / `text` name it, `matches` are the B statements its mass lands on
+- **weight** - fraction of that statement's mass to the target, sums to 1 per statement; a lone `1.0` is a clean 1:1 match, several smaller weights mean the statement splits across B
+- **cost** - ground distance `√(2 − 2cos)` of the matched pair; low = semantically close, high = a forced move
+- **smd** - the distance the map realizes; `weight × cost` summed over all flows equals it
+- **Reading it** - a statement mapped to its counterpart at `weight 1.0` and low `cost` is preserved; high cost or scattered weights flag a statement with no clean equivalent in B
 
 ## Documentation
 

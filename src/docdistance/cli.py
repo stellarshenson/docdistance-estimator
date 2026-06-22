@@ -1,9 +1,10 @@
 """docdistance command-line interface.
 
-Three subcommands - ``install`` (the only one that downloads models), ``distance`` (symmetric SMD)
-and ``distance-wrt-source`` (source-conditioned). Human output is rich and coloured on a capable
-terminal; ``--json`` emits machine-readable JSON and ``--result-only`` emits the bare result.
-Logs go to stderr (loguru, ``--verbose`` for DEBUG), so stdout carries only the result.
+Three subcommands - ``init`` (provision a mode's models from local / S3 / HuggingFace, the only one
+that downloads), ``distance`` (symmetric SMD) and ``distance-wrt-source`` (source-conditioned). A
+mode must be ``init``'d before its distance runs, else the command exits 1 with a clear message.
+Human output is rich and coloured; ``--json`` emits machine-readable JSON and ``--result-only`` the
+bare result. Logs go to stderr (loguru, ``--verbose`` for DEBUG), so stdout carries only the result.
 """
 
 from __future__ import annotations
@@ -37,10 +38,9 @@ class Backend(str, Enum):
     torch = "torch"
 
 
-class InstallBackend(str, Enum):
-    openvino = "openvino"
-    torch = "torch"
-    both = "both"
+class Mode(str, Enum):
+    wmd = "wmd"
+    wmd_wrt_source = "wmd-wrt-source"
 
 
 def _version_cb(value: bool):
@@ -61,12 +61,13 @@ def main(
 
 
 def _run(fn):
-    """Call ``fn`` and turn a missing-model error into a clean message + exit code 1."""
+    """Call ``fn`` and turn a missing-model or un-init'd-mode error into a clean message + exit 1."""
     from docdistance.encoders import ModelsNotInstalled
+    from docdistance.settings import NotInitializedError
 
     try:
         return fn()
-    except ModelsNotInstalled as exc:
+    except (ModelsNotInstalled, NotInitializedError) as exc:
         _err.print(f"[bold red]error:[/bold red] {exc}")
         raise typer.Exit(1)
 
@@ -111,7 +112,10 @@ def _emit_distance(r, json_out: bool, result_only: bool) -> None:
 
 def _emit_wrt_source(r, json_out: bool, result_only: bool) -> None:
     if result_only:
-        typer.echo(f"{r.d_sel},{r.residual_a},{r.residual_b}")
+        if r.grd_a is not None:
+            typer.echo(f"{r.d_sel},{r.grd_a},{r.grd_b}")
+        else:
+            typer.echo(f"{r.d_sel},{r.residual_a},{r.residual_b}")
         return
     if json_out:
         typer.echo(json.dumps(r.to_dict(), indent=2))
@@ -120,8 +124,16 @@ def _emit_wrt_source(r, json_out: bool, result_only: bool) -> None:
     grid.add_column(style="bold cyan")
     grid.add_column()
     grid.add_row("D_sel (selection divergence)", f"{r.d_sel:.4f}")
-    grid.add_row("A → source", f"{r.residual_a:.4f}  (closeness {r.closeness_a * 100:.1f}%)")
-    grid.add_row("B → source", f"{r.residual_b:.4f}  (closeness {r.closeness_b * 100:.1f}%)")
+    if r.grd_a is not None:
+        grid.add_row("A grounding D_grd (E03-H11)", f"{r.grd_a:.4f}")
+        grid.add_row("B grounding D_grd (E03-H11)", f"{r.grd_b:.4f}")
+        grid.add_row("D_grd separation |A-B|", f"{r.d_grd:.4f}")
+    grid.add_row(
+        "A → source (geometric)", f"{r.residual_a:.4f}  (closeness {r.closeness_a * 100:.1f}%)"
+    )
+    grid.add_row(
+        "B → source (geometric)", f"{r.residual_b:.4f}  (closeness {r.closeness_b * 100:.1f}%)"
+    )
     grid.add_row(
         "statements", f"A {r.n_statements_a} / B {r.n_statements_b} / S {r.n_statements_source}"
     )
@@ -133,10 +145,13 @@ def _emit_wrt_source(r, json_out: bool, result_only: bool) -> None:
             expand=False,
         )
     )
-    _out.print(
-        "[dim]residual = geometric distance to the source; the reranker + NLI grounding grade and "
-        "numeric verifier are deferred to E02[/dim]"
+    note = (
+        "D_grd = reranker x NLI relevance-gated ungrounded mass (lower = better grounded); residual "
+        "= geometric distance to the source"
+        if r.grd_a is not None
+        else "residual = geometric distance to the source (run init wmd-wrt-source for reranker + NLI grounding)"
     )
+    _out.print(f"[dim]{note}[/dim]")
 
 
 @app.command(
@@ -281,25 +296,59 @@ def distance_wrt_source(
 
 @app.command(
     epilog="[bold]Examples[/bold]\n\n"
-    "  docdistance install               [dim]# both backends[/dim]\n"
-    "  docdistance install --backend openvino",
+    "  docdistance init                                    [dim]# wmd mode, from HuggingFace[/dim]\n"
+    "  docdistance init wmd-wrt-source                     [dim]# + reranker + NLI grounding models[/dim]\n"
+    "  docdistance init wmd-wrt-source --source s3://general-purpose/docdistance --aws-profile stellars-tech\n"
+    "  docdistance init wmd --source /path/to/models       [dim]# from a local mirror[/dim]",
 )
-def install(
-    backend: InstallBackend = typer.Option(
-        InstallBackend.both, "--backend", help="which encoder weights to fetch"
+def init(
+    mode: Mode = typer.Argument(Mode.wmd, help="which distance mode to provision models for"),
+    source: str = typer.Option(
+        None,
+        "--source",
+        help="model source base: an s3://bucket/prefix, a local dir, or omit for HuggingFace",
+    ),
+    backend: Backend = typer.Option(
+        Backend.openvino, "--backend", help="which weights to fetch (openvino INT8 or torch)"
+    ),
+    aws_profile: str = typer.Option(
+        None,
+        "--aws-profile",
+        help="AWS named profile for an s3:// source (omit in Lambda for the execution-role chain)",
+    ),
+    aws_endpoint_url: str = typer.Option(
+        None, "--aws-endpoint-url", help="custom S3 endpoint for an S3-compatible store"
+    ),
+    aws_region: str = typer.Option(None, "--region", help="AWS region for an s3:// source"),
+    home: str = typer.Option(
+        None,
+        "--home",
+        help="where to write docdistance.json + the model mirror (default: $DOCDISTANCE_HOME or cwd)",
     ),
     verbose: bool = typer.Option(False, "--verbose", "-v", help="DEBUG logging to stderr"),
 ):
-    """Download and cache the models - the only command that fetches from the Hub (TQDM progress bars)."""
+    """Provision a mode's models from local / S3 / HuggingFace and write docdistance.json."""
     configure_logging(verbose)
-    from docdistance.encoders import ModelsNotInstalled, download_models
+    from docdistance.bootstrap import init as _init
+    from docdistance.encoders import ModelsNotInstalled
 
     try:
-        backends = download_models(backend.value)
-    except ModelsNotInstalled as exc:
+        summary = _init(
+            mode.value,
+            source=source,
+            backend=backend.value,
+            aws_profile=aws_profile,
+            aws_endpoint_url=aws_endpoint_url,
+            aws_region=aws_region,
+            home=home,
+        )
+    except (ModelsNotInstalled, FileNotFoundError, ValueError) as exc:
         _err.print(f"[bold red]error:[/bold red] {exc}")
         raise typer.Exit(1)
-    _out.print(f"[green]models ready:[/green] {', '.join(backends)}")
+    srcs = ", ".join(f"{k}:{v}" for k, v in summary["sources"].items())
+    _out.print(f"[green]initialized {summary['mode']}:[/green] {srcs}")
+    if summary["config_file"]:
+        _out.print(f"[dim]config written: {summary['config_file']}[/dim]")
 
 
 if __name__ == "__main__":

@@ -20,7 +20,7 @@ def test_app_help_lists_subcommands():
     assert res.exit_code == 0
     assert "distance" in res.output
     assert "distance-wrt-source" in res.output
-    assert "install" in res.output
+    assert "init" in res.output
 
 
 def test_distance_help_has_flags_and_examples():
@@ -57,10 +57,24 @@ def test_wrt_source_help_has_source_option():
     assert "--source-map-json" in res.output
 
 
-def test_install_help_has_backend():
-    res = runner.invoke(app, ["install", "--help"], env=_WIDE)
+def test_init_help_has_mode_and_source_flags():
+    res = runner.invoke(app, ["init", "--help"], env=_WIDE)
     assert res.exit_code == 0
+    assert "--source" in res.output
     assert "--backend" in res.output
+    assert "--aws-profile" in res.output
+
+
+def test_distance_without_init_exits_with_clear_error(tmp_path):
+    """A mode that was never init'd must fail loudly with a 'run docdistance init' message, exit 1."""
+    from docdistance import settings
+
+    settings.reset()
+    env = {**_WIDE, "DOCDISTANCE_HOME": str(tmp_path)}  # empty home -> no docdistance.json
+    res = runner.invoke(app, ["distance", "hello world", "goodbye world"], env=env)
+    assert res.exit_code == 1
+    assert "not initialized" in res.output
+    settings.reset()
 
 
 def test_version():

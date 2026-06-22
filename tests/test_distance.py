@@ -103,3 +103,37 @@ def test_compute_source_conditioned_result():
     assert len(r.coverage_a) == 10
     assert r.d_sel >= 0.0
     assert 0.0 <= r.closeness_a <= 1.0
+    assert r.grd_a is None and r.grd_b is None and r.d_grd is None  # no grounding without models
+
+
+def test_grounding_residual_matches_the_h11_formula():
+    """mean_i (1 - entail_i) * (1 - max_j R[i,j]) - the E03-H11 relevance-gated residual."""
+    R = np.array([[0.9, 0.1], [0.2, 0.3]])
+    ent = np.array([1.0, 0.0])
+    # statement 0: (1-1)*(1-0.9)=0 ; statement 1: (1-0)*(1-0.3)=0.7 ; mean = 0.35
+    assert d.grounding_residual(R, ent) == pytest.approx(0.35, abs=1e-9)
+    # accepts a precomputed per-statement max vector too
+    assert d.grounding_residual(np.array([0.9, 0.3]), ent) == pytest.approx(0.35, abs=1e-9)
+
+
+def test_grounding_residual_zero_when_fully_entailed():
+    R = np.array([[0.4, 0.5], [0.1, 0.2]])
+    assert d.grounding_residual(R, np.array([1.0, 1.0])) == pytest.approx(0.0, abs=1e-12)
+
+
+def test_grounding_blend_is_the_h14_convex_combination():
+    assert d.grounding_blend(0.2, 0.4) == pytest.approx(0.75 * 0.2 + 0.25 * 0.4)
+    assert d.grounding_blend(1.0, 0.0, alpha=0.5) == pytest.approx(0.5)
+
+
+def test_compute_source_conditioned_with_grounding_arrays():
+    ea, eb, es = _emb(4, seed=1), _emb(3, seed=2), _emb(6, seed=3)
+    rng = np.random.default_rng(0)
+    ra, rb = rng.random((4, 6)), rng.random((3, 6))
+    enta, entb = rng.random(4), rng.random(3)
+    r = d.compute_source_conditioned(
+        ea, eb, es, reranker_a=ra, reranker_b=rb, entail_a=enta, entail_b=entb
+    )
+    assert r.grd_a == pytest.approx(d.grounding_residual(ra, enta))
+    assert r.grd_b == pytest.approx(d.grounding_residual(rb, entb))
+    assert r.d_grd == pytest.approx(abs(r.grd_a - r.grd_b))

@@ -1,0 +1,72 @@
+# Acceptance Criteria - init + model resolution + grounding wire-in
+
+Mode-aware `init` (CLI command + `docdistance.init` API) provisions a distance mode's models from local / S3 / HuggingFace, records readiness in `docdistance.json` (under `$DOCDISTANCE_HOME` or the current folder), and fails a distance run whose mode was never init'd with a clear error. The source-conditioned mode now runs the reranker x NLI grounding axis `D_grd` (ported from nb05) instead of the geometric stand-in. Replaces the old `install` command (hard rename, 1.1.0).
+
+- [x] **init API** - `docdistance.init(mode="wmd", *, source=None, backend="openvino", aws_profile=None, aws_endpoint_url=None, aws_region=None, home=None)` provisions the mode's models and returns a per-model source summary
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **init CLI** - `docdistance init [MODE]` with `--source`, `--backend`, `--aws-profile`, `--aws-endpoint-url`, `--region`, `--home`; calls `bootstrap.init`
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Hard rename** - `install` command removed; `init` replaces it; `ModelsNotInstalled` hints and docs point at `docdistance init`
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Mode registry** - `MODE_MODELS`: `wmd -> [mmbert, sat]`, `wmd-wrt-source -> [mmbert, sat, reranker, nli]`; init pulls only the mode's models
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Local resolution** - `--source <dir>` copies each model dir from the local mirror; HuggingFace is never reached when the local dir has the model
+  - log: 2026-06-22 tested `test_init_local_source_records_local_and_never_touches_hf` (v1.1.0)
+- [x] **HuggingFace resolution** - no `--source` (or `--source hf`) warms each model from the Hub; records `source: hf`
+  - log: 2026-06-22 tested `test_init_hf_source_records_hf` (v1.1.0)
+- [x] **S3 resolution** - `--source s3://bucket/prefix` mirrors each model dir via botocore directly (path-style, optional `--aws-profile` / `--aws-endpoint-url`; Lambda omits profile for the execution-role chain)
+  - log: 2026-06-22 implemented; opt-in round-trip test gated on `DOCDISTANCE_S3_TEST` (v1.1.0)
+- [x] **3-way order** - per model: S3 prefix, then local dir, then HuggingFace fallback (mirrors groundrails `_mirror_one`)
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **docdistance.json** - init writes the readiness file to `$DOCDISTANCE_HOME/docdistance.json`, else `./docdistance.json`; records modes, model paths, per-model source
+  - log: 2026-06-22 tested `test_save_then_load_in_a_fresh_process_marks_ready` (v1.1.0)
+- [x] **Readiness gate** - `settings.require_ready(mode)` raises `NotInitializedError` unless init ran (in-process) or `docdistance.json` records the mode; a fresh process loads the file and is ready
+  - log: 2026-06-22 tested in test_settings (v1.1.0)
+- [x] **Failover** - a distance run for an un-init'd mode exits 1 with `mode '<mode>' is not initialized - run:  docdistance init <mode>`
+  - log: 2026-06-22 tested `test_distance_without_init_exits_with_clear_error`, `test_distance_requires_init` (v1.1.0)
+- [x] **Mode distinction** - `init wmd` does not satisfy `wmd-wrt-source` and vice versa
+  - log: 2026-06-22 tested `test_require_ready_distinguishes_modes` (v1.1.0)
+- [x] **Lazy loading** - `DocDistance` loads the encoder + segmenter on first use, the reranker + NLI only for the source-conditioned path; the readiness check runs before any model load
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Grounding wire-in** - `distance_wrt_source` runs the reranker grid (sigmoid relevance) + top-3 joint-premise NLI entailment, computes the E03-H11 relevance-gated residual per document
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Grounding math** - `grounding_residual(R, entail) = mean_i (1 − entail_i)·(1 − max_j R[i,j])`; `grounding_blend(d_sel, d_grd, alpha=0.75)` the E03-H14 blend
+  - log: 2026-06-22 tested `test_grounding_residual_matches_the_h11_formula`, `test_grounding_blend_is_the_h14_convex_combination` (v1.1.0)
+- [x] **Result fields** - `SourceConditionedResult` gains `grd_a`, `grd_b`, `d_grd` (default `None`); populated when grounding arrays are supplied, `None` on the metric-only path
+  - log: 2026-06-22 tested `test_compute_source_conditioned_with_grounding_arrays` (v1.1.0)
+- [x] **Length-bucketing** - the reranker length-buckets the flat pair list (E06-H25) and scatters scores back, so relevance is order-invariant
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Reranker / NLI loaders** - OpenVINO INT8 (`stellars/bge-reranker-v2-m3-openvino-int8`, `stellars/mdeberta-v3-base-mnli-xnli-openvino-int8`) and torch backends; resolve init mirror -> local dev dir -> HF
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **NLI entail index** - read from `id2label` (mDeBERTa entailment = 0), not hard-coded
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **s3 extra** - `botocore` under the `docdistance[s3]` optional extra, lazy-imported only in the S3 path
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Makefile sync** - `sync_models_up` / `sync_models_down` sync the registry-named model dirs to `s3://general-purpose/docdistance/` via the `stellars-tech` profile
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **CLI output** - `distance-wrt-source` shows `grd_a` / `grd_b` / `D_grd` when grounded; `--json` carries the new fields; `--result-only` emits `d_sel,grd_a,grd_b`
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Docs** - README (init usage, modes, sources, docdistance.json), cli-reference (init section, grounding fields), api-reference (init, grounding result fields)
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **Tests** - bootstrap (scheme/split, local, hf, mode coverage, missing-dir), settings (home precedence, save/load, require_ready, corrupt), distance (grounding math), pipeline (readiness gate, premise fusion, grounding wiring), cli (init help, failover); 44 pass, 1 opt-in skip
+  - log: 2026-06-22 implemented (v1.1.0)
+- [x] **S3 upload run** - mmBERT IR (329 MB) uploaded to `s3://general-purpose/docdistance/mmbert-openvino-int8/` via `make sync_models_up` (stellars-tech profile)
+  - log: 2026-06-23 mmBERT uploaded + verified; reranker / NLI / SaT IRs pending an HF fetch into `models/` then a re-run of `sync_models_up`
+- [x] **Opt-in S3 round-trip** - `DOCDISTANCE_S3_TEST=1 AWS_PROFILE=stellars-tech` runs `test_init_s3_source_downloads_the_mmbert_ir`; passes - `init` pulls the mmBERT IR from the real bucket and records `source: s3`
+  - log: 2026-06-23 passed live (26.8s, real 329 MB download); skipped by default in CI
+- [x] **Edge: unknown mode** - `init("bogus")` raises `ValueError`
+  - log: 2026-06-22 tested `test_init_unknown_mode_raises` (v1.1.0)
+- [x] **Edge: local source missing dir** - `--source` pointing at a nonexistent dir raises `FileNotFoundError`
+  - log: 2026-06-22 tested `test_init_local_source_missing_dir_raises` (v1.1.0)
+- [x] **Edge: corrupt docdistance.json** - a malformed config raises `RuntimeError`, not a silent un-init'd state
+  - log: 2026-06-22 tested `test_corrupt_config_fails_loudly` (v1.1.0)
+- [x] **Edge: $DOCDISTANCE_HOME unset** - `docdistance.json` resolves to the current folder
+  - log: 2026-06-22 tested `test_default_home_falls_back_to_cwd`, `test_config_file_path_precedence` (v1.1.0)
+
+## API
+
+- CLI `docdistance init [MODE] [--source URI] [--backend openvino|torch] [--aws-profile NAME] [--aws-endpoint-url URL] [--region NAME] [--home DIR]` -> provisions models, writes `docdistance.json`, prints the per-model source
+- Python `docdistance.init(mode="wmd", *, source=None, backend="openvino", aws_profile=None, aws_endpoint_url=None, aws_region=None, home=None) -> dict` (summary: `{mode, home, models_dir, sources, config_file}`)
+- Python `docdistance.NotInitializedError` raised by `require_ready(mode)` and the distance methods when a mode is not init'd
+- `docdistance.json` shape: `{home, models_dir, modes: [...], model_paths: {key: dir}, sources: {key: "local"|"s3"|"hf"}}`
+- `SourceConditionedResult` adds `grd_a`, `grd_b`, `d_grd` (float | None)

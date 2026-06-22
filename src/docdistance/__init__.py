@@ -1,14 +1,18 @@
 from importlib.metadata import PackageNotFoundError, version
 
 from docdistance import config  # noqa: F401  (sets up logging + paths on import)
+from docdistance.bootstrap import init
 from docdistance.distance import (
     DistanceResult,
     SourceConditionedResult,
     closeness,
     compute_distance,
     compute_source_conditioned,
+    grounding_blend,
+    grounding_residual,
     rwmd,
     smd,
+    transport_plan,
     wcd,
 )
 from docdistance.pipeline import (
@@ -16,6 +20,7 @@ from docdistance.pipeline import (
     document_distance,
     source_conditioned_distance,
 )
+from docdistance.settings import NotInitializedError
 
 try:
     __version__ = version("docdistance")
@@ -26,11 +31,16 @@ __all__ = [
     "DocDistance",
     "DistanceResult",
     "SourceConditionedResult",
+    "NotInitializedError",
+    "init",
     "document_distance",
     "source_conditioned_distance",
     "compute_distance",
     "compute_source_conditioned",
+    "grounding_residual",
+    "grounding_blend",
     "smd",
+    "transport_plan",
     "wcd",
     "rwmd",
     "closeness",

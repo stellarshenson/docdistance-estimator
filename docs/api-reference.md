@@ -11,16 +11,19 @@ a leading markdown `# ` title line in a file is stripped so the title is not cou
 
 | Symbol | Signature | Returns | Notes |
 | --- | --- | --- | --- |
+| `init` | `(mode="wmd", *, source=None, backend="openvino", aws_profile=None, aws_endpoint_url=None, aws_region=None, home=None)` | `dict` | provision a mode's models from local / S3 / HuggingFace; writes `docdistance.json`, returns a per-model source summary |
 | `document_distance` | `(a, b, *, backend="openvino", anisotropy=False, threshold=0.725, offline=True, device=None)` | `DistanceResult` | symmetric SMD; loads models then scores in one call |
-| `source_conditioned_distance` | `(a, b, source, *, backend="openvino", anisotropy=True, offline=True, device=None)` | `SourceConditionedResult` | `d(A, B | S)`; selection divergence + each document's distance to `S` |
-| `DocDistance` | `DocDistance(backend="openvino", offline=True, device=None)` | pipeline | construct once (models load here), then score many pairs |
+| `source_conditioned_distance` | `(a, b, source, *, backend="openvino", anisotropy=True, offline=True, device=None)` | `SourceConditionedResult` | `d(A, B | S)`; selection axis + reranker x NLI grounding residuals |
+| `DocDistance` | `DocDistance(backend="openvino", offline=True, device=None)` | pipeline | construct once, models load lazily on first use, then score many pairs |
 | `DocDistance.distance` | `(a, b, *, anisotropy=False, threshold=0.725)` | `DistanceResult` | symmetric distance on the loaded models |
 | `DocDistance.distance_with_map` | `(a, b, *, anisotropy=False, threshold=0.725)` | `(DistanceResult, dict)` | the distance plus the optimal-transport statement map, one encode pass |
-| `DocDistance.distance_wrt_source` | `(a, b, source, *, anisotropy=True)` | `SourceConditionedResult` | source-conditioned distance on the loaded models |
+| `DocDistance.distance_wrt_source` | `(a, b, source, *, anisotropy=True)` | `SourceConditionedResult` | source-conditioned distance, runs the reranker x NLI grounding |
+| `DocDistance.distance_wrt_source_with_map` | `(a, b, source, *, anisotropy=True, top_k=3)` | `(SourceConditionedResult, dict)` | the conditioned result plus the statement → source map, one encode pass |
 | `DocDistance.embed` | `(doc)` | `ndarray [n, dim]` | segment then embed into L2-normalized statement vectors |
 
+- **init** - run once per mode before scoring; `"wmd"` pulls mmBERT + SaT, `"wmd-wrt-source"` adds the bge-reranker-v2-m3 + mDeBERTa NLI; `source` is an `s3://` prefix, a local dir, or `None` for the Hub; an un-init'd mode raises `NotInitializedError`
 - **backend** - `"openvino"` (CPU INT8, default) or `"torch"`; pass `device="cuda"` with `backend="torch"` for GPU
-- **offline** - `True` loads from the local cache only; run `docdistance install` once to populate it
+- **offline** - `True` loads from the local cache only; run `docdistance.init(mode)` once to populate it
 - **anisotropy** - all-but-the-top postprocessing; off for a bare pair, on by default for the conditioned axis (E04-H15)
 - **threshold** - closeness cutoff for the similar / not-similar verdict, default `0.725`
 
@@ -37,7 +40,9 @@ loading. Use these when you hold the embeddings already.
 | `rwmd` | `(X, Y)` | `float` | lower bound: one-sided relaxation, greedy nearest-statement |
 | `closeness` | `(d)` | `float` | map a distance to 0..1 similarity, `1 − d/√2` |
 | `compute_distance` | `(X, Y, *, anisotropy=False, threshold=0.725)` | `DistanceResult` | assemble the full symmetric result from embeddings |
-| `compute_source_conditioned` | `(X, Y, S, *, anisotropy=True)` | `SourceConditionedResult` | assemble the conditioned result from embeddings |
+| `compute_source_conditioned` | `(X, Y, S, *, anisotropy=True, reranker_a=None, reranker_b=None, entail_a=None, entail_b=None)` | `SourceConditionedResult` | assemble the conditioned result; pass the grounding arrays for `grd_a`/`grd_b`/`d_grd` |
+| `grounding_residual` | `(reranker, entail)` | `float` | E03-H11 relevance-gated ungrounded mass `mean_i (1 − entail_i)·(1 − max_j R[i,j])` |
+| `grounding_blend` | `(d_sel, d_grd, *, alpha=0.75)` | `float` | E03-H14 two-axis blend `alpha·d_sel + (1 − alpha)·d_grd` |
 
 - **bound chain** - `WCD ≤ RWMD ≤ SMD`, the two cheap bounds bracket the exact distance below
 - **ground cost** - `√(2 − 2cos)` on L2-normalized embeddings, a metric, so SMD is a metric too
@@ -63,10 +68,12 @@ Both are dataclasses with a `to_dict()` method (the shape the CLI `--json` emits
 | Field | Type | Meaning |
 | --- | --- | --- |
 | `d_sel` | `float` | selection divergence: metric OT between the two coverage profiles over `S` |
-| `residual_a`, `residual_b` | `float` | each document's geometric distance to the source |
+| `residual_a`, `residual_b` | `float` | each document's geometric distance to the source (the metric stand-in) |
 | `closeness_a`, `closeness_b` | `float` | the residuals mapped to 0..1 |
 | `n_statements_a`, `n_statements_b`, `n_statements_source` | `int` | statement counts |
 | `coverage_a`, `coverage_b` | `list[float]` | each document's coverage distribution over the source statements |
+| `grd_a`, `grd_b` | `float \| None` | each document's reranker x NLI grounding residual (E03-H11); `None` on the metric-only path |
+| `d_grd` | `float \| None` | grounding-axis separation `|grd_a − grd_b|`; `None` without grounding |
 
 ## CLI
 
@@ -75,17 +82,19 @@ the bare scalar. Logs go to stderr, so stdout carries only the result.
 
 | Command | Purpose | Key options |
 | --- | --- | --- |
-| `install` | download + cache the models (the only command that fetches) | `--backend openvino\|torch\|both` |
+| `init [MODE]` | provision a mode's models from local / S3 / HuggingFace (the only command that fetches); writes `docdistance.json` | `--source`, `--backend`, `--aws-profile`, `--aws-endpoint-url`, `--region`, `--home` |
 | `distance A B` | symmetric SMD between two documents | `--backend`, `--gpu`, `--anisotropy`, `--threshold`, `--transport-map-json`, `--json`, `--result-only` |
-| `distance-wrt-source A B --source S` | source-conditioned `d(A, B | S)` | `--source/-s` (required), `--backend`, `--gpu`, `--json`, `--result-only` |
+| `distance-wrt-source A B --source S` | source-conditioned `d(A, B | S)` | `--source/-s` (required), `--backend`, `--gpu`, `--source-map-json`, `--json`, `--result-only` |
 
 ## Examples
 
 One-shot symmetric distance:
 
 ```python
+import docdistance
 from docdistance import document_distance
 
+docdistance.init("wmd")                     # provision once (writes docdistance.json)
 r = document_distance("report_v1.md", "report_v2.md")
 print(r.closeness)   # 0..1 similarity, 1 - smd/sqrt(2)
 print(r.verdict)     # "similar" | "not similar"
@@ -97,7 +106,7 @@ Reusable pipeline - load once, score many pairs:
 ```python
 from docdistance import DocDistance
 
-dd = DocDistance(backend="openvino")        # models load here
+dd = DocDistance(backend="openvino")        # construct once; models load lazily on first call
 for a, b in pairs:
     print(dd.distance(a, b).closeness)      # no reload per call
 ```
@@ -105,11 +114,13 @@ for a, b in pairs:
 Source-conditioned distance `d(A, B | S)`:
 
 ```python
+import docdistance
 from docdistance import source_conditioned_distance
 
+docdistance.init("wmd-wrt-source")   # provision mmBERT + SaT + reranker + NLI once
 r = source_conditioned_distance("summary_a.md", "summary_b.md", source="article.md")
 print(r.d_sel)                       # how differently A and B select from the source
-print(r.residual_a, r.residual_b)    # each summary's distance to the source
+print(r.grd_a, r.grd_b)              # each summary's reranker x NLI grounding residual
 ```
 
 Transport map - the interpretable statement-to-statement alignment behind the distance:
@@ -142,7 +153,8 @@ print(d, closeness(d))
 CLI:
 
 ```bash
-docdistance install                                              # cache the models once
+docdistance init wmd                                             # provision the symmetric models once
+docdistance init wmd-wrt-source                                  # + reranker + NLI grounding models
 docdistance distance a.md b.md                                   # rich, coloured verdict
 docdistance distance a.md b.md --json                            # machine-readable
 docdistance distance a.md b.md --result-only                     # bare SMD scalar

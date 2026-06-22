@@ -8,6 +8,7 @@ lightweight uv ``.venv``.
 import numpy as np
 import pytest
 
+from docdistance import pipeline, settings
 from docdistance.pipeline import _build_source_map, _build_transport_map
 
 
@@ -82,3 +83,57 @@ def test_transport_map_identical_maps_each_to_itself():
         assert best["target_index"] == flow["index"]  # statement -> itself
         assert best["weight"] == pytest.approx(1.0, abs=1e-3)
         assert best["cost"] == pytest.approx(0.0, abs=1e-4)
+
+
+def test_distance_requires_init(monkeypatch, tmp_path):
+    """The readiness gate raises before any model load when the mode was never init'd."""
+    settings.reset()
+    monkeypatch.setenv("DOCDISTANCE_HOME", str(tmp_path))  # empty home, no docdistance.json
+    dd = pipeline.DocDistance()  # lazy: constructs without loading models
+    with pytest.raises(settings.NotInitializedError):
+        dd.distance("hello world", "goodbye world")
+    settings.reset()
+
+
+class _FakeReranker:
+    """score_grid: statement 0 prefers source 0, the grid is constant per doc for a stable premise."""
+
+    def score_grid(self, docs, sources):
+        return np.array([[0.9, 0.1, 0.2] for _ in docs], dtype=np.float32)
+
+
+class _FakeNLI:
+    def __init__(self):
+        self.premises = None
+
+    def entail(self, premises, hypotheses):
+        self.premises = list(premises)
+        return np.full(len(premises), 0.5, dtype=np.float32)
+
+
+def test_grounding_fuses_topk_source_into_the_premise():
+    dd = pipeline.DocDistance()
+    dd._reranker, dd._nli = _FakeReranker(), _FakeNLI()
+    R, ent = dd._grounding(["a statement"], ["s0", "s1", "s2"])
+    assert R.shape == (1, 3) and ent.shape == (1,)
+    # argsort-desc of [0.9, 0.1, 0.2] is [0, 2, 1] -> top-3 premise "s0 s2 s1"
+    assert dd._nli.premises == ["s0 s2 s1"]
+
+
+def test_distance_wrt_source_wires_grounding_into_the_result(monkeypatch, tmp_path):
+    settings.reset()
+    settings.mark_ready("wmd-wrt-source")
+    docs = {
+        "A": (["a0", "a1"], _emb(2, seed=1)),
+        "B": (["b0"], _emb(1, seed=2)),
+        "S": (["s0", "s1", "s2"], _emb(3, seed=3)),
+    }
+    dd = pipeline.DocDistance()
+    monkeypatch.setattr(dd, "_ensure_grounding", lambda: None)
+    monkeypatch.setattr(dd, "embed_statements", lambda doc: docs[doc])
+    dd._reranker, dd._nli = _FakeReranker(), _FakeNLI()
+
+    r = dd.distance_wrt_source("A", "B", "S")
+    assert r.grd_a is not None and r.grd_b is not None and r.d_grd is not None
+    assert r.d_grd == pytest.approx(abs(r.grd_a - r.grd_b))
+    settings.reset()

@@ -205,6 +205,33 @@ data: requirements
 	$(PYTHON_INTERPRETER) src/docdistance/dataset.py
 
 #################################################################################
+# S3 MODEL MIRROR                                                               #
+#################################################################################
+# The published OpenVINO INT8 IRs that `docdistance init --source s3://...` pulls. Layout under the
+# bucket matches the model registry subdirs, so init resolves each model by name.
+S3_PROFILE ?= stellars-tech
+S3_MODELS_URI ?= s3://general-purpose/docdistance
+S3_MODEL_DIRS = mmbert-openvino-int8 reranker-openvino-int8 nli-openvino-int8 sat-3l-sm
+
+## Upload the model IRs in models/<registry-subdir> to the S3 mirror (stellars-tech profile)
+sync_models_up:
+	@for d in $(S3_MODEL_DIRS); do \
+		if [ -d "$(PROJECT_DIR)/models/$$d" ]; then \
+			echo "$(MSG_PREFIX) syncing models/$$d -> $(S3_MODELS_URI)/$$d"; \
+			aws s3 sync "$(PROJECT_DIR)/models/$$d" "$(S3_MODELS_URI)/$$d" --profile $(S3_PROFILE); \
+		else \
+			echo "$(WARN_PREFIX) $(WARN_STYLE)skip models/$$d (not present)$(NO_STYLE)"; \
+		fi; \
+	done
+
+## Download the model IRs from the S3 mirror into models/<registry-subdir>
+sync_models_down:
+	@for d in $(S3_MODEL_DIRS); do \
+		echo "$(MSG_PREFIX) syncing $(S3_MODELS_URI)/$$d -> models/$$d"; \
+		aws s3 sync "$(S3_MODELS_URI)/$$d" "$(PROJECT_DIR)/models/$$d" --profile $(S3_PROFILE); \
+	done
+
+#################################################################################
 # Self Documenting Commands                                                     #
 #################################################################################
 

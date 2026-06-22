@@ -16,13 +16,14 @@ from pathlib import Path
 
 import numpy as np
 
+from docdistance import config, settings
 from docdistance import distance as _core
 from docdistance.distance import (
     DEFAULT_THRESHOLD,
     DistanceResult,
     SourceConditionedResult,
 )
-from docdistance.encoders import Segmenter, load_encoder
+from docdistance.encoders import Segmenter, load_encoder, load_nli, load_reranker
 
 
 def _load_body(path: Path) -> str:
@@ -146,15 +147,38 @@ def _build_transport_map(
 
 
 class DocDistance:
-    """Reusable pipeline - construct once (models load here), then call :meth:`distance` per pair."""
+    """Reusable pipeline - construct once, then call :meth:`distance` per pair.
+
+    Models load lazily on first use: the encoder + segmenter for ``wmd``, plus the reranker + NLI for
+    ``wmd-wrt-source``. Each scoring method first checks the readiness gate, so an un-init'd mode
+    raises :class:`~docdistance.settings.NotInitializedError` before any model load.
+    """
 
     def __init__(self, backend: str = "openvino", offline: bool = True, device: str | None = None):
         self.backend = backend
-        self.segmenter = Segmenter(offline=offline)
-        self.encoder = load_encoder(backend, offline=offline, device=device)
+        self._offline = offline
+        self._device = device
+        self.segmenter = None
+        self.encoder = None
+        self._reranker = None
+        self._nli = None
+
+    def _ensure_base(self) -> None:
+        if self.encoder is None:
+            self.segmenter = Segmenter(offline=self._offline)
+            self.encoder = load_encoder(self.backend, offline=self._offline, device=self._device)
+
+    def _ensure_grounding(self) -> None:
+        self._ensure_base()
+        if self._reranker is None:
+            self._reranker = load_reranker(
+                self.backend, offline=self._offline, device=self._device
+            )
+            self._nli = load_nli(self.backend, offline=self._offline, device=self._device)
 
     def embed_statements(self, doc: str | Path) -> tuple[list[str], np.ndarray]:
         """Segment a document and embed it, returning both the statement texts and their vectors."""
+        self._ensure_base()
         statements = self.segmenter.split(_read(doc))
         if not statements:
             raise ValueError("document produced no statements")
@@ -164,6 +188,18 @@ class DocDistance:
         """Segment then embed a document into L2-normalized statement vectors ``[n, dim]``."""
         return self.embed_statements(doc)[1]
 
+    def _grounding(
+        self, doc_sents: list[str], src_sents: list[str]
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Reranker relevance grid + per-statement entailment of the top-k fused source premise."""
+        R = self._reranker.score_grid(doc_sents, src_sents)
+        k = min(config.RERANK_TOP_K, len(src_sents))
+        premises = [
+            " ".join(src_sents[j] for j in np.argsort(R[i])[::-1][:k])
+            for i in range(len(doc_sents))
+        ]
+        return R, self._nli.entail(premises, doc_sents)
+
     def distance(
         self,
         a: str | Path,
@@ -172,6 +208,7 @@ class DocDistance:
         anisotropy: bool = False,
         threshold: float = DEFAULT_THRESHOLD,
     ) -> DistanceResult:
+        settings.require_ready("wmd")
         return _core.compute_distance(
             self.embed(a), self.embed(b), anisotropy=anisotropy, threshold=threshold
         )
@@ -185,6 +222,7 @@ class DocDistance:
         threshold: float = DEFAULT_THRESHOLD,
     ) -> tuple[DistanceResult, dict]:
         """The symmetric distance result and the optimal-transport statement map, sharing one encode pass."""
+        settings.require_ready("wmd")
         sa, ea = self.embed_statements(a)
         sb, eb = self.embed_statements(b)
         result = _core.compute_distance(ea, eb, anisotropy=anisotropy, threshold=threshold)
@@ -199,8 +237,22 @@ class DocDistance:
         *,
         anisotropy: bool = True,
     ) -> SourceConditionedResult:
+        settings.require_ready("wmd-wrt-source")
+        self._ensure_grounding()
+        sa, ea = self.embed_statements(a)
+        sb, eb = self.embed_statements(b)
+        ss, es = self.embed_statements(source)
+        ra, enta = self._grounding(sa, ss)
+        rb, entb = self._grounding(sb, ss)
         return _core.compute_source_conditioned(
-            self.embed(a), self.embed(b), self.embed(source), anisotropy=anisotropy
+            ea,
+            eb,
+            es,
+            anisotropy=anisotropy,
+            reranker_a=ra,
+            reranker_b=rb,
+            entail_a=enta,
+            entail_b=entb,
         )
 
     def distance_wrt_source_with_map(
@@ -213,10 +265,23 @@ class DocDistance:
         top_k: int = 3,
     ) -> tuple[SourceConditionedResult, dict]:
         """The source-conditioned result and the statement-to-source alignment map, sharing one encode pass."""
+        settings.require_ready("wmd-wrt-source")
+        self._ensure_grounding()
         sa, ea = self.embed_statements(a)
         sb, eb = self.embed_statements(b)
         ss, es = self.embed_statements(source)
-        result = _core.compute_source_conditioned(ea, eb, es, anisotropy=anisotropy)
+        ra, enta = self._grounding(sa, ss)
+        rb, entb = self._grounding(sb, ss)
+        result = _core.compute_source_conditioned(
+            ea,
+            eb,
+            es,
+            anisotropy=anisotropy,
+            reranker_a=ra,
+            reranker_b=rb,
+            entail_a=enta,
+            entail_b=entb,
+        )
         smap = _build_source_map(sa, ea, sb, eb, ss, es, anisotropy=anisotropy, top_k=top_k)
         return result, smap
 

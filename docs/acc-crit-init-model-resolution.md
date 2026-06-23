@@ -50,10 +50,12 @@ Mode-aware `init` (CLI command + `docdistance.init` API) provisions a distance m
   - log: 2026-06-22 implemented (v1.1.0)
 - [x] **Tests** - bootstrap (scheme/split, local, hf, mode coverage, missing-dir), settings (home precedence, save/load, require_ready, corrupt), distance (grounding math), pipeline (readiness gate, premise fusion, grounding wiring), cli (init help, failover); 44 pass, 1 opt-in skip
   - log: 2026-06-22 implemented (v1.1.0)
-- [x] **S3 upload run** - mmBERT IR (329 MB) uploaded to `s3://general-purpose/docdistance/mmbert-openvino-int8/` via `make sync_models_up` (stellars-tech profile)
-  - log: 2026-06-23 mmBERT uploaded + verified; reranker / NLI / SaT IRs pending an HF fetch into `models/` then a re-run of `sync_models_up`
+- [x] **S3 upload run** - all four IRs mirrored to `s3://general-purpose/docdistance/` via `make sync_models_up` (stellars-tech profile): mmBERT (329 MB), reranker (563 MB), NLI (321 MB), SaT (816 MB, pruned to config + safetensors)
+  - log: 2026-06-23 all four model dirs uploaded + verified on S3
 - [x] **Opt-in S3 round-trip** - `DOCDISTANCE_S3_TEST=1 AWS_PROFILE=stellars-tech` runs `test_init_s3_source_downloads_the_mmbert_ir`; passes - `init` pulls the mmBERT IR from the real bucket and records `source: s3`
   - log: 2026-06-23 passed live (26.8s, real 329 MB download); skipped by default in CI
+- [x] **Full wmd-wrt-source from S3 (live)** - `init wmd-wrt-source --source s3://general-purpose/docdistance --aws-profile stellars-tech` resolves all four models `s3`; each loads + runs from the mirror (segmenter 3 segments, reranker `R=[[1.0,0.0]]`, NLI entail `0.955`, encoder `(1,768)`)
+  - log: 2026-06-23 verified end-to-end; needs `docdistance[s3]` (botocore) installed
 - [x] **Edge: unknown mode** - `init("bogus")` raises `ValueError`
   - log: 2026-06-22 tested `test_init_unknown_mode_raises` (v1.1.0)
 - [x] **Edge: local source missing dir** - `--source` pointing at a nonexistent dir raises `FileNotFoundError`

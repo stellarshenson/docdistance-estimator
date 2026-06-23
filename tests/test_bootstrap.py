@@ -86,6 +86,18 @@ def test_init_local_source_missing_dir_raises(tmp_path):
         bootstrap.init("wmd", source=str(tmp_path / "does-not-exist"))
 
 
+def test_s3_client_without_botocore_raises_clear_error(monkeypatch):
+    """A missing botocore on an s3:// source gives a 'pip install docdistance[s3]' message, not a bare ImportError."""
+    import sys
+
+    from docdistance.encoders import ModelsNotInstalled
+
+    for mod in ("botocore", "botocore.session", "botocore.config"):
+        monkeypatch.setitem(sys.modules, mod, None)  # force ImportError even if installed
+    with pytest.raises(ModelsNotInstalled, match=r"docdistance\[s3\]"):
+        bootstrap._s3_client("some-profile", None, None)
+
+
 def test_init_is_additive_across_modes(monkeypatch, tmp_path):
     """init wmd then (a fresh process) init wmd-wrt-source leaves BOTH modes ready, no clobber."""
     monkeypatch.setattr(bootstrap, "_warm_hf", lambda key, backend: f"/cache/{key}")

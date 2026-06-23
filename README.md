@@ -89,7 +89,7 @@ print(s.d_sel, s.grd_a, s.grd_b)            # selection divergence + each doc's 
 - **Source map** - add `--source-map-json map.json` to `distance-wrt-source` to also write, for every statement of A and B, the top-3 source statements it covers with their weights - a per-statement alignment showing *which part of the source* each statement draws on
 - **Offline after init** - distance calls run fully offline once `docdistance init <mode>` has provisioned the mode (from HuggingFace, S3, or a local mirror) and written `docdistance.json`
 - **Backend** - `--backend openvino|torch`, default `openvino` (CPU INT8)
-- **Full reference** - the [CLI reference](docs/cli-reference.md) and the [API reference](docs/api-reference.md)
+- **Full reference** - the [CLI reference](docs/cli-reference.md), the [API reference](docs/api-reference.md) and the [AWS deployment reference](docs/aws-deployment-reference.md)
 
 ### Transport map output
 

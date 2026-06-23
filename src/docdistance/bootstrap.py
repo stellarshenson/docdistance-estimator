@@ -40,8 +40,15 @@ def _split_s3(uri: str) -> tuple[str, str]:
 
 def _s3_client(profile: str | None, endpoint_url: str | None, region: str | None):
     """A low-level botocore S3 client (path-style, for S3-compatible endpoints / custom regions)."""
-    from botocore.config import Config
-    import botocore.session
+    try:
+        from botocore.config import Config
+        import botocore.session
+    except ImportError as exc:
+        from docdistance.encoders import ModelsNotInstalled
+
+        raise ModelsNotInstalled(
+            "an s3:// source needs botocore - install the extra:  pip install 'docdistance[s3]'"
+        ) from exc
 
     sess = botocore.session.Session(profile=profile) if profile else botocore.session.Session()
     return sess.create_client(

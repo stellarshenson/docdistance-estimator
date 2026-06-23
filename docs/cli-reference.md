@@ -78,7 +78,7 @@ Source-conditioned distance `d(A, B | S)` - selection divergence plus each docum
 pip install docdistance                        # from PyPI ('docdistance[s3]' for S3 sources)
 docdistance init wmd                           # provision the symmetric-distance models
 docdistance init wmd-wrt-source                # + the reranker + NLI grounding models
-docdistance init wmd-wrt-source --source s3://general-purpose/docdistance --aws-profile stellars-tech
+docdistance init wmd-wrt-source --source s3://your-bucket --aws-profile NAME
 docdistance init wmd --source /path/to/models  # from a local mirror
 
 # method 1 - symmetric distance

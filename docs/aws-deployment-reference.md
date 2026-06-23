@@ -4,9 +4,10 @@ docdistance runs CPU-only and pulls its INT8 models from S3 at `init` time, so a
 
 ## Models and footprint
 
-The OpenVINO INT8 IRs live under one S3 prefix; `init --source` mirrors the dirs a mode needs.
+The OpenVINO INT8 IRs sit at the bucket root (or under a prefix); `init --source` points at whichever holds them and mirrors the dirs a mode needs.
 
-- **S3 layout** - `s3://general-purpose/docdistance/<model>/`, one dir per model (`openvino_model.xml` + `.bin` + tokenizer; NLI also `config.json` for the entailment index)
+- **S3 layout** - one dir per model (`openvino_model.xml` + `.bin` + tokenizer; NLI also `config.json` for the entailment index); the dirs sit at the bucket root by default - `s3://your-bucket/<model>/`
+- **Recommended grouping** - on a shared bucket, group the IRs under a `models/` prefix (`s3://your-bucket/models/<model>/`) and keep deployment config under a sibling `settings/`; point `--source` at the `models/` prefix
 - **mmbert-openvino-int8** - 329 MB, the mmBERT statement encoder (both modes)
 - **sat-3l-sm** - 816 MB, the SaT segmenter (both modes; `config.json` + `model.safetensors`)
 - **reranker-openvino-int8** - 563 MB, bge-reranker-v2-m3 cross-encoder (wmd-wrt-source only)
@@ -15,10 +16,10 @@ The OpenVINO INT8 IRs live under one S3 prefix; `init --source` mirrors the dirs
 
 ## Provisioning from S3
 
-- **CLI** - `docdistance init <mode> --source s3://general-purpose/docdistance`; add `--aws-profile NAME` locally, omit it in Lambda to use the execution-role credential chain; `--aws-endpoint-url URL` targets an S3-compatible store
-- **Python** - `docdistance.init(mode, source="s3://general-purpose/docdistance", home="/tmp/docdistance")`
+- **CLI** - `docdistance init <mode> --source s3://your-bucket` (or `.../models` if grouped); add `--aws-profile NAME` locally, omit it in Lambda to use the execution-role credential chain; `--aws-endpoint-url URL` targets an S3-compatible store
+- **Python** - `docdistance.init(mode, source="s3://your-bucket", home="/tmp/docdistance")`
 - **Resolution order** - per model: the S3 prefix, then a local dir, then HuggingFace; the source served is recorded per model in `docdistance.json`
-- **Any prefix** - `--source` accepts any `s3://bucket/prefix`; mirror the dirs to your own bucket with `make sync_models_up` (or `aws s3 sync`)
+- **Any prefix** - `--source` accepts the bucket root or any `s3://bucket/prefix`; mirror the dirs to your own bucket with `make sync_models_up` (or `aws s3 sync`)
 - **Extra** - the S3 path needs botocore: `pip install 'docdistance[s3]'` (or bake it into the image)
 - **Readiness** - `init` writes `docdistance.json` to `$DOCDISTANCE_HOME` (else the current folder); a mode never init'd exits 1 with `run: docdistance init <mode>`
 
@@ -28,7 +29,7 @@ The OpenVINO INT8 IRs live under one S3 prefix; `init --source` mirrors the dirs
 - **Ephemeral storage** - size `/tmp` above the mode total: ≥ ~1.5 GB for `wmd`, ≥ ~2.5 GB for `wmd-wrt-source`; Lambda `/tmp` defaults to 512 MB, configurable to 10 GB
 - **Memory and vCPU** - Lambda allocates ~1 vCPU per 1769 MB, up to 6 vCPU at 10240 MB; the OpenVINO INT8 path is CPU-bound, so more memory buys more cores and a faster reranker grid
 - **Offline** - the loaders set `HF_HUB_OFFLINE=1` after init, so inference makes no Hub calls
-- **IAM** - the execution role needs `s3:GetObject` + `s3:ListBucket` on `arn:aws:s3:::general-purpose` and `arn:aws:s3:::general-purpose/docdistance/*`
+- **IAM** - the execution role needs `s3:GetObject` + `s3:ListBucket` on `arn:aws:s3:::your-bucket` and `arn:aws:s3:::your-bucket/*`
 
 ## Deployment shapes
 

@@ -63,7 +63,7 @@ docdistance distance-wrt-source a.md b.md --source s.md                       # 
 docdistance distance-wrt-source a.md b.md -s s.md --source-map-json map.json   # + statement → source map
 ```
 
-`init` provisions a mode's models from HuggingFace by default, or from S3 (`--source s3://general-purpose/docdistance --aws-profile stellars-tech`) or a local mirror (`--source /path/to/models`), and records readiness in a `docdistance.json` written to `$DOCDISTANCE_HOME` or the current folder. A distance run whose mode was never init'd exits with a clear "run `docdistance init <mode>`" error.
+`init` provisions a mode's models from HuggingFace by default, or from S3 (`--source s3://your-bucket --aws-profile NAME`) or a local mirror (`--source /path/to/models`), and records readiness in a `docdistance.json` written to `$DOCDISTANCE_HOME` or the current folder. A distance run whose mode was never init'd exits with a clear "run `docdistance init <mode>`" error.
 
 Or from Python:
 

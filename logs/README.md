@@ -18,3 +18,5 @@ Background-job and notebook-execution logs for this project.
 - `E06-scorer-env-setup.log` - isolated venv install for the E06 trained scorers (`pylate` + `FlagEmbedding`, CPU torch, transformers 5.3)
 - `E06-scorer-probe.log` - API + cache probe of the trained scorers (`jina-colbert-v2` MaxSim, `bge-m3` sparse) in the isolated venv
 - `E06-execution.log` - nbconvert execution of the E06 batch (trained multilingual ColBERT/sparse scorers and the reserved length-bucketing CPU-speed win)
+- `11-structure-fixture.log` - nbconvert execution log for `notebooks/11-kj-structure-fixture.ipynb` (builds the reusable structure-distance fixture: segmented statements with block labels, byte-identical reorder pool, cross-summary pairs, section-swap perturbations)
+- `E07-structure-distance.log` - nbconvert execution of the E07 batch (structure axis on the SMD transport plan `T`: tau-induced distance, bounded [0,1] normalizers, naive baseline, GW reorder-invariance control, section axis)

@@ -1,0 +1,186 @@
+{
+  "results": {
+    "E09-H49": {
+      "g_struct_entropy": -0.049330482135010706,
+      "g_struct_dr": 2.270416326593315,
+      "g_margin": -0.010753452896310038,
+      "smd_fidelity": 0.7405483405483408,
+      "l_sem": 0.25945165945165916,
+      "cmrr": -0.19013361579289464,
+      "entropy_raw": 0.12878289326884168,
+      "entropy_cmr": 0.13513581548453527,
+      "struct_dr_raw": 0.03175508878258478,
+      "struct_dr_cmr": 0.10385236080698551,
+      "naive_margin_raw": 0.004617604617604614,
+      "naive_margin_cmr": -0.006135848278705424,
+      "tier_viol": 1,
+      "tier_pairs": 24
+    },
+    "E09-H50": {
+      "raw": {
+        "entropy_med": 0.12878289326884168,
+        "smd_fidelity": 1.0,
+        "g_struct_entropy": 0.0,
+        "cmrr": 0.0,
+        "tier_viol": 0
+      },
+      "per-pair (k=1)": {
+        "entropy_med": 0.13513581548453527,
+        "smd_fidelity": 0.7405483405483408,
+        "g_struct_entropy": -0.049330482135010706,
+        "cmrr": -0.19013361579289464,
+        "tier_viol": 1
+      },
+      "offline-frozen (k=1)": {
+        "entropy_med": 0.12989669405182738,
+        "smd_fidelity": 0.9207792207792209,
+        "g_struct_entropy": -0.008648670290863704,
+        "cmrr": -0.10917173973713219,
+        "tier_viol": 0
+      },
+      "winner": "offline-frozen (k=1)"
+    },
+    "E09-H51": {
+      "depths": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "cmrr_by_d": [
+        0.0,
+        -0.19013361579289464,
+        -0.27033615376788606,
+        -0.16378375244221424
+      ],
+      "fidelity_by_d": [
+        1.0,
+        0.7405483405483408,
+        0.7812409812409814,
+        0.6046176046176048
+      ],
+      "entropy_by_d": [
+        0.12878289326884168,
+        0.13513581548453527,
+        0.1363989167621601,
+        0.13712251443727239
+      ],
+      "stability_by_d": {
+        "1": 0.7707458200490681,
+        "2": 0.8586374293096808,
+        "3": 0.8291307651533152
+      },
+      "best_d": 0,
+      "stability_bar": 0.9,
+      "unstable_depths": [
+        1,
+        2,
+        3
+      ]
+    },
+    "E09-H52": {
+      "levels": [
+        "coarse",
+        "default",
+        "fine"
+      ],
+      "mean_n": {
+        "coarse": 6.7272727272727275,
+        "default": 13.090909090909092,
+        "fine": 32.63636363636363
+      },
+      "cmrr": {
+        "coarse": 0.0,
+        "default": -0.19013361579289464,
+        "fine": 0.12490759423598033
+      },
+      "smd_fidelity": {
+        "coarse": 0.6528860028860031,
+        "default": 0.7405483405483408,
+        "fine": 0.7883838383838385
+      },
+      "g_struct_entropy": {
+        "coarse": 0.0,
+        "default": -0.049330482135010706,
+        "fine": 0.026432465648927133
+      },
+      "stability": {
+        "coarse": 0.7362742497450568,
+        "default": 0.7707458200490681,
+        "fine": 0.8616402015947914
+      },
+      "tier_viol": {
+        "coarse": 0,
+        "default": 1,
+        "fine": 2
+      },
+      "best_level": "fine"
+    },
+    "E09-H53": {
+      "dr_raw": 0.036017913372840146,
+      "dr_cmr": 0.11694487459620363,
+      "dr_ratio": 3.2468531251559867,
+      "tier_dprime_raw": 2.806335973435489,
+      "tier_dprime_cmr": 2.281287868643411,
+      "tier_viol_raw": 0,
+      "tier_viol_cmr": 1,
+      "tier_same_mean_raw": 0.3369335711657346,
+      "tier_diff_mean_raw": 0.42211493843841164,
+      "tier_same_mean_cmr": 1.0464941112140378,
+      "tier_diff_mean_cmr": 1.2753228879873715
+    }
+  },
+  "verdicts": {
+    "E09-H49": {
+      "verdict": "Refuted",
+      "applicability": "none",
+      "cmrr": -0.19013361579289464,
+      "detail": "entropy 0.129->0.135 (g_struct -0.049); SMD-fidelity 0.741 (l_sem 0.259); tier viol 1/24; naive margin +0.005->-0.006; CMRR -0.19"
+    },
+    "E09-H50": {
+      "verdict": "Inconclusive",
+      "applicability": "none",
+      "cmrr": -0.10917173973713219,
+      "detail": "winner=offline-frozen (k=1) (CMRR -0.11); per-pair CMRR -0.19 fidelity 0.741; offline CMRR -0.11 fidelity 0.921"
+    },
+    "E09-H51": {
+      "verdict": "Inconclusive",
+      "applicability": "none",
+      "cmrr": 0.0,
+      "detail": "best D=0 (CMRR 0.00); CMRR by D [0.0, -0.19, -0.27, -0.16]; stability {D1:0.77, D2:0.86, D3:0.83}; unstable (<0.9) at D=[1, 2, 3]"
+    },
+    "E09-H52": {
+      "verdict": "Refuted",
+      "applicability": "none",
+      "cmrr": 0.12490759423598033,
+      "detail": "best=fine CMRR 0.12 (n~33); CMRR coarse 0.00 / default -0.19 / fine 0.12; stability {coarse:0.74, default:0.77, fine:0.86}; fallback=clause-split (no SAT threshold knob)"
+    },
+    "E09-H53": {
+      "verdict": "Refuted",
+      "applicability": "none",
+      "cmrr": 3.2468531251559867,
+      "detail": "SMD DR 0.0360->0.1169 (x3.25); tier d' 2.81->2.28 (d-prime down (topic-removal cost)); tier viol 0->1/24"
+    }
+  },
+  "config": {
+    "diffuse_pairs": 55,
+    "tier_pairs": 10,
+    "lam_head": 0.25,
+    "depths": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "eps_cmrr": 0.02,
+    "boot_reps": 60,
+    "granularity_levels": [
+      "coarse",
+      "default",
+      "fine"
+    ],
+    "device": "NVIDIA RTX 5000 Ada Generation",
+    "cmrr_def": "structural differential gain (relative T-entropy reduction) / semantic common-content loss (1 - SMD-fidelity Spearman); floored at EPS_CMRR",
+    "regime": "diffuse cross-summary pairs (independent summaries of one article); tier-contrast gold/adversarial guard"
+  }
+}

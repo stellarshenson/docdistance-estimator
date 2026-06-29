@@ -19,6 +19,8 @@ The structure axis exists to fill a gap the content distance cannot, but it is i
 
 ## Executive summary
 
+**Result first** - one mechanism survives execution: the **index-infused SMD**, the structure distance read off the SMD transport plan `T` (Phase 6, E07-H11-H16). It rises monotonically with reorder (Spearman 1.00, footrule → 0.94 at full scramble) while SMD stays blind (max `|ΔSMD|` 0.0004), the `T`-sparsity gate passes on the realistic diffuse regime (cross-summary median row-entropy 0.13), and it ships as a bounded `[0,1]` second axis beside semantic closeness (a reordered-but-faithful pair reads semantic 1.00 / structure 0.41). **Gromov-Wasserstein is confirmed a relational, not order, instrument** (GW ≈ 0 on a pure reorder against 0.0134 cross-summary), so it is reserved for relational rewrite and is not the order/section deliverable. The caveats are load-bearing - every number is the **byte-identical upper bound**, τ barely beats a naive greedy-1-NN baseline on the easy regime (both ~0.94), and the real-conversion-pair gate (E07-H1), the LLM paraphrase / content-edit cells, and second-article replication remain deferred.
+
 A structure axis is **additive** to SMD, not a replacement: the content distance answers *how far apart in meaning*, the structure distance answers *how far apart in arrangement*. The order and section signal is carried by the **transport-induced** instruments - the positional penalty (Phase 2) and the structure distance read off the SMD plan `T` (Phase 6), both of which use statement position explicitly. **Gromov-Wasserstein is not that instrument**: a pure reorder of identical statements is an isometry of the statement cloud, so `GW(C_A, C_B) = 0` exactly - GW is blind to reorder and section-swap, and only moves when the inter-statement relations themselves change (statements rewritten, merged, split). GW/FGW are therefore the tool for a different, harder notion - *relational* structure - and need their own perturbation (Phase 4); they do not serve the order/section deliverable. The whole programme is gated on **E07-H1**: if conversion pipelines do not restructure-while-preserving-content, the axis is killed before any build.
 
 **The deliverable** - a *secondary* distance that is bounded `[0,1]` like the semantic closeness, explainable to a human, and computed from the semantic transport plan `T` the SMD pass already produces - not a second model and not a second alignment. Phase 1-Phase 5 generate and validate the structural signal; **Phase 6** turns the chosen signal into that shippable secondary metric: it rides on `T`, normalizes to `[0,1]`, gates on semantic match quality so content changes stay on the content axis, and emits the statements that moved. The `[0,1]` bound is proven only on **equal-length** pairs so far; on unequal-length pairs (real conversions) no normalizer yet has a shown fixed `1` endpoint - the rank statistics are data-dependent and the off-diagonal-mass form has no canonical diagonal on a rectangular plan, so the endpoint is verified per-normalizer on the second-article fixture before shipping (E07-H12). The output reports two interpretable 0..1 numbers side by side - semantic closeness (how far in meaning) and structure closeness (how far in arrangement).
@@ -42,14 +44,14 @@ Five strategies, ranked from cheap-additive to principled-fused. Each adds one s
 | hypothesis | strategy | mechanism | predicted | bar | verdict |
 |---|---|---|---|---|---|
 | E07-H1 | precondition | structure-signal probe on real + synthetic pairs | real pairs restructure while preserving content | order displacement ≥ aligner-noise floor + 0.10 (independent alignment) | Deferred |
-| E07-H2 | precondition (sanity) | confirm SMD order-invariance (exact by construction) | shuffle-delta = 0 exactly | `|ΔSMD|` ≤ 0.01 - a sanity check, not a finding | Kept |
+| E07-H2 | precondition (sanity) | confirm SMD order-invariance (exact by construction) | shuffle-delta = 0 exactly | `\|ΔSMD\|` ≤ 0.01 - a sanity check, not a finding | Kept |
 | E07-H3 | order | positional penalty, reported **beside** SMD | reorder rises above paraphrase floor, monotone in displacement | separation > paraphrase-control floor, monotone, SMD uncorrupted | Kept |
 | E07-H4 | order | Order-Preserving OT (IDM + KL) | transport concentrates on the diagonal for aligned pairs | diagonal mass up on aligned, down on reordered | Kept |
 | E07-H5 | section | section-crossing penalty `×(1+β)` | catches content-in-wrong-section | **gated on a ≥2-block fixture** (summaries have 1 heading); rises on swap, paraphrase flat | Kept |
 | E07-H6 | section | hierarchical section→statement transport | block-proportion mismatch surfaces | gated on a ≥2-block fixture; composition drift separates, content held | Deferred |
 | E07-H7 | relational | Gromov-Wasserstein structure-only | **≈0 on reorder (isometry)**, rises only on relational rewrite | GW separates a rewrite/merge/split perturbation; reorder invariance confirmed | Confirmed |
 | E07-H8 | fused | Fused GW content + structure | **FGW = SMD on a pure reorder**; an `α` helps only with a relational perturbation | discrimination up on rewrite pairs, content-only unhurt | Confirmed |
-| E07-H9 | validation | decorrelation of the **`T`-induced** structure metric (Phase 6) vs SMD | the two axes are orthogonal | `|ρ|` ≤ 0.3 with bootstrap CI, also on off-grid real pairs | Exploratory |
+| E07-H9 | validation | decorrelation of the **`T`-induced** structure metric (Phase 6) vs SMD | the two axes are orthogonal | `\|ρ\|` ≤ 0.3 with bootstrap CI, also on off-grid real pairs | Exploratory |
 | E07-H10 | validation | metric property + cheap lower bound | triangle inequality holds, bound prunes | metric verified, bound ≤ exact, latency down | Reported |
 | E07-H11 | secondary metric | structure distance induced by the SMD plan `T` | fires on reorder, ≈0 aligned, no extra model | raw > 0 reorder, ≈0 aligned, zero added model load | Kept |
 | E07-H12 | secondary metric | bound the induced disorder to [0,1] | 0 identical order, 1 full reversal, monotone | bounded [0,1], endpoints correct, monotone | Ship-gate |
@@ -68,6 +70,51 @@ The E07 batch ran in `notebooks/experiments/E07-kj-structure-distance.ipynb` on 
 - **GW reorder-invariance confirmed on data** - GW ≈ 0.0000 on a pure reorder against 0.0134 on cross-summary pairs, and FGW = SMD across `α` on a reorder; the design's central correction holds empirically (E07-H7/H8)
 - **Two-axis output and section axis** - a reordered-but-faithful pair sits at semantic closeness 1.00 / structure closeness 0.41, the structure-only failure a single blend hides (E07-H16); the section axis is bounded `[0,1]` and rises with relocated statements, 0 → 0.222 (E07-H5/H15)
 - **Honest limits** - every number is the byte-identical upper bound; decorrelation is underpowered (Pearson `ρ` = 0.54, CI [0.31, 0.71]); the `τ`-footrule is a derived disorder, not a metric (4% triangle violations); the real-conversion-pair gate (E07-H1), the LLM paraphrase / content-edit cells, and second-article replication remain deferred
+
+### Experiments execution
+
+How the batch ran - one notebook, one GPU embed pass, the rest CPU arithmetic on the plan `T`.
+
+- **Vehicle** - `notebooks/experiments/E07-kj-structure-distance.ipynb`, fixture from `notebooks/11-kj-structure-fixture.ipynb`, both in `datascience:notebook` house style (GPU cell, Rich config, per-section overviews)
+- **Embedding** - mmBERT (`jhu-clsp/mmBERT-base`) on the RTX 5000 Ada (32 GB, sm_89) selected by UUID; each document embedded once on **raw** single-pair embeddings, no `all_but_the_top` anisotropy step - the production regime a lone pair actually faces (the anisotropy fit is corpus-wide and unavailable for one pair)
+- **Fixture** - 7 summary bases (gold, gold-2, v1, v2, opus, sonnet, haiku), 12-14 statements / 4-6 paragraph blocks each; 6 displacement bins × 14 seeds for the reorder sweep; 11 natural cross-summary pairs as the realistic diffuse-`T` regime; section-swap relocating k ∈ {1,2,3} statements
+- **Two regimes** - the **byte-identical reorder** as the clean order-isolation upper bound (every statement has an exact twin, `T` trivially sharp) and the **cross-summary** pairs (independent summaries of one IBM article, no exact twins, `T` diffuse) as the realistic floor
+- **Artefacts** - 10 figures in `reports/figures/E07/`, metrics in `reports/E07-structure-distance-metrics.json`, run log `logs/E07-structure-distance.log`
+
+### Results at a glance
+
+One row per hypothesis - the measured number against the pre-registered bar, with the verdict. On the byte-identical upper bound unless the row names the cross-summary regime.
+
+| hypothesis | mechanism | measured | verdict |
+|---|---|---|---|
+| E07-H2 | SMD order-invariance | max `\|ΔSMD\|` 0.0004 (≤ 0.01) | Kept (sanity) |
+| E07-H11 gate | `T`-sparsity, raw single pair | row-entropy 0.00 sharp vs 0.13 cross-summary, gate passes | Pass |
+| E07-H3 | positional penalty | → 0.51 at full reorder, Spearman 1.00, SMD flat | Kept |
+| E07-H4 | OPW diagonal concentration | band mass 1.00 aligned vs 0.37 reorder | Kept (kill-gate noted) |
+| E07-H5 / H15 | section cross-block mass | 0 → 0.074 → 0.148 → 0.222 over k = 0..3 | Kept |
+| E07-H7 | Gromov-Wasserstein | 0.0000 reorder vs 0.0134 cross-summary | Confirmed (reorder-invariant) |
+| E07-H8 | Fused GW | 0.0000..0.0002 across α on reorder (= SMD) | Confirmed |
+| E07-H9 | decorrelation ρ | Pearson 0.54, CI [0.31, 0.71] | Exploratory (underpowered) |
+| E07-H10 | triangle / cost | 4% triangle violations; τ 0.37 ms, SMD 0.08 ms, GW 0.43 ms | Reported |
+| E07-H11 | τ-induced structure | footrule → 0.94 at full reorder vs naive 0.94 | Kept (upper bound) |
+| E07-H12 | bounded `[0,1]` | 3 normalizers monotone (Spearman 1.00), all in `[0,1]` | Ship-gate (upper bound) |
+| E07-H13 | semantic gating | diff-content 0.24 (SMD 0.42 carries it) vs reorder 0.38 | Kept (exploratory) |
+| E07-H14 | explainability | top mover displaced 13 positions, named | Kept |
+| E07-H16 | two-axis output | reorder reads semantic 1.00 / structure 0.41 | Kept |
+| E07-H1 | real-pair kill-gate | no real conversion pairs exist | Deferred |
+| E07-H6 | hierarchical HOTT | not implemented this batch | Deferred |
+
+The naive baseline is the model-free cousin of τ - greedy 1-NN alignment read into a normalized footrule. On the byte-identical upper bound τ (0.94) and the naive baseline (0.94) sit on top of each other, so τ's separation over a model-free baseline is **not yet shown**; the lift, if any, lives in the diffuse regime where soft transport should beat hard 1-NN, and that comparison is the natural next experiment.
+
+### Benchmark
+
+Per-pair solve cost measured in-notebook - the embed runs once on GPU, every distance is CPU arithmetic on the already-computed plan `T`.
+
+- **Hardware** - embed on RTX 5000 Ada (32 GB, sm_89); OT solves on the AMD Ryzen Threadripper PRO 7975WX (POT `ot.emd`, single pair, n = 12-14 statements)
+- **Per-pair latency** - SMD `ot.emd2` 0.08 ms, the `T`-induced τ 0.37 ms, exact Gromov-Wasserstein 0.43 ms; all sub-millisecond at this size
+- **Footprint** - the τ axis adds **no model** - `O(n)` arithmetic over the plan `T` the SMD pass already produces; GW/FGW are `O(n²m²)` and the only mechanisms with a real cost ceiling as `n` grows
+- **Wall-clock** - the mmBERT embed dominates end-to-end; the entire distance stack (SMD + τ + GW) is under 1 ms per pair at ~12-25 statements, so cost gates nothing at the executive-summary scale these fixtures represent
+- **Caveat** - the latencies are the OT solve only and scale with statement count; exact GW's `O(n²m²)` is the term to watch on long documents, where the entropic-Sinkhorn lower bound (E07-H10, deferred) becomes the always-on path
 
 ## Background - the structure thread after WMD
 
@@ -159,7 +206,7 @@ Grouped by the decision each drives, so the structure axis is never bought at th
 - **Structure tooling** - intra-document cost matrices `C_A[i,k] = √(2 − 2cos)` between statements of the same document; POT `ot.gromov_wasserstein2` (GW) and `ot.fused_gromov_wasserstein2` (FGW); the positional and section penalties are computed as a **separate quantity reported beside SMD**, never folded into the SMD ground cost (the two-axis principle)
 - **Dependencies** - POT (already used for `ot.emd2`), numpy; no new model, no new package planned (POT already provides the Gromov solvers)
 - **Reproducibility** - seeded permutations, but **≥ 10 seeds per displacement bin** (not one), so separation and monotonicity are read as mean ± CI across seeds, never off a single lucky shuffle (Statistical protocol)
-- **Execution vehicle** - `notebooks/experiments/E07-kj-structure-distance.ipynb` (to be created), one toggle per hypothesis over the SMD baseline
+- **Execution vehicle** - `notebooks/experiments/E07-kj-structure-distance.ipynb` (built and run), one toggle per hypothesis over the SMD baseline
 
 ## Dataset preparation
 
@@ -371,16 +418,16 @@ The productionization batch. Phase 1-Phase 5 generate and validate the structura
 - **Acceptance bar (operational)** - on the controlled cells, the two-axis output mis-ranks fewer structure-only-changed pairs than the best blended `w` (a defined count, not "more useful"); both axes `[0,1]`, independently thresholdable; blend documented but not the default. Note the source-conditioned E03-H14 found the *blend* won there - this is the inverse claim and must be earned on numbers, not assumed
 - **Verdict** - Kept - the reorder cell sits at high semantic (1.00) / low structure (0.41) closeness, a structure-only failure a single blended scalar hides
 
-## Readiness for execution
+## Conclusions
 
-The pre-registration is complete and ready to run. The conceptual core is corrected, the statistical protocol is fixed, and the design has survived four rounds of adversarial data-science review with every residual item either resolved or explicitly deferred to a fixture that does not yet exist. "Ready" here means ready to **build the fixture and run Phase 1** - not ready to ship a structure metric, which is contingent on the two gates below and cross-fixture replication.
+The synthetic batch executed cleanly and the design's central claims hold on data - SMD is blind to reorder, one transport-induced mechanism recovers the order signal, and Gromov-Wasserstein is the wrong tool for order. What *ships* is contingent on two gates that remain open and on cross-fixture replication; the batch proves the mechanism, not production readiness.
 
-- **Pre-registration complete** - all 16 hypotheses carry a prediction, a pre-registered acceptance bar, and a kill-gate where one is cheap; the Statistical protocol fixes α, Holm correction, ≥10 seeds, the data-grounded "≈0" tolerance, the monotonicity test, the leave-one-base-out vs seed CI split, and the cross-fixture gate
-- **Conceptual core sound** - GW/FGW reclassified as a relational instrument (invariant to reorder), the order/section signal carried by the position-aware Phase 2 + Phase 6; the anisotropy train→serve leak is gated on the raw single-pair regime
-- **Execution order** - (1) **build the fixture**: the paraphrased-then-reordered realistic cell, rewrite-only independently-validated content edits, the ≥2-block fixture for the section axis, and ≥10 independently-aligned real conversion pairs; (2) **run Phase 1** - the kill-gate, conditional on SMD≈0, floor-calibrated, per-axis; (3) **run the E07-H11 raw-`T` sparsity probe**; (4) if both gates pass, **Phase 6 + Phase 2** (order core), **Phase 3** (section, gated separately), **Phase 4** (relational, ran as a reorder-invariance control; a dedicated rewrite perturbation still pending)
-- **The single ship gate** - **E07-H12 (bounded `τ`-disorder)**; E07-H3, E07-H11, E07-H13 corroborate, everything else is exploratory
-- **Standing deferrals (not blockers to starting)** - cross-fixture replication on a second article before any result is "confirmed"; normalizer selection on the second-article fixture; E07-H9 decorrelation exploratory until powered
-- **Honest gate** - two independent gates can still end the programme cheaply before any build: Phase 1 (no structure variance on real pairs) and the raw-`T` sparsity probe (diffuse `T` washes out `τ`); the design is built to fail fast if the gap is not real
+- **One mechanism survives** - the **index-infused SMD** (the `T`-induced structure distance, Phase 6 / E07-H11-H16) is the only positive order/section instrument; E07-H3 (positional penalty), E07-H13 (gating), E07-H14 (explainability), E07-H16 (two-axis) are facets of it, and **E07-H12 (bounded τ-disorder) is the single ship gate** - the others corroborate, none is an independent confirmation
+- **The premise is validated** - SMD provably ignores reorder (max `|ΔSMD|` 0.0004) while the structure axis rises monotonically, so the gap the axis fills is real on this data
+- **GW/FGW reclassified by data** - GW ≈ 0 on a pure reorder against 0.0134 cross-summary, FGW = SMD across α on a reorder; the four-round review's central correction is confirmed empirically - GW is a relational, not order, instrument and is parked off the critical path
+- **The honest ceiling** - every number is the byte-identical upper bound where `T` is trivially sharp; on the realistic cross-summary regime `T` stays usably concentrated (entropy 0.13) but τ **barely beats the naive greedy-1-NN baseline** (both ~0.94), so the margin over a model-free baseline is unproven on hard pairs
+- **Two gates still open** - Phase 1 (structure variance on ≥10 real conversion pairs, none exist) and the raw-`T` sparsity probe on real paraphrased pairs; either can still end the programme cheaply before a build
+- **Standing deferrals** - cross-fixture replication on a second article before any result is "confirmed"; normalizer selection on that second fixture; E07-H9 decorrelation exploratory until powered (Pearson 0.54 is underpowered at this N, not evidence of a real correlation)
 
 ## Next steps
 
@@ -388,7 +435,8 @@ The pre-registration is complete and ready to run. The conceptual core is correc
 - **Then the raw-`T` sparsity probe (E07-H11) - a second gate** - both Phase 2 and Phase 6 read the plan `T`, and a production single pair uses raw (diffuse) embeddings; run the `T`-sparsity probe on raw single pairs *before* building E07-H12..H16 or trusting Phase 2 separation, mirroring "Run Phase 1 first". A diffuse `T` here drops the whole order/section core
 - **Then Phase 6 + Phase 2 - the order/section core** - if `T` is sharp enough, the `T`-induced structure distance (Phase 6) and the positional penalty (Phase 2) are the only mechanisms that see position; Phase 6 binds the signal to `T`, normalizes to `[0,1]`, gates on semantic match, and ships it as the explainable secondary closeness - the deliverable the project actually wants
 - **Phase 4 reorder-invariance confirmed; relational-difference still pending** - the E07 control showed GW ≈ 0 on a reorder and 0.0134 on cross-summary pairs, so GW is not the order instrument; a dedicated rewrite/merge/split fixture is still needed for the relational-difference direction, not on the critical path for the order/section deliverable
-- **Build the fixture honestly first** - per-base order-preserving content edits (not adv1/adv2 reuse), a ≥2-block fixture for the section axis, and the independently-aligned real pairs; record the real per-cell counts
-- **Vehicle** - create `notebooks/experiments/E07-kj-structure-distance.ipynb`, build the perturbation set, wire the `T`-induced metric (Phase 6) and POT `ot.gromov_wasserstein2` only for the relational batch, fill verdicts here append-only as each batch lands
-- **Refuted, do not revisit** - none yet; this is pre-registration. The data-scientist review already reclassified GW/FGW as a relational (not order/section) instrument before any run
+- **Test the anisotropy lever (ABTT)** - τ barely beat the naive baseline on the easy regime; `all_but_the_top` removes the dominant anisotropy direction and sharpens `T`, which should widen τ's margin over the hard greedy-1-NN baseline on the diffuse cross-summary pairs. Run it the deployable way - a fixed anisotropy direction estimated offline and applied per pair, not corpus-fit on the test pairs (that reintroduces the train→serve leak)
+- **Build the fixture honestly** - per-base order-preserving content edits (not adv1/adv2 reuse), and the independently-aligned real pairs; the ≥2-block paragraph-unit fixture already exists, record real per-cell counts for the rest
+- **Vehicle** - `notebooks/experiments/E07-kj-structure-distance.ipynb` is built and run; the next vehicle is the **second-article fixture** that promotes results from "promising" to "confirmed" and selects the normalizer on a genuine held-out split
+- **Refuted, do not revisit** - **GW/FGW as the order/section instrument** - GW ≈ 0 on a pure reorder is now confirmed on data, not just argued; the order signal comes from the position-aware Phase 2 + Phase 6, never GW
 - **Open question for the user** - the order signal (Phase 6 τ-from-`T`) is the default lead; confirm whether the relational rewrite axis (Phase 4) is worth a dedicated perturbation, or parked

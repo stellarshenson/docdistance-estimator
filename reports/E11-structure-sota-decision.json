@@ -1,0 +1,146 @@
+{
+ "winner": "H55",
+ "rubric": {
+  "content_invariance": {
+   "H44": 0.7353195188059444,
+   "H55": 0.004594381916081363,
+   "bar": 0.1,
+   "pass": {
+    "H44": false,
+    "H55": true
+   },
+   "note": "paraphrase reading / scramble top-bin; lower is better"
+  },
+  "translation_invariance": {
+   "H44": 0.41721782770221216,
+   "H55": 0.001222842336915153,
+   "pass": {
+    "H44": false,
+    "H55": true
+   },
+   "note": "pure-shift reading / scramble top-bin; lower is better"
+  },
+  "scramble_monotone": {
+   "H44": true,
+   "H55": true
+  },
+  "metric": {
+   "H44": 0.0,
+   "H55": 0.045,
+   "note": "triangle-violation rate; H44 metric, H55 score"
+  },
+  "cross_article": {
+   "H44": {
+    "ibm": 0.23965143862481827,
+    "wergeland": 0.2245182313219647
+   },
+   "H55": {
+    "ibm": 0.43875354143510614,
+    "wergeland": 0.39613321705351673
+   }
+  }
+ },
+ "paraphrase": {
+  "by_kind": {
+   "SMD": {
+    "ab_regen": 0.28695,
+    "backtranslation": 0.17237
+   },
+   "H44": {
+    "ab_regen": 0.25913,
+    "backtranslation": 0.14928
+   },
+   "H55": {
+    "ab_regen": 0.0402,
+    "backtranslation": 0.00166
+   }
+  }
+ },
+ "scramble": {
+  "ibm": {
+   "H44": [
+    0.01562,
+    0.06487,
+    0.1088,
+    0.15304,
+    0.19277,
+    0.23965
+   ],
+   "H55": [
+    0.04895,
+    0.16191,
+    0.27017,
+    0.36295,
+    0.42608,
+    0.43875
+   ]
+  },
+  "wergeland": {
+   "H44": [
+    0.01039,
+    0.0623,
+    0.10967,
+    0.14874,
+    0.18697,
+    0.22452
+   ],
+   "H55": [
+    0.03301,
+    0.12994,
+    0.27568,
+    0.34117,
+    0.37866,
+    0.39613
+   ]
+  }
+ },
+ "shift": {
+  "H44": {
+   "ibm": 0.09498,
+   "wergeland": 0.10116
+  },
+  "H55": {
+   "ibm": 0.00052,
+   "wergeland": 0.0005
+  }
+ },
+ "diffuse": {
+  "ibm": {
+   "n": 55,
+   "H44_median": 0.335098116203646,
+   "H55_median": 0.049098828419360085
+  },
+  "wergeland": {
+   "n": 3,
+   "H44_median": 0.36669762509115555,
+   "H55_median": 0.030874334533997905
+  }
+ },
+ "triangle": {
+  "H44": 0.0,
+  "H55": 0.045
+ },
+ "config": {
+  "lambda": 0.25,
+  "opw": {
+   "l1": 50.0,
+   "l2": 0.1,
+   "sigma": 1.0
+  },
+  "content_bar": 0.1,
+  "device": "NVIDIA RTX 5000 Ada Generation",
+  "bases": [
+   "gold",
+   "gold-2",
+   "v1",
+   "v2",
+   "opus",
+   "sonnet",
+   "haiku",
+   "werg-a",
+   "werg-b",
+   "werg-c"
+  ],
+  "n_paraphrase_pairs": 14
+ }
+}

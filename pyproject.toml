@@ -67,6 +67,10 @@ dev = [
     "twine",
     "matplotlib",
     "seaborn",
+    # structure-fixture build (nb 11): PDF text extraction + opus-mt back-translation paraphrase
+    "pdfplumber",
+    "sentencepiece",
+    "sacremoses",
 ]
 # GPU support - the torch backend on CUDA; accelerate is the sentinel the --gpu flag checks for.
 # A CUDA-capable torch wheel (cu12x/cu13x) must already be present; pip cannot select it via an extra.

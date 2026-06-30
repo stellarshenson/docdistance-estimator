@@ -1,0 +1,252 @@
+{
+  "results": {
+    "E10-H54": {
+      "kind": "score",
+      "metric_or_score": "score",
+      "spearman": 0.4285714285714286,
+      "top_bin_rising": false,
+      "collapses": true,
+      "shift_value": -9.912705577010326e-18,
+      "shift_pass": true,
+      "paraphrase_p95": 0.0,
+      "paraphrase_median": 0.0,
+      "content_pass": true,
+      "triangle_viol": 0.013333333333333334,
+      "diffuse_median": 0.0881760120221658,
+      "per_bin_mean": [
+        0.009580482866482581,
+        0.06113668852858237,
+        0.09059423639593472,
+        0.1111203430612593,
+        0.11169014142647653,
+        0.03978726387282118
+      ]
+    },
+    "E10-H55": {
+      "kind": "score",
+      "metric_or_score": "score",
+      "spearman": 1.0,
+      "top_bin_rising": true,
+      "collapses": false,
+      "shift_value": 0.0005169898125559012,
+      "shift_pass": true,
+      "shift_note": "OPW is index-intrinsic; absolute shift is invisible to it",
+      "paraphrase_p95": 0.005041583028177282,
+      "paraphrase_median": 0.0029322636915881384,
+      "content_pass": true,
+      "triangle_viol": 0.05333333333333334,
+      "diffuse_median": 0.049098828419360085,
+      "per_bin_mean": [
+        0.03794255474165221,
+        0.16502816703510614,
+        0.27610859720153763,
+        0.3646322297501491,
+        0.4168111154164042,
+        0.4391492230435085
+      ],
+      "opw_defaults": {
+        "lambda1": 50.0,
+        "lambda2": 0.1,
+        "sigma": 1.0,
+        "stabilization": "global log-max shift (transport-invariant; preserves lambda2=0.1)"
+      }
+    },
+    "E10-H56": {
+      "kind": "metric",
+      "metric_or_score": "metric",
+      "spearman": 1.0,
+      "top_bin_rising": true,
+      "collapses": false,
+      "shift_value": 0.0,
+      "shift_pass": true,
+      "paraphrase_p95": 0.31346153846153846,
+      "paraphrase_median": 0.1,
+      "content_pass": false,
+      "triangle_viol_eqlen": 0.0,
+      "triangle_viol_diffuse": 0.22666666666666666,
+      "diffuse_median": 0.2222222222222222,
+      "per_bin_mean": [
+        0.035965225250939536,
+        0.2073525680668538,
+        0.3160331731760303,
+        0.41213706927992644,
+        0.5077232291518006,
+        0.7419398062255206
+      ],
+      "anchor_variant": {
+        "spearman": 1.0,
+        "top_bin_rising": true,
+        "shift_value": 0.0,
+        "paraphrase_p95": 0.0,
+        "diffuse_median": 0.2222222222222222
+      }
+    },
+    "E10-H57": {
+      "kind": "metric",
+      "metric_or_score": "metric",
+      "spearman": 1.0,
+      "top_bin_rising": true,
+      "collapses": false,
+      "shift_value": 0.0,
+      "shift_pass": true,
+      "paraphrase_p95": 0.3333333333333333,
+      "paraphrase_median": 0.0,
+      "content_pass": false,
+      "triangle_viol_eqlen": 0.0,
+      "triangle_viol_diffuse": 0.0,
+      "diffuse_median": 0.0,
+      "per_bin_mean": [
+        0.00322693179836037,
+        0.030909963052820195,
+        0.04164367378653093,
+        0.06687399901685616,
+        0.1077668363382649,
+        0.1407636014778872
+      ],
+      "codebook_threshold": 0.6,
+      "bootstrap_stability_ari": 0.871823300980569,
+      "stability_pass": false,
+      "mean_n_symbols": 2.8
+    },
+    "E10-H58": {
+      "kind": "score",
+      "metric_or_score": "score",
+      "spearman": 1.0,
+      "top_bin_rising": true,
+      "collapses": false,
+      "shift_value": 0.0,
+      "shift_pass": true,
+      "paraphrase_p95": 7.010787936238061,
+      "paraphrase_median": 6.481368624897085,
+      "content_pass": false,
+      "triangle_viol": 0.0,
+      "diffuse_median": 5.029115852617584,
+      "gamma": 0.1,
+      "per_bin_mean": [
+        0.5726039497055312,
+        2.2289519447017834,
+        3.635216665308341,
+        4.711927173832971,
+        5.295040665234667,
+        5.854154548775308
+      ]
+    }
+  },
+  "verdicts": {
+    "E10-H54": {
+      "verdict": "Refuted",
+      "applicability": "none",
+      "metric_or_score": "score",
+      "shift_pass": true,
+      "monotone_pass": false,
+      "content_pass": true,
+      "combined_property": false,
+      "triangle_zero": true,
+      "beats_E08_H44_on_combined": false,
+      "headline": "shift -9.91e-18 vs paraphrase p95 0 (PASS); Spearman 0.43, top bin COLLAPSES (FAIL); paraphrase median 0 (PASS); triangle 0"
+    },
+    "E10-H55": {
+      "verdict": "Confirmed",
+      "applicability": "medium",
+      "metric_or_score": "score",
+      "shift_pass": true,
+      "monotone_pass": true,
+      "content_pass": true,
+      "combined_property": true,
+      "triangle_zero": true,
+      "beats_E08_H44_on_combined": true,
+      "headline": "shift 0.000517 vs paraphrase p95 0.00504 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.00293 (PASS); triangle 0"
+    },
+    "E10-H56": {
+      "verdict": "Inconclusive",
+      "applicability": "low",
+      "metric_or_score": "metric",
+      "shift_pass": true,
+      "monotone_pass": true,
+      "content_pass": false,
+      "combined_property": true,
+      "triangle_zero": true,
+      "beats_E08_H44_on_combined": true,
+      "headline": "shift 0 vs paraphrase p95 0.313 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.1 (FAIL); triangle 0"
+    },
+    "E10-H57": {
+      "verdict": "Inconclusive",
+      "applicability": "low",
+      "metric_or_score": "metric",
+      "shift_pass": true,
+      "monotone_pass": true,
+      "content_pass": false,
+      "combined_property": true,
+      "triangle_zero": true,
+      "beats_E08_H44_on_combined": true,
+      "headline": "shift 0 vs paraphrase p95 0.333 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0 (FAIL); triangle 0"
+    },
+    "E10-H58": {
+      "verdict": "Inconclusive",
+      "applicability": "low",
+      "metric_or_score": "score",
+      "shift_pass": true,
+      "monotone_pass": true,
+      "content_pass": false,
+      "combined_property": true,
+      "triangle_zero": true,
+      "beats_E08_H44_on_combined": true,
+      "headline": "shift 0 vs paraphrase p95 7.01 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 6.48 (FAIL); triangle 0"
+    }
+  },
+  "config": {
+    "n_bins": 6,
+    "per_bin": 12,
+    "bases": [
+      "gold",
+      "gold-2",
+      "v1",
+      "v2",
+      "opus",
+      "sonnet",
+      "haiku"
+    ],
+    "shifts": [
+      2,
+      4
+    ],
+    "gamma": 0.1,
+    "opw": {
+      "lambda1": 50.0,
+      "lambda2": 0.1,
+      "sigma": 1.0
+    },
+    "paraphrase_target_cos": 0.875,
+    "paraphrase_realized_cos": 0.874805113034589,
+    "paraphrase_draws_per_base": 8,
+    "codebook_threshold": 0.6,
+    "lam_baseline": 0.25,
+    "mono_bar": 0.9,
+    "content_frac": 0.1,
+    "device": "NVIDIA RTX 5000 Ada Generation",
+    "baselines": {
+      "posaug_combined_property": false,
+      "posaug_shift_value": 0.09497613147823232,
+      "posaug_shift_norm": 0.3988884097830914,
+      "posaug_scramble_spearman": 1.0,
+      "naive_combined_property": true,
+      "naive_shift_value": 0.0,
+      "naive_shift_norm": 0.0,
+      "naive_scramble_spearman": 1.0
+    },
+    "winner": "h55",
+    "confirmed": [
+      "h55"
+    ],
+    "regime": "byte-identical reorder upper bound + pure-shift + embedding paraphrase proxy (true-paraphrase deferred, no API key) + cross-summary diffuse",
+    "triangle_rates": {
+      "h54": 0.013333333333333334,
+      "h55": 0.05333333333333334,
+      "h58": 0.0,
+      "h56_eqlen": 0.0,
+      "h56_diffuse": 0.22666666666666666,
+      "h57_eqlen": 0.0,
+      "h57_diffuse": 0.0
+    }
+  }
+}

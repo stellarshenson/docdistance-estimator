@@ -71,6 +71,16 @@ dev = [
     "pdfplumber",
     "sentencepiece",
     "sacremoses",
+    # exec-summary generation (nb 11): AWS Bedrock Anthropic models (opus / sonnet / haiku)
+    "boto3",
+    # notebook execution: dataframes (nb 01/04/E01), torch quantization (nb 03/Q01)
+    "polars",
+    "torchao",
+    # E06 trained scorers: multilingual ColBERT + learned-sparse
+    "FlagEmbedding",
+    "pylate",
+    # E05 custom scorer modeling files (ColBERT/SPLADE) require einops
+    "einops",
 ]
 # GPU support - the torch backend on CUDA; accelerate is the sentinel the --gpu flag checks for.
 # A CUDA-capable torch wheel (cu12x/cu13x) must already be present; pip cannot select it via an extra.

@@ -17,6 +17,9 @@
 /models/*
 !/models/.gitkeep
 
+# Local provisioning state written by `docdistance init` (absolute paths, per-machine)
+/docdistance.json
+
 # Mac OS-specific storage files
 .DS_Store
 

@@ -1,15 +1,15 @@
 {
   "results": {
     "E07-H29": {
-      "dsmd_max": 0.0003831272208896865
+      "dsmd_max": 0.0003146505808796395
     },
     "T_sparsity": {
-      "sharp_mean_entropy": 4.818800142470169e-12,
-      "diffuse_median_entropy": 0.12878289326884168,
+      "sharp_mean_entropy": 4.4477623636784724e-12,
+      "diffuse_median_entropy": 0.12796282351410931,
       "gate_pass": true
     },
     "E07-H38": {
-      "footrule_top_bin": 0.9412151765468092,
+      "footrule_top_bin": 0.928812925170068,
       "above_chance": true
     },
     "E07-H39": {
@@ -29,78 +29,78 @@
       },
       "bounded": {
         "offdiag": [
-          0.09536019536019555,
-          0.959981684981685
+          0.08345404595404599,
+          0.9560697635697636
         ],
         "footrule": [
-          0.04400510204081633,
-          0.9412151765468092
+          0.034615646258503406,
+          0.928812925170068
         ],
         "kendall": [
-          0.03845955631669921,
-          0.859722816865674
+          0.02943510193510197,
+          0.8128109853109853
         ]
       }
     },
     "E07-H40": {
-      "reorder_gated": 0.38175988030066454,
-      "diffcontent_ungated": 0.23817848817611523,
-      "diffcontent_gated": 0.2365826375829978,
-      "diffcontent_smd": 0.42211493843841164
+      "reorder_gated": 0.38575774296477816,
+      "diffcontent_ungated": 0.2388888888868111,
+      "diffcontent_gated": 0.2340804638075078,
+      "diffcontent_smd": 0.4255986058915203
     },
     "E07-H41": {
       "example_base": "gold",
-      "footrule": 0.4897959183673469,
-      "top_mover_disp": 13.0
+      "footrule": 0.4666666666666667,
+      "top_mover_disp": 9.0
     },
     "E07-H43": {
-      "reorder_semantic": 0.9998502631486735,
-      "reorder_structure": 0.4129818594104308
+      "reorder_semantic": 0.9998664082671933,
+      "reorder_structure": 0.4262448979591837
     },
     "E07-H30": {
-      "pp_top": 0.5070714999286429,
-      "smd_flat_max": 0.0003831272208896865
+      "pp_top": 0.5042821992821993,
+      "smd_flat_max": 0.0003146505808796395
     },
     "E07-H31": {
-      "aligned_band": 0.9999999999999999,
-      "reordered_band": 0.36548927263212966
+      "aligned_band": 1.0,
+      "reordered_band": 0.44589410589410583
     },
     "E07-H34": {
-      "gw_reorder_mean": -8.556810319827944e-11,
-      "gw_cross_mean": 0.01343874124309711
+      "gw_reorder_mean": -2.91971599978777e-10,
+      "gw_cross_mean": 0.025889372400969064
     },
     "E07-H35": {
       "fgw_reorder_range": [
-        1.5260099277963901e-09,
-        0.00024686509485555286
+        1.2572900012775001e-09,
+        0.00017755681818176772
       ]
     },
     "E07-H32": {
       "mass_by_k": {
         "0": 0.0,
-        "1": 0.0740188383045526,
-        "2": 0.1480376766091052,
-        "3": 0.22205651491365777
+        "1": 0.08372627372627373,
+        "2": 0.16745254745254745,
+        "3": 0.2511788211788212
       }
     },
     "E07-H36": {
-      "rho": 0.5438686641960769,
+      "rho": 0.5262911425283513,
       "ci": [
-        0.31232492390838107,
-        0.7108628157138126
+        0.3712235298416758,
+        0.6593446353477573
       ]
     },
     "E07-H37": {
-      "triangle_violation_rate": 0.035,
-      "ms_smd": 0.08307620068080723,
-      "ms_tau": 0.33040946000255644,
-      "ms_gw": 0.426583195803687
+      "triangle_violation_rate": 0.08,
+      "ms_smd": 0.08123555991915055,
+      "ms_tau": 0.3287970599194523,
+      "ms_gw": 0.2965966996271163
     }
   },
   "verdicts": {
     "E07-H29": {
       "verdict": "Kept (sanity)",
-      "detail": "max |dSMD|=0.0004 <= 0.01; SMD provably blind to reorder"
+      "detail": "max |dSMD|=0.0003 <= 0.01; SMD provably blind to reorder"
     },
     "E07-H28": {
       "verdict": "Deferred",
@@ -112,7 +112,7 @@
     },
     "E07-H38": {
       "verdict": "Kept (upper bound)",
-      "detail": "tau footrule rises to 0.94 at full reorder vs naive 0.94; separates and recovers position on sharp T"
+      "detail": "tau footrule rises to 0.93 at full reorder vs naive 0.93; separates and recovers position on sharp T"
     },
     "E07-H39": {
       "verdict": "Ship-gate (upper bound)",
@@ -120,7 +120,7 @@
     },
     "E07-H40": {
       "verdict": "Kept (exploratory)",
-      "detail": "diff-content structure reads 0.24 gated (ungated 0.24, SMD=0.42 carries the content) vs reorder 0.38 - the axis already separates content from structure; tier cells differ in arrangement too (caveat)"
+      "detail": "diff-content structure reads 0.23 gated (ungated 0.24, SMD=0.43 carries the content) vs reorder 0.39 - the axis already separates content from structure; tier cells differ in arrangement too (caveat)"
     },
     "E07-H41": {
       "verdict": "Kept",
@@ -128,19 +128,19 @@
     },
     "E07-H43": {
       "verdict": "Kept",
-      "detail": "reorder cell sits at high semantic (1.00) / low structure (0.41) closeness - a structure-only failure a single blend hides"
+      "detail": "reorder cell sits at high semantic (1.00) / low structure (0.43) closeness - a structure-only failure a single blend hides"
     },
     "E07-H30": {
       "verdict": "Kept",
-      "detail": "positional penalty monotone (Spearman 1.00, 0 inversions), SMD uncorrupted (max |dSMD| 0.0004)"
+      "detail": "positional penalty monotone (Spearman 1.00, 0 inversions), SMD uncorrupted (max |dSMD| 0.0003)"
     },
     "E07-H31": {
       "verdict": "Kept (kill-gate noted)",
-      "detail": "SMD plan already near-diagonal on aligned pairs (1.00) and off-diagonal on reorder (0.37); OPW regularizer would add little on aligned pairs as predicted - full OPW solver deferred"
+      "detail": "SMD plan already near-diagonal on aligned pairs (1.00) and off-diagonal on reorder (0.45); OPW regularizer would add little on aligned pairs as predicted - full OPW solver deferred"
     },
     "E07-H34": {
       "verdict": "Confirmed (reorder-invariant)",
-      "detail": "GW~0.0000 on reorder vs 0.0134 on cross-summary - GW is a relational, not order, instrument as the design states"
+      "detail": "GW~0.0000 on reorder vs 0.0259 on cross-summary - GW is a relational, not order, instrument as the design states"
     },
     "E07-H35": {
       "verdict": "Confirmed",
@@ -148,7 +148,7 @@
     },
     "E07-H32": {
       "verdict": "Kept",
-      "detail": "cross-block mass 0 at no-swap, rises to 0.222 at k=3; bounded [0,1] on paragraph-unit summaries"
+      "detail": "cross-block mass 0 at no-swap, rises to 0.251 at k=3; bounded [0,1] on paragraph-unit summaries"
     },
     "E07-H42": {
       "verdict": "Kept",
@@ -160,11 +160,11 @@
     },
     "E07-H36": {
       "verdict": "Exploratory",
-      "detail": "Pearson rho=0.54 (95% CI [0.31,0.71]) - CI half-width exceeds the 0.3 margin, not confirmable on one article"
+      "detail": "Pearson rho=0.53 (95% CI [0.37,0.66]) - CI half-width exceeds the 0.3 margin, not confirmable on one article"
     },
     "E07-H37": {
       "verdict": "Reported",
-      "detail": "tau-structure triangle-inequality violation rate 4% (it is a derived disorder, not claimed a metric - only GW/FGW are); cost tau 0.33ms vs SMD 0.08ms vs GW 0.43ms per pair"
+      "detail": "tau-structure triangle-inequality violation rate 8% (it is a derived disorder, not claimed a metric - only GW/FGW are); cost tau 0.33ms vs SMD 0.08ms vs GW 0.30ms per pair"
     }
   },
   "config": {
@@ -177,9 +177,12 @@
       "v2",
       "opus",
       "sonnet",
-      "haiku"
+      "haiku",
+      "werg-a",
+      "werg-b",
+      "werg-c"
     ],
-    "chance_footrule": 0.6615850340136055,
+    "chance_footrule": 0.6612037037037036,
     "regime": "byte-identical upper bound + cross-summary diffuse"
   }
 }

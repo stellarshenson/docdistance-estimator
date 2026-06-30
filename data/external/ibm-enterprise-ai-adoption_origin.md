@@ -2,7 +2,7 @@
 
 Provenance and usage record for the companion PDF in this directory.
 
-- **Local file** - `Data Suggests Growth in Enterprise Adoption of AI is Due to Widespread Deploymen.pdf`
+- **Local file** - `ibm-enterprise-ai-adoption.pdf`
 - **Title** - Data Suggests Growth in Enterprise Adoption of AI is Due to Widespread Deployment by Early Adopters, But Barriers Keep 40% in the Exploration and Experimentation Phases
 - **Publisher** - IBM Newsroom (distributed via PRNewswire)
 - **Published** - 2024-01-10, ARMONK, N.Y.

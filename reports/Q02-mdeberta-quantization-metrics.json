@@ -4,26 +4,26 @@
   "best_alpha": 0.7,
   "size_mb": 318.135992,
   "fp32_mb": 1151.416604,
-  "entail_parity_pearson": 0.992684006690979,
-  "dgrd_parity_pearson": 0.983435604702927,
+  "entail_parity_pearson": 0.990977942943573,
+  "dgrd_parity_pearson": 0.998358639744775,
   "tier_means_fp": {
-    "gold": 0.13591542750601265,
-    "adv1": 0.14642895087128754,
-    "adv2": 0.1783741047865256
+    "gold": 0.0811375091743113,
+    "adv1": 0.08350735908518375,
+    "adv2": 0.4132343111208818
   },
   "tier_means_int8": {
-    "gold": 0.13534374866645688,
-    "adv1": 0.16812093486035945,
-    "adv2": 0.19846715421688205
+    "gold": 0.08595847273094913,
+    "adv1": 0.08379085325755337,
+    "adv2": 0.4236462035293658
   },
-  "violations_fp": 12,
-  "violations_int8": 11,
-  "severity_fp": "interleaved",
-  "severity_int8": "interleaved",
+  "violations_fp": 6,
+  "violations_int8": 7,
+  "severity_fp": "Set2>Set1",
+  "severity_int8": "Set2>Set1",
   "ordering_fp": true,
-  "ordering_int8": true,
-  "verdict_preserved": true,
-  "faithful": true,
+  "ordering_int8": false,
+  "verdict_preserved": false,
+  "faithful": false,
   "calibration": "source top-3 joint premise x summary statement, exec-summary fixtures",
-  "n_calib": 128
+  "n_calib": 95
 }

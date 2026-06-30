@@ -158,15 +158,27 @@ class DocDistance:
         self.backend = backend
         self._offline = offline
         self._device = device
-        self.segmenter = None
-        self.encoder = None
+        self._segmenter = None
+        self._encoder = None
         self._reranker = None
         self._nli = None
 
     def _ensure_base(self) -> None:
-        if self.encoder is None:
-            self.segmenter = Segmenter(offline=self._offline)
-            self.encoder = load_encoder(self.backend, offline=self._offline, device=self._device)
+        if self._encoder is None:
+            self._segmenter = Segmenter(offline=self._offline)
+            self._encoder = load_encoder(self.backend, offline=self._offline, device=self._device)
+
+    @property
+    def segmenter(self):
+        """SAT segmenter, lazily loaded on first access (so direct use works, not only the methods)."""
+        self._ensure_base()
+        return self._segmenter
+
+    @property
+    def encoder(self):
+        """Statement encoder, lazily loaded on first access."""
+        self._ensure_base()
+        return self._encoder
 
     def _ensure_grounding(self) -> None:
         self._ensure_base()
@@ -179,10 +191,10 @@ class DocDistance:
     def embed_statements(self, doc: str | Path) -> tuple[list[str], np.ndarray]:
         """Segment a document and embed it, returning both the statement texts and their vectors."""
         self._ensure_base()
-        statements = self.segmenter.split(_read(doc))
+        statements = self._segmenter.split(_read(doc))
         if not statements:
             raise ValueError("document produced no statements")
-        return statements, self.encoder.encode(statements)
+        return statements, self._encoder.encode(statements)
 
     def embed(self, doc: str | Path) -> np.ndarray:
         """Segment then embed a document into L2-normalized statement vectors ``[n, dim]``."""

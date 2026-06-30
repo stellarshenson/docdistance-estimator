@@ -51,7 +51,7 @@ Three ablations matter:
 
 ## Relevance To This Project
 
-SummaC is the design template for the grounding axis `D_grd` of the source-conditioned distance `d(A, B | S)` (see `docs/wmd-source-conditioned-docdistance-solution-sota.md`, where it is cited as the multi-premise NLI pattern).
+SummaC is the design template for the grounding axis `D_grd` of the source-conditioned distance `d(A, B | S)` (see `docs/solution/wmd-source-conditioned-docdistance-solution-sota.md`, where it is cited as the multi-premise NLI pattern).
 
 - **Granularity justifies statement-level processing** - the project segments documents into atomic statements (`sat-3l-sm`) and runs statement-pair NLI rather than whole-document NLI, exactly the sentence-level insight that makes SummaC work; whole-document entailment would dilute the very inconsistencies `D_grd` must catch
 - **The pair-matrix-then-aggregate shape is shared** - SummaC scores every `(source sentence, summary sentence)` pair and aggregates; `D_grd` scores a reranker grid over `(summary statement, source statement)` pairs and aggregates per summary statement, the same matrix-reduction idea

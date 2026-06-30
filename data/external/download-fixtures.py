@@ -23,12 +23,12 @@ HERE = Path(__file__).resolve().parent
 # byte-identical to what the rest of the pipeline expects.
 FIXTURES = [
     {
-        "filename": "FINAL-Impact-of-AI-on-society.pdf",
+        "filename": "impact-of-ai-on-society.pdf",
         "url": "https://wergelandcentre.org/content/uploads/2023/01/FINAL-Impact-of-AI-on-society.pdf",
         "note": "Direct PDF, hosted by The European Wergeland Centre (wergelandcentre.org).",
     },
     {
-        "filename": "Data Suggests Growth in Enterprise Adoption of AI is Due to Widespread Deploymen.pdf",
+        "filename": "ibm-enterprise-ai-adoption.pdf",
         "url": "https://newsroom.ibm.com/2024-01-10-Data-Suggests-Growth-in-Enterprise-Adoption-of-AI-is-Due-to-Widespread-Deployment-by-Early-Adopters",
         "note": ("IBM Newsroom article page (HTML), not a direct PDF link. The local fixture PDF is a "
                  "print-to-PDF render of this page; this URL will return HTML, so save the page as PDF "

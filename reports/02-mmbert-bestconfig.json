@@ -5,9 +5,9 @@
     "target": "cpu",
     "toolchain": "openvino",
     "scheme": "smoothquant_int8_per_tensor_static",
-    "artifact": "/home/lab/workspace/learning/projects/docdistance-estimator/models/02-mmbert-openvino-int8",
+    "artifact": "/home/lab/workspace/learning/projects/docdistance/models/02-mmbert-openvino-int8",
     "pearson_in_domain": 0.9915822148323059,
-    "latency_ms_per_sentence": 21.399426186690107,
+    "latency_ms_per_sentence": 22.040083687443257,
     "ir_size_mb": 310.358081,
     "smoothquant_alpha": 0.8
   },
@@ -18,9 +18,9 @@
     "torchao_config": "Float8DynamicActivationFloat8WeightConfig",
     "apply": "quantize_(model, <config>()) on the FP checkpoint, then torch.compile (needs C compiler)",
     "pearson_in_domain": 0.9985144138336182,
-    "sent_per_s": 2588.1976890673304,
-    "speedup_vs_bf16_eager": 2.1641962926229192,
-    "speedup_vs_bf16_compiled": 1.1345363356903087
+    "sent_per_s": 2551.1669413864606,
+    "speedup_vs_bf16_eager": 2.098890624765709,
+    "speedup_vs_bf16_compiled": 1.1663371806033584
   },
   "smoothquant_study": {
     "model": "jhu-clsp/mmBERT-base",

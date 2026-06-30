@@ -1,15 +1,13 @@
 [
- "# Summary - Enterprise AI Adoption (Sunnet 4.6)",
- "The enterprise AI adoption has reached a critical turning point where early movers accelerate investments, while 40% of large companies remain trapped in experiments and cannot move into production.",
- "IBM's Global AI Adoption Index 2023, drawn from 8.584 IT professionals in 15 markets, notes that 42% of corporate scale organizations actively provide AI today.",
- "The most consistent finding is dynamic asymmetry: 59% of companies that are already researching or using AI are accelerating their investments, while those that are still experimenting point to persistent structural barriers rather than lack of interest.",
- "This divergence means that the gap between the leaders and the Laggards is widening every quarter.",
- "Skill shortage is the only major barrier.",
- "Thirty-three percent of organizations cite limited AI expertise as the main obstacle to deployment, and one in five report that no employees are able to run new AI tools.",
- "25 percent identify data complexity as a second barrier, and 23 percent cite ethical concerns.",
- "Especially for generative AI the barriers shift: 57% flag data protection and 43% flag trust and transparency as the top inhibitors.",
- "The infrastructure of trust remains far behind the intention.",
- "Eighty-five percent of IT professionals agree that transparent AI practices drive customer preferences, but less than half take concrete steps towards this standard - only 27% are working to reduce biases, 44% are actively developing ethical AI policies and 34% are reticent employees to work alongside AI systems.",
- "Organisations should prioritise the closure of the skills and governance gap before expanding the field of application.",
- "The acceleration of targeted reskilling programmes, the introduction of bias reduction practices and the introduction of transparent model decision-making frameworks directly address the three main obstacles that discourage 40% of companies from actively using AI."
+ "# Summary - Enterprise AI Adoption (Sunnet, Sonnet 4.6)",
+ "The acquisition of Enterprise AI is facing a critical turning point: 42% of large companies (1,000+ employees) have actively engaged AI, yet 40% remain stuck in exploration and experimentation and cannot capture competitive advantages that are already emerging from early movers.",
+ "The gap is widening: 59% of companies already using or researching AI have accelerated investment over the past 24 months, with China (85%), India (74%) and the UAE (72%) showing the leading acceleration, while Canada (35%), Australia (38%) and the United Kingdom (40%) are clearly slowing down.",
+ "Financial services are leaders in industry, with about half of the companies active in the telecommunications sector, compared to 37%.",
+ "The most common use cases are IT process automation (33%), security and threat detection (26%), AI governance and monitoring (25%), suggesting that AI includes not only peripheral functions but also core operations.",
+ "Three obstacles are responsible for most blocked implementations: limited AI competence and expertise (33%), excessive data complexity (25%) and ethical concerns (23%).",
+ "Data protection (57%) and trust and transparency (43%) are the dominant blockers especially for generative AI.",
+ "The personnel dimension leads to a problem: one in five organisations lacks employees with skills to use AI tools, 16% cannot fill this gap, and only 34% are employees who actively retrain.",
+ "The confidence deficit is equally large: while 85% of IT professionals agree that consumers prefer companies with transparent AI practices and 83% declare that their business needs to be explained, less than half have taken concrete steps towards trusted AI – only 27% reduce bias, 37% track data progress and 44% develop ethical AI policies.",
+ "Organisations still in the exploration phase must immediately prioritize the closure of the skills gap through structured reskilling programs – the 39% of AI deployment companies already investing in human resource development show that:",
+ "This is executable since accessible tools and embedded AI in off-the-shelf applications (with 45% and 37% of users respectively) have already eliminated the biggest technical barriers to access, leaving human capital as the most important remaining limitation to use."
 ]

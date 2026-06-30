@@ -1,15 +1,13 @@
 [
- "# Summary - Enterprise AI Adoption (v1, Opus 4.8)",
- "The corporate AI adoption has split into two groups, and the gap between them is what now limits the further value.",
- "Among large organizations with more than 1,000 employees, 42% have actively deployed AI, while another 40% remain in exploration or experimentation without bringing a model into production.",
- "The early adopters are making progress: 59% of companies already working with AI have accelerated their rollout or investments over the past two years.",
- "The research of 40% remains blocked by a recurring series of barriers.",
- "Limited AI competence and expertise (33%), data complexity (25%) and ethical concerns (23%), followed by integration difficulties (22%) and high prices (21%).",
- "Generative AI raises its own obstacles, led by data protection (57%) and trust and transparency (43%).",
- "On the other hand, accessible AI tools (45%), drive to reduce and automate costs (42%) and AI embedded in off-the-shelf applications (37%).",
- "India, the United Arab Emirates, Singapore and China lead in active use, and financial services is the AI-active industry.",
- "The problem is exacerbated by the discrepancy between workers: one in five organisations lacks skilled workers with the right skills, but only 34% of employees are retrained.",
- "In order to transform exploration into introduction, companies should fill the skills gap by investing in training and research and development, simplifying their data and using accessible and embedded instruments that reduce access barriers.",
- "Businesses should also operationalize trusted AI practices - reduce distortions, track data origin and ensure explainability - because most people recognize their value (85% say customers prefer transparent and ethical AI), but less than half respond to them.",
- "The organisations that remove these barriers will already report the benefits of early adopters."
+ "# Summary - Enterprise AI Adoption (v1, Opus 4.5)",
+ "The acquisition of Enterprise AI has reached a turning point where early movers are making further progress, while a significant segment remains blocked, resulting in an expansion of the skill gap that requires immediate attention from organisations that are still working in exploratory phases.",
+ "IBM's global survey of 8,584 IT professionals showed that 42% of large companies (over 1,000 employees) have actively used AI, with 59% of companies already working with AI accelerating their investments over the past 24 months.",
+ "The remaining 40% of companies remain stuck in exploration or experiment without production.",
+ "Geographical differences are strong: India (59%), the United Arab Emirates (58%), Singapore (53%), Spain (28%), Australia (29%) and France (26%) are clearly lagging behind.",
+ "Financial services lead to the adoption of industry, with a rate of introduction of about 50% compared to 37% in telecommunications.",
+ "Three main obstacles prevent the next wave of adoptive individuals from progressing: limited AI competence and expertise (33%), excessive data complexity (25%) and ethical concerns (23%).",
+ "The qualification gap manifests itself in concrete terms: 20% of organisations do not have qualified employees to use AI tools, and 16% cannot find qualified new recruits.",
+ "Although 85% of IT professionals believe that consumers prefer companies with transparent AI practices, less than half of companies have implemented basic confidence measures: only 27% actively reduce bias, 37% pursue data propensity and 44% have developed ethical AI guidelines.",
+ "Organizations currently using AI focus mainly on IT automation (33%), security and threat detection (26%) and business analytics (24%), while they invest most in R & D (44%) and human resource skills (39%).",
+ "The organisations in the exploratory phase should prioritise the closure of the skills gap through targeted reskilling programmes, currently implemented by only 34% of enterprises, as labour shortages are the only major barrier to the introduction and the most immediate within organisational control."
 ]

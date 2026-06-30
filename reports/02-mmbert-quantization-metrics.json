@@ -58,8 +58,8 @@
     "pearson": 0.9915822148323059,
     "spearman": 0.9926694140991926,
     "emb_cos": 0.9938685297966003,
-    "latency_ms_per_sentence_int8": 21.399426186690107,
-    "latency_ms_per_sentence_fp": 30.62559512545704,
+    "latency_ms_per_sentence_int8": 22.040083687443257,
+    "latency_ms_per_sentence_fp": 30.065488812397234,
     "ir_size_mb_int8": 310.358081,
     "ir_size_mb_fp": 614.928073
   },
@@ -73,45 +73,45 @@
         "pearson": 0.9995980262756348,
         "spearman": 0.9995587459130788,
         "emb_cos": 0.9998565912246704,
-        "sent_per_s": 1195.9163306441758,
-        "ms_per_sent": 0.8361788984529994
+        "sent_per_s": 1215.483508899487,
+        "ms_per_sent": 0.8227178671518232
       },
       "bf16_compiled": {
         "pearson": 0.9995980262756348,
         "spearman": 0.9995587459130788,
         "emb_cos": 0.9998565912246704,
-        "sent_per_s": 2281.282324459482,
-        "ms_per_sent": 0.4383499531286361
+        "sent_per_s": 2187.3322601845853,
+        "ms_per_sent": 0.4571779140292165
       },
       "int8_weight_only": {
         "pearson": 0.9996144771575928,
         "spearman": 0.9995982625431761,
         "emb_cos": 0.999242901802063,
         "pearson_syn": 0.9990562796592712,
-        "sent_per_s": 33.03535927060305,
-        "ms_per_sent": 30.27059557030043,
-        "speedup_vs_bf16_eager": 0.027623470324891944,
-        "speedup_vs_bf16_compiled": 0.014481048187856503
+        "sent_per_s": 32.99924971974677,
+        "ms_per_sent": 30.303719281278063,
+        "speedup_vs_bf16_eager": 0.02714907234704046,
+        "speedup_vs_bf16_compiled": 0.015086528151403034
       },
       "int8_dynamic_w8a8": {
         "pearson": 0.9717385768890381,
         "spearman": 0.9888347027547483,
         "emb_cos": 0.995013952255249,
         "pearson_syn": 0.9943881630897522,
-        "sent_per_s": 2052.2319978820983,
-        "ms_per_sent": 0.48727434375450684,
-        "speedup_vs_bf16_eager": 1.7160330913590514,
-        "speedup_vs_bf16_compiled": 0.899595800080705
+        "sent_per_s": 1997.8776608809167,
+        "ms_per_sent": 0.5005311484183039,
+        "speedup_vs_bf16_eager": 1.643689647990221,
+        "speedup_vs_bf16_compiled": 0.9133855414871077
       },
       "fp8_dynamic_e4m3": {
         "pearson": 0.9985144138336182,
         "spearman": 0.9987344477877883,
         "emb_cos": 0.9987162351608276,
         "pearson_syn": 0.9973229765892029,
-        "sent_per_s": 2588.1976890673304,
-        "ms_per_sent": 0.386369250009011,
-        "speedup_vs_bf16_eager": 2.1641962926229192,
-        "speedup_vs_bf16_compiled": 1.1345363356903087
+        "sent_per_s": 2551.1669413864606,
+        "ms_per_sent": 0.39197748441210933,
+        "speedup_vs_bf16_eager": 2.098890624765709,
+        "speedup_vs_bf16_compiled": 1.1663371806033584
       }
     }
   },
@@ -119,9 +119,9 @@
     "target": "cpu",
     "toolchain": "openvino",
     "scheme": "smoothquant_int8_per_tensor_static",
-    "artifact": "/home/lab/workspace/learning/projects/docdistance-estimator/models/02-mmbert-openvino-int8",
+    "artifact": "/home/lab/workspace/learning/projects/docdistance/models/02-mmbert-openvino-int8",
     "pearson_in_domain": 0.9915822148323059,
-    "latency_ms_per_sentence": 21.399426186690107,
+    "latency_ms_per_sentence": 22.040083687443257,
     "ir_size_mb": 310.358081,
     "smoothquant_alpha": 0.8
   },
@@ -132,9 +132,9 @@
     "torchao_config": "Float8DynamicActivationFloat8WeightConfig",
     "apply": "quantize_(model, <config>()) on the FP checkpoint, then torch.compile (needs C compiler)",
     "pearson_in_domain": 0.9985144138336182,
-    "sent_per_s": 2588.1976890673304,
-    "speedup_vs_bf16_eager": 2.1641962926229192,
-    "speedup_vs_bf16_compiled": 1.1345363356903087
+    "sent_per_s": 2551.1669413864606,
+    "speedup_vs_bf16_eager": 2.098890624765709,
+    "speedup_vs_bf16_compiled": 1.1663371806033584
   },
   "recommended_target": "gpu"
 }

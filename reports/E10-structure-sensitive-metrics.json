@@ -6,20 +6,20 @@
       "spearman": 0.4285714285714286,
       "top_bin_rising": false,
       "collapses": true,
-      "shift_value": -9.912705577010326e-18,
+      "shift_value": -6.938893903907228e-18,
       "shift_pass": true,
       "paraphrase_p95": 0.0,
       "paraphrase_median": 0.0,
       "content_pass": true,
-      "triangle_viol": 0.013333333333333334,
-      "diffuse_median": 0.0881760120221658,
+      "triangle_viol": 0.04,
+      "diffuse_median": 0.09288503223568156,
       "per_bin_mean": [
-        0.009580482866482581,
-        0.06113668852858237,
-        0.09059423639593472,
-        0.1111203430612593,
-        0.11169014142647653,
-        0.03978726387282118
+        0.007132195050748706,
+        0.060459035922822126,
+        0.09187995415412444,
+        0.10999467197927072,
+        0.11075224505497011,
+        0.05362491084147205
       ]
     },
     "E10-H55": {
@@ -28,21 +28,21 @@
       "spearman": 1.0,
       "top_bin_rising": true,
       "collapses": false,
-      "shift_value": 0.0005169898125559012,
+      "shift_value": 0.0004270759414630457,
       "shift_pass": true,
       "shift_note": "OPW is index-intrinsic; absolute shift is invisible to it",
-      "paraphrase_p95": 0.005041583028177282,
-      "paraphrase_median": 0.0029322636915881384,
+      "paraphrase_p95": 0.0038583508745453324,
+      "paraphrase_median": 0.001605298143437378,
       "content_pass": true,
-      "triangle_viol": 0.05333333333333334,
-      "diffuse_median": 0.049098828419360085,
+      "triangle_viol": 0.12,
+      "diffuse_median": 0.03874115754816276,
       "per_bin_mean": [
-        0.03794255474165221,
-        0.16502816703510614,
-        0.27610859720153763,
-        0.3646322297501491,
-        0.4168111154164042,
-        0.4391492230435085
+        0.030793801935744016,
+        0.16175567560531512,
+        0.27338131511605895,
+        0.33572404183917753,
+        0.3774638351387851,
+        0.41182075820485975
       ],
       "opw_defaults": {
         "lambda1": 50.0,
@@ -59,26 +59,26 @@
       "collapses": false,
       "shift_value": 0.0,
       "shift_pass": true,
-      "paraphrase_p95": 0.31346153846153846,
-      "paraphrase_median": 0.1,
+      "paraphrase_p95": 0.3275757575757576,
+      "paraphrase_median": 0.029292929292929294,
       "content_pass": false,
       "triangle_viol_eqlen": 0.0,
-      "triangle_viol_diffuse": 0.22666666666666666,
-      "diffuse_median": 0.2222222222222222,
+      "triangle_viol_diffuse": 0.21333333333333335,
+      "diffuse_median": 0.05952380952380952,
       "per_bin_mean": [
-        0.035965225250939536,
-        0.2073525680668538,
-        0.3160331731760303,
-        0.41213706927992644,
-        0.5077232291518006,
-        0.7419398062255206
+        0.027300569800569798,
+        0.17847023347023344,
+        0.28614940614940615,
+        0.3825879675879676,
+        0.457513505013505,
+        0.6083167758167759
       ],
       "anchor_variant": {
         "spearman": 1.0,
         "top_bin_rising": true,
         "shift_value": 0.0,
         "paraphrase_p95": 0.0,
-        "diffuse_median": 0.2222222222222222
+        "diffuse_median": 0.03869047619047619
       }
     },
     "E10-H57": {
@@ -96,17 +96,17 @@
       "triangle_viol_diffuse": 0.0,
       "diffuse_median": 0.0,
       "per_bin_mean": [
-        0.00322693179836037,
-        0.030909963052820195,
-        0.04164367378653093,
-        0.06687399901685616,
-        0.1077668363382649,
-        0.1407636014778872
+        0.002732822732822733,
+        0.025484607984607985,
+        0.03268389018389018,
+        0.048004958004958,
+        0.07095885595885595,
+        0.09670810670810671
       ],
       "codebook_threshold": 0.6,
-      "bootstrap_stability_ari": 0.871823300980569,
-      "stability_pass": false,
-      "mean_n_symbols": 2.8
+      "bootstrap_stability_ari": 1.0,
+      "stability_pass": true,
+      "mean_n_symbols": 2.1
     },
     "E10-H58": {
       "kind": "score",
@@ -116,19 +116,19 @@
       "collapses": false,
       "shift_value": 0.0,
       "shift_pass": true,
-      "paraphrase_p95": 7.010787936238061,
-      "paraphrase_median": 6.481368624897085,
+      "paraphrase_p95": 6.543348874977626,
+      "paraphrase_median": 5.519596027790532,
       "content_pass": false,
       "triangle_viol": 0.0,
-      "diffuse_median": 5.029115852617584,
+      "diffuse_median": 3.756796921936602,
       "gamma": 0.1,
       "per_bin_mean": [
-        0.5726039497055312,
-        2.2289519447017834,
-        3.635216665308341,
-        4.711927173832971,
-        5.295040665234667,
-        5.854154548775308
+        0.4152391189315542,
+        1.9123626833462246,
+        3.0061603959085432,
+        3.645453912895464,
+        4.187291856733528,
+        4.69640410195474
       ]
     }
   },
@@ -143,7 +143,7 @@
       "combined_property": false,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": false,
-      "headline": "shift -9.91e-18 vs paraphrase p95 0 (PASS); Spearman 0.43, top bin COLLAPSES (FAIL); paraphrase median 0 (PASS); triangle 0"
+      "headline": "shift -6.94e-18 vs paraphrase p95 0 (PASS); Spearman 0.43, top bin COLLAPSES (FAIL); paraphrase median 0 (PASS); triangle 0"
     },
     "E10-H55": {
       "verdict": "Confirmed",
@@ -155,7 +155,7 @@
       "combined_property": true,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": true,
-      "headline": "shift 0.000517 vs paraphrase p95 0.00504 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.00293 (PASS); triangle 0"
+      "headline": "shift 0.000427 vs paraphrase p95 0.00386 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.00161 (PASS); triangle 0"
     },
     "E10-H56": {
       "verdict": "Inconclusive",
@@ -167,7 +167,7 @@
       "combined_property": true,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": true,
-      "headline": "shift 0 vs paraphrase p95 0.313 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.1 (FAIL); triangle 0"
+      "headline": "shift 0 vs paraphrase p95 0.328 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.0293 (FAIL); triangle 0"
     },
     "E10-H57": {
       "verdict": "Inconclusive",
@@ -191,7 +191,7 @@
       "combined_property": true,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": true,
-      "headline": "shift 0 vs paraphrase p95 7.01 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 6.48 (FAIL); triangle 0"
+      "headline": "shift 0 vs paraphrase p95 6.54 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 5.52 (FAIL); triangle 0"
     }
   },
   "config": {
@@ -204,7 +204,10 @@
       "v2",
       "opus",
       "sonnet",
-      "haiku"
+      "haiku",
+      "werg-a",
+      "werg-b",
+      "werg-c"
     ],
     "shifts": [
       2,
@@ -217,7 +220,7 @@
       "sigma": 1.0
     },
     "paraphrase_target_cos": 0.875,
-    "paraphrase_realized_cos": 0.874805113034589,
+    "paraphrase_realized_cos": 0.8748431004583835,
     "paraphrase_draws_per_base": 8,
     "codebook_threshold": 0.6,
     "lam_baseline": 0.25,
@@ -226,8 +229,8 @@
     "device": "NVIDIA RTX 5000 Ada Generation",
     "baselines": {
       "posaug_combined_property": false,
-      "posaug_shift_value": 0.09497613147823232,
-      "posaug_shift_norm": 0.3988884097830914,
+      "posaug_shift_value": 0.10537151573916279,
+      "posaug_shift_norm": 0.4646518272018017,
       "posaug_scramble_spearman": 1.0,
       "naive_combined_property": true,
       "naive_shift_value": 0.0,
@@ -240,11 +243,11 @@
     ],
     "regime": "byte-identical reorder upper bound + pure-shift + embedding paraphrase proxy (true-paraphrase deferred, no API key) + cross-summary diffuse",
     "triangle_rates": {
-      "h54": 0.013333333333333334,
-      "h55": 0.05333333333333334,
+      "h54": 0.04,
+      "h55": 0.12,
       "h58": 0.0,
       "h56_eqlen": 0.0,
-      "h56_diffuse": 0.22666666666666666,
+      "h56_diffuse": 0.21333333333333335,
       "h57_eqlen": 0.0,
       "h57_diffuse": 0.0
     }

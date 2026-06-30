@@ -85,78 +85,78 @@
   },
   "doc_counts": {
     "gold": {
-      "n": 14,
-      "n_blocks": 6,
+      "n": 11,
+      "n_blocks": 4,
       "tier": "gold",
       "kind": "summary",
       "article": "ibm"
     },
     "gold-2": {
-      "n": 14,
-      "n_blocks": 6,
-      "tier": "gold",
-      "kind": "summary",
-      "article": "ibm"
-    },
-    "v1": {
       "n": 13,
       "n_blocks": 4,
       "tier": "gold",
       "kind": "summary",
       "article": "ibm"
     },
+    "v1": {
+      "n": 11,
+      "n_blocks": 3,
+      "tier": "gold",
+      "kind": "summary",
+      "article": "ibm"
+    },
     "v2": {
-      "n": 12,
+      "n": 13,
       "n_blocks": 4,
       "tier": "gold",
       "kind": "summary",
       "article": "ibm"
     },
     "opus": {
-      "n": 14,
-      "n_blocks": 6,
+      "n": 10,
+      "n_blocks": 4,
       "tier": "gold",
       "kind": "summary",
       "article": "ibm"
     },
     "sonnet": {
-      "n": 13,
-      "n_blocks": 6,
+      "n": 11,
+      "n_blocks": 3,
       "tier": "gold",
       "kind": "summary",
       "article": "ibm"
     },
     "haiku": {
-      "n": 15,
-      "n_blocks": 5,
+      "n": 14,
+      "n_blocks": 4,
       "tier": "gold",
       "kind": "summary",
       "article": "ibm"
     },
     "adv1-a": {
-      "n": 14,
-      "n_blocks": 5,
+      "n": 10,
+      "n_blocks": 6,
       "tier": "adv1",
       "kind": "summary",
       "article": "ibm"
     },
     "adv1-b": {
-      "n": 9,
-      "n_blocks": 4,
+      "n": 10,
+      "n_blocks": 6,
       "tier": "adv1",
       "kind": "summary",
       "article": "ibm"
     },
     "adv2-a": {
-      "n": 14,
-      "n_blocks": 5,
+      "n": 2,
+      "n_blocks": 2,
       "tier": "adv2",
       "kind": "summary",
       "article": "ibm"
     },
     "adv2-b": {
-      "n": 12,
-      "n_blocks": 6,
+      "n": 4,
+      "n_blocks": 2,
       "tier": "adv2",
       "kind": "summary",
       "article": "ibm"
@@ -190,50 +190,50 @@
       "article": "wergeland"
     },
     "gold~bt": {
-      "n": 14,
-      "n_blocks": 6,
+      "n": 11,
+      "n_blocks": 4,
       "tier": "gold",
       "kind": "paraphrase",
       "article": "ibm"
     },
     "gold-2~bt": {
-      "n": 14,
-      "n_blocks": 6,
-      "tier": "gold",
-      "kind": "paraphrase",
-      "article": "ibm"
-    },
-    "v1~bt": {
       "n": 13,
       "n_blocks": 4,
       "tier": "gold",
       "kind": "paraphrase",
       "article": "ibm"
     },
+    "v1~bt": {
+      "n": 11,
+      "n_blocks": 3,
+      "tier": "gold",
+      "kind": "paraphrase",
+      "article": "ibm"
+    },
     "v2~bt": {
-      "n": 12,
+      "n": 13,
       "n_blocks": 4,
       "tier": "gold",
       "kind": "paraphrase",
       "article": "ibm"
     },
     "opus~bt": {
-      "n": 14,
-      "n_blocks": 6,
+      "n": 10,
+      "n_blocks": 4,
       "tier": "gold",
       "kind": "paraphrase",
       "article": "ibm"
     },
     "sonnet~bt": {
-      "n": 13,
-      "n_blocks": 6,
+      "n": 11,
+      "n_blocks": 3,
       "tier": "gold",
       "kind": "paraphrase",
       "article": "ibm"
     },
     "haiku~bt": {
-      "n": 15,
-      "n_blocks": 5,
+      "n": 14,
+      "n_blocks": 4,
       "tier": "gold",
       "kind": "paraphrase",
       "article": "ibm"

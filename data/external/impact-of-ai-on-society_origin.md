@@ -2,7 +2,7 @@
 
 Provenance and usage record for the companion PDF in this directory.
 
-- **Local file** - `FINAL-Impact-of-AI-on-society.pdf`
+- **Local file** - `impact-of-ai-on-society.pdf`
 - **Title** - Impact of AI on society (as printed on the document)
 - **Source / host** - The European Wergeland Centre (wergelandcentre.org)
 - **Source URL** - https://wergelandcentre.org/content/uploads/2023/01/FINAL-Impact-of-AI-on-society.pdf

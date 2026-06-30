@@ -1,41 +1,41 @@
 {
   "results": {
     "E09-H49": {
-      "g_struct_entropy": -0.049330482135010706,
-      "g_struct_dr": 2.270416326593315,
-      "g_margin": -0.010753452896310038,
-      "smd_fidelity": 0.7405483405483408,
-      "l_sem": 0.25945165945165916,
-      "cmrr": -0.19013361579289464,
-      "entropy_raw": 0.12878289326884168,
-      "entropy_cmr": 0.13513581548453527,
-      "struct_dr_raw": 0.03175508878258478,
-      "struct_dr_cmr": 0.10385236080698551,
-      "naive_margin_raw": 0.004617604617604614,
-      "naive_margin_cmr": -0.006135848278705424,
-      "tier_viol": 1,
+      "g_struct_entropy": 0.03201518403712332,
+      "g_struct_dr": 1.2991566856925245,
+      "g_margin": -0.07714520290874971,
+      "smd_fidelity": 0.8041157833215419,
+      "l_sem": 0.19588421667845812,
+      "cmrr": 0.16343932441313486,
+      "entropy_raw": 0.12796282351410931,
+      "entropy_cmr": 0.12386607016939517,
+      "struct_dr_raw": 0.06832239572795426,
+      "struct_dr_cmr": 0.1570838929204564,
+      "naive_margin_raw": 0.11789819376026274,
+      "naive_margin_cmr": 0.04075299085151302,
+      "tier_viol": 0,
       "tier_pairs": 24
     },
     "E09-H50": {
       "raw": {
-        "entropy_med": 0.12878289326884168,
+        "entropy_med": 0.12796282351410931,
         "smd_fidelity": 1.0,
         "g_struct_entropy": 0.0,
         "cmrr": 0.0,
         "tier_viol": 0
       },
       "per-pair (k=1)": {
-        "entropy_med": 0.13513581548453527,
-        "smd_fidelity": 0.7405483405483408,
-        "g_struct_entropy": -0.049330482135010706,
-        "cmrr": -0.19013361579289464,
-        "tier_viol": 1
+        "entropy_med": 0.12386607016939517,
+        "smd_fidelity": 0.8041157833215419,
+        "g_struct_entropy": 0.03201518403712332,
+        "cmrr": 0.16343932441313486,
+        "tier_viol": 0
       },
       "offline-frozen (k=1)": {
-        "entropy_med": 0.12989669405182738,
-        "smd_fidelity": 0.9207792207792209,
-        "g_struct_entropy": -0.008648670290863704,
-        "cmrr": -0.10917173973713219,
+        "entropy_med": 0.12473281532327114,
+        "smd_fidelity": 0.9673321234119785,
+        "g_struct_entropy": 0.025241770243386565,
+        "cmrr": 0.7726786335614507,
         "tier_viol": 0
       },
       "winner": "offline-frozen (k=1)"
@@ -49,28 +49,28 @@
       ],
       "cmrr_by_d": [
         0.0,
-        -0.19013361579289464,
-        -0.27033615376788606,
-        -0.16378375244221424
+        0.16343932441313486,
+        -0.17415736844430357,
+        -0.023874164283951754
       ],
       "fidelity_by_d": [
         1.0,
-        0.7405483405483408,
-        0.7812409812409814,
-        0.6046176046176048
+        0.8041157833215419,
+        0.7374265587991019,
+        0.8182041896090315
       ],
       "entropy_by_d": [
-        0.12878289326884168,
-        0.13513581548453527,
-        0.1363989167621601,
-        0.13712251443727239
+        0.12796282351410931,
+        0.12386607016939517,
+        0.1338144482083783,
+        0.12851821070942482
       ],
       "stability_by_d": {
-        "1": 0.7707458200490681,
-        "2": 0.8586374293096808,
-        "3": 0.8291307651533152
+        "1": 0.7379242644618165,
+        "2": 0.8654411609822185,
+        "3": 0.8366512191441965
       },
-      "best_d": 0,
+      "best_d": 1,
       "stability_bar": 0.9,
       "unstable_depths": [
         1,
@@ -85,85 +85,85 @@
         "fine"
       ],
       "mean_n": {
-        "coarse": 6.7272727272727275,
-        "default": 13.090909090909092,
-        "fine": 32.63636363636363
+        "coarse": 5.5,
+        "default": 10.5,
+        "fine": 27.928571428571427
       },
       "cmrr": {
-        "coarse": 0.0,
-        "default": -0.19013361579289464,
-        "fine": 0.12490759423598033
+        "coarse": 0.06439341175791159,
+        "default": 0.16343932441313486,
+        "fine": 0.3308835834067686
       },
       "smd_fidelity": {
-        "coarse": 0.6528860028860031,
-        "default": 0.7405483405483408,
-        "fine": 0.7883838383838385
+        "coarse": 0.41136300716724605,
+        "default": 0.8041157833215419,
+        "fine": 0.9371866252422407
       },
       "g_struct_entropy": {
-        "coarse": 0.0,
-        "default": -0.049330482135010706,
-        "fine": 0.026432465648927133
+        "coarse": 0.03790434425541838,
+        "default": 0.03201518403712332,
+        "fine": 0.020783914525719656
       },
       "stability": {
-        "coarse": 0.7362742497450568,
-        "default": 0.7707458200490681,
-        "fine": 0.8616402015947914
+        "coarse": 0.7852630647243991,
+        "default": 0.7379242644618165,
+        "fine": 0.8846931943263171
       },
       "tier_viol": {
-        "coarse": 0,
-        "default": 1,
-        "fine": 2
+        "coarse": 10,
+        "default": 0,
+        "fine": 0
       },
       "best_level": "fine"
     },
     "E09-H53": {
-      "dr_raw": 0.036017913372840146,
-      "dr_cmr": 0.11694487459620363,
-      "dr_ratio": 3.2468531251559867,
-      "tier_dprime_raw": 2.806335973435489,
-      "tier_dprime_cmr": 2.281287868643411,
+      "dr_raw": 0.07487213224424705,
+      "dr_cmr": 0.17563625109453726,
+      "dr_ratio": 2.345816071079405,
+      "tier_dprime_raw": 5.480297958424191,
+      "tier_dprime_cmr": 6.648661831247525,
       "tier_viol_raw": 0,
-      "tier_viol_cmr": 1,
-      "tier_same_mean_raw": 0.3369335711657346,
-      "tier_diff_mean_raw": 0.42211493843841164,
-      "tier_same_mean_cmr": 1.0464941112140378,
-      "tier_diff_mean_cmr": 1.2753228879873715
+      "tier_viol_cmr": 0,
+      "tier_same_mean_raw": 0.30415109540873914,
+      "tier_diff_mean_raw": 0.4255986058915203,
+      "tier_same_mean_cmr": 1.075981891260439,
+      "tier_diff_mean_cmr": 1.3878569128838452
     }
   },
   "verdicts": {
     "E09-H49": {
-      "verdict": "Refuted",
-      "applicability": "none",
-      "cmrr": -0.19013361579289464,
-      "detail": "entropy 0.129->0.135 (g_struct -0.049); SMD-fidelity 0.741 (l_sem 0.259); tier viol 1/24; naive margin +0.005->-0.006; CMRR -0.19"
+      "verdict": "Inconclusive",
+      "applicability": "low",
+      "cmrr": 0.16343932441313486,
+      "detail": "entropy 0.128->0.124 (g_struct +0.032); SMD-fidelity 0.804 (l_sem 0.196); tier viol 0/24; naive margin +0.118->+0.041; CMRR 0.16"
     },
     "E09-H50": {
       "verdict": "Inconclusive",
-      "applicability": "none",
-      "cmrr": -0.10917173973713219,
-      "detail": "winner=offline-frozen (k=1) (CMRR -0.11); per-pair CMRR -0.19 fidelity 0.741; offline CMRR -0.11 fidelity 0.921"
+      "applicability": "low",
+      "cmrr": 0.7726786335614507,
+      "detail": "winner=offline-frozen (k=1) (CMRR 0.77); per-pair CMRR 0.16 fidelity 0.804; offline CMRR 0.77 fidelity 0.967"
     },
     "E09-H51": {
       "verdict": "Inconclusive",
-      "applicability": "none",
-      "cmrr": 0.0,
-      "detail": "best D=0 (CMRR 0.00); CMRR by D [0.0, -0.19, -0.27, -0.16]; stability {D1:0.77, D2:0.86, D3:0.83}; unstable (<0.9) at D=[1, 2, 3]"
+      "applicability": "low",
+      "cmrr": 0.16343932441313486,
+      "detail": "best D=1 (CMRR 0.16); CMRR by D [0.0, 0.16, -0.17, -0.02]; stability {D1:0.74, D2:0.87, D3:0.84}; unstable (<0.9) at D=[1, 2, 3]"
     },
     "E09-H52": {
       "verdict": "Refuted",
       "applicability": "none",
-      "cmrr": 0.12490759423598033,
-      "detail": "best=fine CMRR 0.12 (n~33); CMRR coarse 0.00 / default -0.19 / fine 0.12; stability {coarse:0.74, default:0.77, fine:0.86}; fallback=clause-split (no SAT threshold knob)"
+      "cmrr": 0.3308835834067686,
+      "detail": "best=fine CMRR 0.33 (n~28); CMRR coarse 0.06 / default 0.16 / fine 0.33; stability {coarse:0.79, default:0.74, fine:0.88}; fallback=clause-split (no SAT threshold knob)"
     },
     "E09-H53": {
-      "verdict": "Refuted",
-      "applicability": "none",
-      "cmrr": 3.2468531251559867,
-      "detail": "SMD DR 0.0360->0.1169 (x3.25); tier d' 2.81->2.28 (d-prime down (topic-removal cost)); tier viol 0->1/24"
+      "verdict": "Confirmed",
+      "applicability": "medium",
+      "cmrr": 2.345816071079405,
+      "detail": "SMD DR 0.0749->0.1756 (x2.35); tier d' 5.48->6.65 (d-prime up); tier viol 0->0/24"
     }
   },
   "config": {
-    "diffuse_pairs": 55,
+    "diffuse_pairs": 58,
     "tier_pairs": 10,
     "lam_head": 0.25,
     "depths": [

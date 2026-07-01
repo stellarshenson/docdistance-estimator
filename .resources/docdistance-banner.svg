@@ -45,12 +45,12 @@
     transport trunk band:             y=200      (between wordmark and tagline)
     tagline baseline:                 y=225      (font 20; cap-top ~209)
 
-  Left statement cloud (6 nodes, r=7, clustered around centroid 175,150):
+  Left statement cloud (5 nodes, r=7, clustered around centroid 175,150):
     n-l1 (150,118)  n-l2 (122,158)  n-l3 (200,150)
-    n-l4 (152,196)  n-l5 (210,196)  n-l6 (178,238)
-  Right statement cloud (6 nodes, r=7, clustered around centroid 1025,150):
+    n-l4 (152,196)  n-l6 (178,238)
+  Right statement cloud (5 nodes, r=7, clustered around centroid 1025,150):
     n-r1 (1050,118) n-r2 (1078,158) n-r3 (1000,150)
-    n-r4 (1048,196) n-r5 (990,196)  n-r6 (1022,238)
+    n-r4 (1048,196) n-r6 (1022,238)
 
   Transport bundle (manifold, svg-infographics connector, shape=spline):
     sources = n-l1, n-l3, n-l6  (endpoints ~5px off each node edge = 12-13px from centre)
@@ -106,7 +106,6 @@
       <circle class="node" cx="122.0" cy="158.0" r="7.0"/>
       <circle class="node-c" cx="200.0" cy="150.0" r="7.0"/>
       <circle class="node" cx="152.0" cy="196.0" r="7.0"/>
-      <circle class="node-b" cx="210.0" cy="196.0" r="7.0"/>
       <circle class="node-c" cx="178.0" cy="238.0" r="7.0"/>
     </g>
     <g id="cloud-right">
@@ -114,7 +113,6 @@
       <circle class="node" cx="1078.0" cy="158.0" r="7.0"/>
       <circle class="node-c" cx="1000.0" cy="150.0" r="7.0"/>
       <circle class="node" cx="1048.0" cy="196.0" r="7.0"/>
-      <circle class="node-b" cx="990.0" cy="196.0" r="7.0"/>
       <circle class="node-c" cx="1022.0" cy="238.0" r="7.0"/>
     </g>
   </g>

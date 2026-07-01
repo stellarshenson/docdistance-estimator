@@ -1,15 +1,14 @@
 [
- "# Summary - Enterprise AI Adoption (v2, Opus 4.5)",
- "The adoption of Enterprise AI has slowed down active deployment in 42% of large companies, while 40% remain stuck in exploration phases – a bottleneck that costs companies a competitive advantage as early adopters progress with accelerated investments.",
- "The 42% of companies using AI double: 59% have accelerated their AI investments over the last 24 months, suggesting that they have enough value to justify expansion.",
- "Geographical differences are strong: India (59%) and the United Arab Emirates (58%) are leading, while France (26%) and Spain (28%) lag behind.",
- "Financial services lead to the introduction of industry at around 50% compared to 37% in telecommunications.",
- "The primary deployment uses IT automation center (33%), security and threat detection (26%) and AI governance (25%).",
- "Three barriers prevent the remaining 40% from moving beyond the experiment: limited AI knowledge and know-how (33%), data complexity (25%) and ethical concerns (23%).",
- "The skill gap manifests itself in concrete terms: 20% of organisations do not have qualified employees to use AI tools, and 16% cannot adjust to close this gap.",
- "Especially for generative AI, data protection concerns concern 57% of non-adopters and confidence problems 43%.",
- "Organisations recognise the importance of responsible AI practices – 85% agree that consumers prefer transparent AI ethics – yet less than half of the companies have implemented distortion reduction (27%), data origin tracking (37%), or ethical AI policies (44%).",
- "Only 34% train employees to work alongside AI tools.",
- "In addition to AI implementation, organisations should prioritise workforce reskilling programmes, as the skills gap is the only major barrier and only one third of companies are currently investing in training.",
- "This restriction would unlock both the availability capability and trusted AI practices that account for 85% of IT professionals in consumer demand."
+ "# Summary - Enterprise AI Adoption (v2, Opus 4.6)",
+ "The adoption of Enterprise AI has stopped its active deployment at 42% of large companies (over 1,000 employees), while 40% are stuck in exploration or experimentation phases, and pilots are unable to convert to production – a gap that threatens the competitive position as early adoptivists accelerate.",
+ "The primary result is a growing gap: 59% of companies already using or researching AI have accelerated their investments over the last 24 months, which means that early movers are increasing their advantage while negligence is falling further.",
+ "Limited AI skills and know-how are the only major barrier cited by 33% of respondents, followed by data complexity (25%) and ethical concerns (23%).",
+ "Geographical differences are strong: India (59%), the United Arab Emirates (58%), Singapore (53%), France (26%), Australia (29%), Spain (28%).",
+ "Financial services lead to the adoption of industry with around 50% use, while telecommunications is at 37%.",
+ "Generative AI introduces additional friction: 57% of non-adopters cite data protection and 43% cite trust and transparency as inhibitors.",
+ "Only 34% of organizations reskil employees to work alongside AI, and 20% report missing employees with the right skills completely.",
+ "Although 85% of IT professionals believe that consumers prefer companies with transparent AI practices, less than half take concrete steps – only 27% actively reduce bias and only 37% track data progress.",
+ "The top drivers that organizations move forward are more accessible AI tools (45%), cost-reducing imperatives (42%), and AI embedded in off-the-shelf software (37%).",
+ "IT automation (33%), security and threat detection (26%) and AI governance (25%) are the most common use cases.",
+ "Organisations should prioritise the closing of the skills gap through aggressive reskilling programs and simplified tooling, as limited know-how with 33% is the dominant barrier, but only 34% of companies invest in the training of workers – solving this only limitation frees the largest cohort of blocked adoptive people before the early advantage becomes insurmountable."
 ]

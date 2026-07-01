@@ -1,15 +1,15 @@
 [
- "# Summary - Enterprise AI Adoption (gold-2, Opus 4.5)",
- "Companies are facing a crucial moment in AI adoption: while 42% of large companies have used AI, 40% are stuck in exploration and experimentation and cannot capture the operational benefits of their competitors.",
- "The data show a growing gap between AI leaders and Laggards.",
- "Organisations that already use AI double – 59% have accelerated investment over the last 24 months – suggesting measurable returns.",
- "Financial services lead adoption with about half actively with AI, while telecommunications routes with 37%.",
- "Geographical differences are strong: India (59%), the UAE (58%) and Singapore (53%) have an active deployment rate almost twice as high as Spain (28%), Australia (29%) and France (26%).",
- "Primary use cases focus on operational efficiency – IT process automation (33%), security and threat detection (26%) and AI governance (25%) – and not on experimental applications.",
- "Three specific obstacles are responsible for most blocked implementations: limited AI competence and expertise (33%), data complexity (25%) and ethical concerns (23%).",
- "The skills gap is acute: one in five organisations lacks qualified staff to use AI tools, and 16% cannot find qualified staff.",
- "Only 34% train existing employees to work with AI, even if 55% of AI-based companies use the technology specifically to reduce manual tasks.",
- "A worrying lack of confidence leads to these challenges: while 85% of IT professionals believe that consumers prefer companies with transparent AI practices, less than half have implemented guarantees – only 27% actively reduce biases, 37% track data progress and 44% have developed ethical AI guidelines.",
- "Cost reduction (42%) and ever more accessible instruments (45%) are driving adoption decisions forward, but 21% continue to call high prices a hindrance.",
- "Exploration organisations should prioritise the closing of the skills gap through targeted reskilling programs, currently run by only one-third of companies, as labour shortages block more deployment opportunities than any other factor and the barrier is the most immediate within organisational control."
+ "# Summary - Enterprise AI Adoption (gold-2, Opus 4.6)",
+ "The acquisition of Enterprise AI has stalled 42% of large companies (more than 1,000 employees), while 40% are stuck in exploration or experimentation phases, and AI pilots are unable to transfer to production – a gap that limits competitive advantages and operational efficiency in all industries around the world.",
+ "Among the 42% actively using AI, 59% have accelerated their investment or rollout over the past 24 months, suggesting that organizations that make initial deployment barriers clear quickly increase their commitment.",
+ "Geographical disparities are strong: India (59%), the UAE (58%), Singapore (53%), France (26%), Australia (29%), Spain (28%).",
+ "Financial services are leaders in industry, with about half of the reported active use compared to 37% in telecommunications.",
+ "The primary obstacles preventing the remaining 40% from engaging are limited AI competence and expertise (33%), data complexity (25%) and ethical concerns (23%).",
+ "One in five organisations lacks employees with the right skills, and 16% cannot find qualified new recruits to fill this gap.",
+ "Only 34% of companies train or reskil employees to work alongside AI tools.",
+ "The top drivers that drive adoption are more accessible AI tools (45%), cost reduction and process automation (42%) and AI in off-the-shelf applications (37%).",
+ "IT automation (33%), security and threat detection (26%) and AI governance (25%) are among the most common applications.",
+ "With trusted AI, 85% of IT professionals agree that consumers prefer companies with transparent and ethical AI practices, but less than half take concrete steps: only 27% actively reduce bias, 37% track data proficiency and 44% have developed ethical AI guidelines.",
+ "For generative AI in particular, 57% of non-adopters cite data protection as a primary inhibitor, followed by confidence and transparency concerns (43%).",
+ "Organisations should prioritise the closure of the skills gap through targeted reskilling programmes and targeted recruitment, as limited AI expertise is the only major barrier (33%) and only one third of companies are currently investing in labour training – this bottleneck will directly exempt and position the 40% of companies stuck in experiments to capture the compounding returns already demonstrated by accelerated investment from early adopters."
 ]

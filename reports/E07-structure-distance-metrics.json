@@ -1,15 +1,15 @@
 {
   "results": {
     "E07-H29": {
-      "dsmd_max": 0.0003146505808796395
+      "dsmd_max": 0.0003019271119098578
     },
     "T_sparsity": {
-      "sharp_mean_entropy": 4.4477623636784724e-12,
-      "diffuse_median_entropy": 0.12796282351410931,
+      "sharp_mean_entropy": 4.525211628857012e-12,
+      "diffuse_median_entropy": 0.12279516347753033,
       "gate_pass": true
     },
     "E07-H38": {
-      "footrule_top_bin": 0.928812925170068,
+      "footrule_top_bin": 0.9351832955404384,
       "above_chance": true
     },
     "E07-H39": {
@@ -29,24 +29,24 @@
       },
       "bounded": {
         "offdiag": [
-          0.08345404595404599,
-          0.9560697635697636
+          0.08733419358419363,
+          0.9608842546342546
         ],
         "footrule": [
-          0.034615646258503406,
-          0.928812925170068
+          0.034651360544217684,
+          0.9351832955404384
         ],
         "kendall": [
-          0.02943510193510197,
-          0.8128109853109853
+          0.029306249306249352,
+          0.8347910422910423
         ]
       }
     },
     "E07-H40": {
-      "reorder_gated": 0.38575774296477816,
-      "diffcontent_ungated": 0.2388888888868111,
-      "diffcontent_gated": 0.2340804638075078,
-      "diffcontent_smd": 0.4255986058915203
+      "reorder_gated": 0.3846311916712946,
+      "diffcontent_ungated": 0.2871212121189538,
+      "diffcontent_gated": 0.2824727489956802,
+      "diffcontent_smd": 0.41513845653019166
     },
     "E07-H41": {
       "example_base": "gold",
@@ -54,47 +54,47 @@
       "top_mover_disp": 9.0
     },
     "E07-H43": {
-      "reorder_semantic": 0.9998664082671933,
-      "reorder_structure": 0.4262448979591837
+      "reorder_semantic": 0.9998749178609465,
+      "reorder_structure": 0.4293877551020408
     },
     "E07-H30": {
-      "pp_top": 0.5042821992821993,
-      "smd_flat_max": 0.0003146505808796395
+      "pp_top": 0.5068145743145743,
+      "smd_flat_max": 0.0003019271119098578
     },
     "E07-H31": {
       "aligned_band": 1.0,
-      "reordered_band": 0.44589410589410583
+      "reordered_band": 0.4582833832833833
     },
     "E07-H34": {
-      "gw_reorder_mean": -2.91971599978777e-10,
-      "gw_cross_mean": 0.025889372400969064
+      "gw_reorder_mean": 3.308780248054144e-10,
+      "gw_cross_mean": 0.024926211999050964
     },
     "E07-H35": {
       "fgw_reorder_range": [
-        1.2572900012775001e-09,
-        0.00017755681818176772
+        -2.363476237637885e-10,
+        0.00020289462620642906
       ]
     },
     "E07-H32": {
       "mass_by_k": {
         "0": 0.0,
-        "1": 0.08372627372627373,
-        "2": 0.16745254745254745,
-        "3": 0.2511788211788212
+        "1": 0.0813020313020313,
+        "2": 0.1626040626040626,
+        "3": 0.2439060939060939
       }
     },
     "E07-H36": {
-      "rho": 0.5262911425283513,
+      "rho": 0.6572293340410861,
       "ci": [
-        0.3712235298416758,
-        0.6593446353477573
+        0.5402938741178606,
+        0.7574472082077568
       ]
     },
     "E07-H37": {
-      "triangle_violation_rate": 0.08,
-      "ms_smd": 0.08123555991915055,
-      "ms_tau": 0.3287970599194523,
-      "ms_gw": 0.2965966996271163
+      "triangle_violation_rate": 0.075,
+      "ms_smd": 0.07947595993755385,
+      "ms_tau": 0.32077198004117236,
+      "ms_gw": 0.2997882998897694
     }
   },
   "verdicts": {
@@ -108,11 +108,11 @@
     },
     "E07-H38-gate": {
       "verdict": "Pass",
-      "detail": "byte-identical T entropy 0.00 (sharp) vs cross-summary median 0.13; T stays usably concentrated in the realistic regime"
+      "detail": "byte-identical T entropy 0.00 (sharp) vs cross-summary median 0.12; T stays usably concentrated in the realistic regime"
     },
     "E07-H38": {
       "verdict": "Kept (upper bound)",
-      "detail": "tau footrule rises to 0.93 at full reorder vs naive 0.93; separates and recovers position on sharp T"
+      "detail": "tau footrule rises to 0.94 at full reorder vs naive 0.94; separates and recovers position on sharp T"
     },
     "E07-H39": {
       "verdict": "Ship-gate (upper bound)",
@@ -120,7 +120,7 @@
     },
     "E07-H40": {
       "verdict": "Kept (exploratory)",
-      "detail": "diff-content structure reads 0.23 gated (ungated 0.24, SMD=0.43 carries the content) vs reorder 0.39 - the axis already separates content from structure; tier cells differ in arrangement too (caveat)"
+      "detail": "diff-content structure reads 0.28 gated (ungated 0.29, SMD=0.42 carries the content) vs reorder 0.38 - the axis already separates content from structure; tier cells differ in arrangement too (caveat)"
     },
     "E07-H41": {
       "verdict": "Kept",
@@ -136,19 +136,19 @@
     },
     "E07-H31": {
       "verdict": "Kept (kill-gate noted)",
-      "detail": "SMD plan already near-diagonal on aligned pairs (1.00) and off-diagonal on reorder (0.45); OPW regularizer would add little on aligned pairs as predicted - full OPW solver deferred"
+      "detail": "SMD plan already near-diagonal on aligned pairs (1.00) and off-diagonal on reorder (0.46); OPW regularizer would add little on aligned pairs as predicted - full OPW solver deferred"
     },
     "E07-H34": {
       "verdict": "Confirmed (reorder-invariant)",
-      "detail": "GW~0.0000 on reorder vs 0.0259 on cross-summary - GW is a relational, not order, instrument as the design states"
+      "detail": "GW~0.0000 on reorder vs 0.0249 on cross-summary - GW is a relational, not order, instrument as the design states"
     },
     "E07-H35": {
       "verdict": "Confirmed",
-      "detail": "FGW stays 0.0000..0.0002 across alpha on a reorder (=SMD), adds nothing; only the cross-summary pair varies with alpha"
+      "detail": "FGW stays -0.0000..0.0002 across alpha on a reorder (=SMD), adds nothing; only the cross-summary pair varies with alpha"
     },
     "E07-H32": {
       "verdict": "Kept",
-      "detail": "cross-block mass 0 at no-swap, rises to 0.251 at k=3; bounded [0,1] on paragraph-unit summaries"
+      "detail": "cross-block mass 0 at no-swap, rises to 0.244 at k=3; bounded [0,1] on paragraph-unit summaries"
     },
     "E07-H42": {
       "verdict": "Kept",
@@ -160,11 +160,11 @@
     },
     "E07-H36": {
       "verdict": "Exploratory",
-      "detail": "Pearson rho=0.53 (95% CI [0.37,0.66]) - CI half-width exceeds the 0.3 margin, not confirmable on one article"
+      "detail": "Pearson rho=0.66 (95% CI [0.54,0.76]) - CI half-width exceeds the 0.3 margin, not confirmable on one article"
     },
     "E07-H37": {
       "verdict": "Reported",
-      "detail": "tau-structure triangle-inequality violation rate 8% (it is a derived disorder, not claimed a metric - only GW/FGW are); cost tau 0.33ms vs SMD 0.08ms vs GW 0.30ms per pair"
+      "detail": "tau-structure triangle-inequality violation rate 8% (it is a derived disorder, not claimed a metric - only GW/FGW are); cost tau 0.32ms vs SMD 0.08ms vs GW 0.30ms per pair"
     }
   },
   "config": {

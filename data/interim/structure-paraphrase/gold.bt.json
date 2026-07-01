@@ -1,13 +1,13 @@
 [
- "# Summary - Enterprise AI Adoption (Gold, Opus 4.5)",
- "Enterprise AI adoption has reached a turning point where early movers are advancing, while a significant proportion of organizations remain constrained, resulting in an expansion of the skill gap that requires immediate attention from corporate leaders.",
- "42 percent of the large companies (more than 1,000 employees) used AI in production, while 40 percent remained in exploration or experimentation phases.",
- "Among the organisations already working with AI, 59 percent have accelerated their investments over the past 24 months, suggesting that early adopters are increasing their benefits.",
- "Geographical differences are strong: India leads the deployment at 59 percent, while France starts at 26 percent.",
- "Financial services have the highest sectoral adoption at around 50 percent, with telecommunications lagging behind at 37 percent.",
- "The primary barriers to introduction are limited AI skills and know-how (33%), data complexity (25 percent) and ethical concerns (23 percent).",
- "One in five organisations lacks employees with skills to use AI tools, and 16 percent can't find qualified new recruits.",
- "Although 85 percent of IT professionals agree that consumers prefer companies with transparent AI practices, less than half of them have implemented trustworthy AI measures: only 27 percent actively reduce bias, 37 percent track data propensity and 44 percent have developed ethical AI guidelines.",
- "Only 34 percent of organizations train employees to work alongside AI systems.",
- "Organisations should prioritise the closure of the skills gap through aggressive reskilling programmes rather than relying solely on external recruitment measures, as the lack of talent is the only major barrier to introduction and only one third of companies are currently investing in labour training, although they identify skills shortages as the main obstacle."
+ "# Summary - Enterprise AI Adoption (Gold, Opus 4.6)",
+ "The adoption of Enterprise AI has stalled 42% of large companies (over 1,000 employees), while 40% are stuck in exploration or experimentation phases and pilots are unable to translate into production – a gap that is important because early adopters are making progress, with 59% accelerating their AI investments and rollouts over the past 24 months.",
+ "The primary bottleneck is a shortage of skilled workers: 33% of companies cite limited AI know-how as a top obstacle, one out of five lack employees with the right skills and 16% cannot find qualified new recruits to fill the gap.",
+ "Data complexity blocks 25% of organizations, ethical concerns block 23%, integration difficulties and high cost of each block about 21–22%.",
+ "Geographical differences are strong: India (59%), the United Arab Emirates (58%), Singapore (53%), France (26%), Australia (29%), Spain (28%).",
+ "Financial services lead through industry, with about 50% use of AI, compared to 37% in telecommunications.",
+ "Generative AI introduces additional friction: 57% of non-adopters cite data protection and 43% cite trust and transparency as inhibitors.",
+ "Although 85% of IT professionals believe that consumers prefer companies with transparent AI practices, less than half have taken concrete steps – only 27% actively reduce bias, 37% pursue data excellence and 44% have developed ethical AI policies.",
+ "Cost reduction and process automation (42%) and easier access tools (45%) are the strongest adoption drivers, while the dominant applications are IT automation (33%), security and threat detection (26%) and AI governance (25%).",
+ "Only 34% of the organizations reskil employees to work alongside AI tools.",
+ "Organisations should prioritize the closure of the skills gap through structured reskilling programs and accessible, less complex AI-tooling, as the 33% barrier is the largest single inhibitor, only 34% actively train workers, and the data show that companies that have overcome the early barriers are now increasing their advantage through accelerated investment."
 ]

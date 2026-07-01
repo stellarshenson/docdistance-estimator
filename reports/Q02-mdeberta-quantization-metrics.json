@@ -4,26 +4,26 @@
   "best_alpha": 0.7,
   "size_mb": 318.135992,
   "fp32_mb": 1151.416604,
-  "entail_parity_pearson": 0.990977942943573,
-  "dgrd_parity_pearson": 0.998358639744775,
+  "entail_parity_pearson": 0.99567711353302,
+  "dgrd_parity_pearson": 0.9985191966338656,
   "tier_means_fp": {
-    "gold": 0.0811375091743113,
-    "adv1": 0.08350735908518375,
-    "adv2": 0.4132343111208818
+    "gold": 0.2279630613817784,
+    "adv1": 0.28483927235515527,
+    "adv2": 0.6248399442897856
   },
   "tier_means_int8": {
-    "gold": 0.08595847273094913,
-    "adv1": 0.08379085325755337,
-    "adv2": 0.4236462035293658
+    "gold": 0.22962415947872344,
+    "adv1": 0.26470228092569403,
+    "adv2": 0.6263340635557015
   },
   "violations_fp": 6,
-  "violations_int8": 7,
+  "violations_int8": 6,
   "severity_fp": "Set2>Set1",
   "severity_int8": "Set2>Set1",
   "ordering_fp": true,
-  "ordering_int8": false,
-  "verdict_preserved": false,
-  "faithful": false,
+  "ordering_int8": true,
+  "verdict_preserved": true,
+  "faithful": true,
   "calibration": "source top-3 joint premise x summary statement, exec-summary fixtures",
-  "n_calib": 95
+  "n_calib": 98
 }

@@ -1,12 +1,15 @@
 [
- "# Summary - Enterprise AI Adoption (opus, opus 4.5)",
- "Companies are facing a critical turning point in AI adoption: while 42% of large companies have used AI, an almost equal share (40%) remains stuck in exploration phases and cannot convert experiments into operational value.",
- "This stagnation is important because the early adopters are making progress – 59% of companies already using AI have accelerated their investments in the last 24 months and increased their competitive advantage, while others are falling back.",
- "Three primary barriers block the path from experiment to introduction: skills gaps affect 33% of organisations, data complexity hinders 25%, ethical concerns stagnate 23%.",
- "The shortage of skilled workers proves to be particularly acute: one in five organisations lacks employees who can use AI tools, and 16% cannot find qualified employees to fill this gap.",
- "Geographical differences show the extent of divergence: India (59%), the United Arab Emirates (58%), Singapore (53%), France (26%), Australia (29%), Spain (28%).",
- "Financial services companies set AI about twice as high as telecommunications companies (50% versus 37%).",
- "Generative AI introduces additional friction, with 57% of non-Adopter data protection concerns and 43% referring to trust and transparency issues.",
- "Although 85% of IT professionals believe that consumers prefer companies with ethical AI practices, less than half have implemented key guarantees – only 27% actively reduce bias, 37% pursue data proficiency and 44% have developed ethical AI policies.",
- "Organisations should prioritize the closure of the skills gap through aggressive reskilling programs, as currently only 34% train employees to work with AI tools while investing in data infrastructure to reduce complexity."
+ "# Summary - Enterprise AI Adoption (opus, opus 4.6)",
+ "The adoption of Enterprise AI has slowed down active deployment in 42% of large companies (more than 1,000 employees), while 40% remain stuck in exploration or experimentation phases and are unable to overcome persistent barriers that prevent them from realizing early emerging operational benefits.",
+ "This bifurcation plays a role because the early adopters are making further progress – 59% of companies that are already active or are researching it.",
+ "AI has accelerated its investment in the last 24 months – a competitive gap that will become more and more difficult for later people to close.",
+ "The biggest obstacle is a shortage of skilled workers: 33% of companies cite limited AI know-how as a top inhibitor, one in five reports that employees with the right skills are missing, and 16% do not find qualified new jobs to fill the gap – currently only 34% of their workforce are retrained.",
+ "Data complexity blocks 25% of organizations, ethical concerns block 23%, integration difficulties and high cost of each block about 21%.",
+ "Generative AI is facing even steeper barriers of trust, with 57% of non-adopters referring to data protection and 43% referring to transparency concerns.",
+ "Geographical diversity is strong: India (59%), the UAE (58%), Singapore (53%), France (26%), Spain (28%) and Australia (29%).",
+ "Financial services are leading in industry with around 50% use.",
+ "Those using AI include IT process automation (33%), security and threat detection (26%) and AI governance or monitoring (25%).",
+ "Accessibility is the primary adoption accelerator – 45% of respondents say AI tools are easier to use than adoption, followed by cost reduction needs (42%) and AI embedded in off-the-shelf software (37%).",
+ "85% of IT professionals agree that consumers prefer companies with transparent, ethical AI practices, but less than half have a distortion reduction (27%), a data-provenence tracking (37%) or an ethical AI policy (44%).",
+ "Organisations should prioritise structured training programmes for workers, which are currently carried out by only one-third of enterprises, as the skills gap is the most frequently cited barrier, it combines data complexity and integration challenges and the 59% acceleration rate among current users shows that, once they have sufficient expertise, teams follow investment and deployment rapidly."
 ]

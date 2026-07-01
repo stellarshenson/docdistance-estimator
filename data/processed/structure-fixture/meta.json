@@ -86,7 +86,7 @@
   "doc_counts": {
     "gold": {
       "n": 11,
-      "n_blocks": 4,
+      "n_blocks": 3,
       "tier": "gold",
       "kind": "summary",
       "article": "ibm"
@@ -99,21 +99,21 @@
       "article": "ibm"
     },
     "v1": {
-      "n": 11,
-      "n_blocks": 3,
-      "tier": "gold",
-      "kind": "summary",
-      "article": "ibm"
-    },
-    "v2": {
-      "n": 13,
+      "n": 12,
       "n_blocks": 4,
       "tier": "gold",
       "kind": "summary",
       "article": "ibm"
     },
+    "v2": {
+      "n": 12,
+      "n_blocks": 3,
+      "tier": "gold",
+      "kind": "summary",
+      "article": "ibm"
+    },
     "opus": {
-      "n": 10,
+      "n": 13,
       "n_blocks": 4,
       "tier": "gold",
       "kind": "summary",
@@ -191,7 +191,7 @@
     },
     "gold~bt": {
       "n": 11,
-      "n_blocks": 4,
+      "n_blocks": 3,
       "tier": "gold",
       "kind": "paraphrase",
       "article": "ibm"
@@ -204,21 +204,21 @@
       "article": "ibm"
     },
     "v1~bt": {
-      "n": 11,
-      "n_blocks": 3,
-      "tier": "gold",
-      "kind": "paraphrase",
-      "article": "ibm"
-    },
-    "v2~bt": {
-      "n": 13,
+      "n": 12,
       "n_blocks": 4,
       "tier": "gold",
       "kind": "paraphrase",
       "article": "ibm"
     },
+    "v2~bt": {
+      "n": 12,
+      "n_blocks": 3,
+      "tier": "gold",
+      "kind": "paraphrase",
+      "article": "ibm"
+    },
     "opus~bt": {
-      "n": 10,
+      "n": 13,
       "n_blocks": 4,
       "tier": "gold",
       "kind": "paraphrase",

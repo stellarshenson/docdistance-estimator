@@ -1,41 +1,41 @@
 {
   "results": {
     "E09-H49": {
-      "g_struct_entropy": 0.03201518403712332,
-      "g_struct_dr": 1.2991566856925245,
-      "g_margin": -0.07714520290874971,
-      "smd_fidelity": 0.8041157833215419,
-      "l_sem": 0.19588421667845812,
-      "cmrr": 0.16343932441313486,
-      "entropy_raw": 0.12796282351410931,
-      "entropy_cmr": 0.12386607016939517,
-      "struct_dr_raw": 0.06832239572795426,
-      "struct_dr_cmr": 0.1570838929204564,
-      "naive_margin_raw": 0.11789819376026274,
-      "naive_margin_cmr": 0.04075299085151302,
+      "g_struct_entropy": -0.0074096837330578785,
+      "g_struct_dr": 1.3985719800079013,
+      "g_margin": -0.067861834388928,
+      "smd_fidelity": 0.8695130579224216,
+      "l_sem": 0.13048694207757838,
+      "cmrr": -0.05678486762800067,
+      "entropy_raw": 0.12279516347753033,
+      "entropy_cmr": 0.12370503680284797,
+      "struct_dr_raw": 0.07777800348677755,
+      "struct_dr_cmr": 0.18655613982434147,
+      "naive_margin_raw": 0.09268472906403942,
+      "naive_margin_cmr": 0.02482289467511142,
       "tier_viol": 0,
       "tier_pairs": 24
     },
     "E09-H50": {
       "raw": {
-        "entropy_med": 0.12796282351410931,
+        "entropy_med": 0.12279516347753033,
         "smd_fidelity": 1.0,
         "g_struct_entropy": 0.0,
         "cmrr": 0.0,
         "tier_viol": 0
       },
       "per-pair (k=1)": {
-        "entropy_med": 0.12386607016939517,
-        "smd_fidelity": 0.8041157833215419,
-        "g_struct_entropy": 0.03201518403712332,
-        "cmrr": 0.16343932441313486,
+        "entropy_med": 0.12370503680284797,
+        "smd_fidelity": 0.8695130579224216,
+        "g_struct_entropy": -0.0074096837330578785,
+        "cmrr": -0.05678486762800067,
         "tier_viol": 0
       },
       "offline-frozen (k=1)": {
-        "entropy_med": 0.12473281532327114,
-        "smd_fidelity": 0.9673321234119785,
-        "g_struct_entropy": 0.025241770243386565,
-        "cmrr": 0.7726786335614507,
+        "entropy_med": 0.12040178366684565,
+        "smd_fidelity": 0.9694853732812454,
+        "g_struct_entropy": 0.019490831258371505,
+        "cmrr": 0.638737332034681,
         "tier_viol": 0
       },
       "winner": "offline-frozen (k=1)"
@@ -49,28 +49,28 @@
       ],
       "cmrr_by_d": [
         0.0,
-        0.16343932441313486,
-        -0.17415736844430357,
-        -0.023874164283951754
+        -0.05678486762800067,
+        -0.12551564812119972,
+        -0.5598284150233417
       ],
       "fidelity_by_d": [
         1.0,
-        0.8041157833215419,
-        0.7374265587991019,
-        0.8182041896090315
+        0.8695130579224216,
+        0.7378572087729552,
+        0.8311236888246333
       ],
       "entropy_by_d": [
-        0.12796282351410931,
-        0.12386607016939517,
-        0.1338144482083783,
-        0.12851821070942482
+        0.12279516347753033,
+        0.12370503680284797,
+        0.12683549548481826,
+        0.1344044340599674
       ],
       "stability_by_d": {
-        "1": 0.7379242644618165,
-        "2": 0.8654411609822185,
-        "3": 0.8366512191441965
+        "1": 0.7354797701176161,
+        "2": 0.8783408790575803,
+        "3": 0.8337849252175833
       },
-      "best_d": 1,
+      "best_d": 0,
       "stability_bar": 0.9,
       "unstable_depths": [
         1,
@@ -85,81 +85,81 @@
         "fine"
       ],
       "mean_n": {
-        "coarse": 5.5,
-        "default": 10.5,
-        "fine": 27.928571428571427
+        "coarse": 5.571428571428571,
+        "default": 10.714285714285714,
+        "fine": 29.5
       },
       "cmrr": {
-        "coarse": 0.06439341175791159,
-        "default": 0.16343932441313486,
-        "fine": 0.3308835834067686
+        "coarse": -0.011908068378923133,
+        "default": -0.05678486762800067,
+        "fine": 0.6953339144098348
       },
       "smd_fidelity": {
-        "coarse": 0.41136300716724605,
-        "default": 0.8041157833215419,
-        "fine": 0.9371866252422407
+        "coarse": 0.5743332615583376,
+        "default": 0.8695130579224216,
+        "fine": 0.9611184595035223
       },
       "g_struct_entropy": {
-        "coarse": 0.03790434425541838,
-        "default": 0.03201518403712332,
-        "fine": 0.020783914525719656
+        "coarse": -0.005068868627996504,
+        "default": -0.0074096837330578785,
+        "fine": 0.02703565375170038
       },
       "stability": {
-        "coarse": 0.7852630647243991,
-        "default": 0.7379242644618165,
-        "fine": 0.8846931943263171
+        "coarse": 0.7718415504243432,
+        "default": 0.7354797701176161,
+        "fine": 0.8872339316434091
       },
       "tier_viol": {
-        "coarse": 10,
+        "coarse": 0,
         "default": 0,
         "fine": 0
       },
       "best_level": "fine"
     },
     "E09-H53": {
-      "dr_raw": 0.07487213224424705,
-      "dr_cmr": 0.17563625109453726,
-      "dr_ratio": 2.345816071079405,
-      "tier_dprime_raw": 5.480297958424191,
-      "tier_dprime_cmr": 6.648661831247525,
+      "dr_raw": 0.08644612813387965,
+      "dr_cmr": 0.20932111238582343,
+      "dr_ratio": 2.4214052948866205,
+      "tier_dprime_raw": 5.969913171399973,
+      "tier_dprime_cmr": 8.012479819986313,
       "tier_viol_raw": 0,
       "tier_viol_cmr": 0,
-      "tier_same_mean_raw": 0.30415109540873914,
-      "tier_diff_mean_raw": 0.4255986058915203,
-      "tier_same_mean_cmr": 1.075981891260439,
-      "tier_diff_mean_cmr": 1.3878569128838452
+      "tier_same_mean_raw": 0.24335848509431923,
+      "tier_diff_mean_raw": 0.41513845653019166,
+      "tier_same_mean_cmr": 0.916275690947513,
+      "tier_diff_mean_cmr": 1.36449118392034
     }
   },
   "verdicts": {
     "E09-H49": {
-      "verdict": "Inconclusive",
-      "applicability": "low",
-      "cmrr": 0.16343932441313486,
-      "detail": "entropy 0.128->0.124 (g_struct +0.032); SMD-fidelity 0.804 (l_sem 0.196); tier viol 0/24; naive margin +0.118->+0.041; CMRR 0.16"
+      "verdict": "Refuted",
+      "applicability": "none",
+      "cmrr": -0.05678486762800067,
+      "detail": "entropy 0.123->0.124 (g_struct -0.007); SMD-fidelity 0.870 (l_sem 0.130); tier viol 0/24; naive margin +0.093->+0.025; CMRR -0.06"
     },
     "E09-H50": {
       "verdict": "Inconclusive",
       "applicability": "low",
-      "cmrr": 0.7726786335614507,
-      "detail": "winner=offline-frozen (k=1) (CMRR 0.77); per-pair CMRR 0.16 fidelity 0.804; offline CMRR 0.77 fidelity 0.967"
+      "cmrr": 0.638737332034681,
+      "detail": "winner=offline-frozen (k=1) (CMRR 0.64); per-pair CMRR -0.06 fidelity 0.870; offline CMRR 0.64 fidelity 0.969"
     },
     "E09-H51": {
       "verdict": "Inconclusive",
-      "applicability": "low",
-      "cmrr": 0.16343932441313486,
-      "detail": "best D=1 (CMRR 0.16); CMRR by D [0.0, 0.16, -0.17, -0.02]; stability {D1:0.74, D2:0.87, D3:0.84}; unstable (<0.9) at D=[1, 2, 3]"
+      "applicability": "none",
+      "cmrr": 0.0,
+      "detail": "best D=0 (CMRR 0.00); CMRR by D [0.0, -0.06, -0.13, -0.56]; stability {D1:0.74, D2:0.88, D3:0.83}; unstable (<0.9) at D=[1, 2, 3]"
     },
     "E09-H52": {
       "verdict": "Refuted",
       "applicability": "none",
-      "cmrr": 0.3308835834067686,
-      "detail": "best=fine CMRR 0.33 (n~28); CMRR coarse 0.06 / default 0.16 / fine 0.33; stability {coarse:0.79, default:0.74, fine:0.88}; fallback=clause-split (no SAT threshold knob)"
+      "cmrr": 0.6953339144098348,
+      "detail": "best=fine CMRR 0.70 (n~30); CMRR coarse -0.01 / default -0.06 / fine 0.70; stability {coarse:0.77, default:0.74, fine:0.89}; fallback=clause-split (no SAT threshold knob)"
     },
     "E09-H53": {
       "verdict": "Confirmed",
       "applicability": "medium",
-      "cmrr": 2.345816071079405,
-      "detail": "SMD DR 0.0749->0.1756 (x2.35); tier d' 5.48->6.65 (d-prime up); tier viol 0->0/24"
+      "cmrr": 2.4214052948866205,
+      "detail": "SMD DR 0.0864->0.2093 (x2.42); tier d' 5.97->8.01 (d-prime up); tier viol 0->0/24"
     }
   },
   "config": {
@@ -179,7 +179,7 @@
       "default",
       "fine"
     ],
-    "device": "NVIDIA RTX 5000 Ada Generation",
+    "device": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition",
     "cmrr_def": "structural differential gain (relative T-entropy reduction) / semantic common-content loss (1 - SMD-fidelity Spearman); floored at EPS_CMRR",
     "regime": "diffuse cross-summary pairs (independent summaries of one article); tier-contrast gold/adversarial guard"
   }

@@ -3,23 +3,23 @@
     "E10-H54": {
       "kind": "score",
       "metric_or_score": "score",
-      "spearman": 0.4285714285714286,
+      "spearman": 0.3714285714285715,
       "top_bin_rising": false,
       "collapses": true,
-      "shift_value": -6.938893903907228e-18,
+      "shift_value": -3.469446951953614e-18,
       "shift_pass": true,
       "paraphrase_p95": 0.0,
       "paraphrase_median": 0.0,
       "content_pass": true,
-      "triangle_viol": 0.04,
-      "diffuse_median": 0.09288503223568156,
+      "triangle_viol": 0.03333333333333333,
+      "diffuse_median": 0.09054175650079754,
       "per_bin_mean": [
-        0.007132195050748706,
-        0.060459035922822126,
-        0.09187995415412444,
-        0.10999467197927072,
-        0.11075224505497011,
-        0.05362491084147205
+        0.006979826727828717,
+        0.06194233719808145,
+        0.0915040123601562,
+        0.1099786631672246,
+        0.10980363451991823,
+        0.047445619823991446
       ]
     },
     "E10-H55": {
@@ -28,21 +28,21 @@
       "spearman": 1.0,
       "top_bin_rising": true,
       "collapses": false,
-      "shift_value": 0.0004270759414630457,
+      "shift_value": 0.00046591414372716846,
       "shift_pass": true,
       "shift_note": "OPW is index-intrinsic; absolute shift is invisible to it",
-      "paraphrase_p95": 0.0038583508745453324,
-      "paraphrase_median": 0.001605298143437378,
+      "paraphrase_p95": 0.003849326238335704,
+      "paraphrase_median": 0.001917496362569493,
       "content_pass": true,
-      "triangle_viol": 0.12,
-      "diffuse_median": 0.03874115754816276,
+      "triangle_viol": 0.16,
+      "diffuse_median": 0.04539805289685564,
       "per_bin_mean": [
-        0.030793801935744016,
-        0.16175567560531512,
-        0.27338131511605895,
-        0.33572404183917753,
-        0.3774638351387851,
-        0.41182075820485975
+        0.03119015438200163,
+        0.15745128574521472,
+        0.2732513804703679,
+        0.3326343216233281,
+        0.3716529663228523,
+        0.41161899713183997
       ],
       "opw_defaults": {
         "lambda1": 50.0,
@@ -59,26 +59,26 @@
       "collapses": false,
       "shift_value": 0.0,
       "shift_pass": true,
-      "paraphrase_p95": 0.3275757575757576,
-      "paraphrase_median": 0.029292929292929294,
+      "paraphrase_p95": 0.2892857142857141,
+      "paraphrase_median": 0.046031746031746035,
       "content_pass": false,
       "triangle_viol_eqlen": 0.0,
-      "triangle_viol_diffuse": 0.21333333333333335,
-      "diffuse_median": 0.05952380952380952,
+      "triangle_viol_diffuse": 0.20666666666666667,
+      "diffuse_median": 0.03571428571428571,
       "per_bin_mean": [
-        0.027300569800569798,
-        0.17847023347023344,
-        0.28614940614940615,
-        0.3825879675879676,
-        0.457513505013505,
-        0.6083167758167759
+        0.02723970473970474,
+        0.1817854367854368,
+        0.282015762015762,
+        0.3765195915195915,
+        0.44862137862137863,
+        0.6069272394272395
       ],
       "anchor_variant": {
         "spearman": 1.0,
         "top_bin_rising": true,
         "shift_value": 0.0,
         "paraphrase_p95": 0.0,
-        "diffuse_median": 0.03869047619047619
+        "diffuse_median": 0.12658730158730158
       }
     },
     "E10-H57": {
@@ -89,19 +89,19 @@
       "collapses": false,
       "shift_value": 0.0,
       "shift_pass": true,
-      "paraphrase_p95": 0.3333333333333333,
+      "paraphrase_p95": 0.16666666666666666,
       "paraphrase_median": 0.0,
       "content_pass": false,
       "triangle_viol_eqlen": 0.0,
       "triangle_viol_diffuse": 0.0,
       "diffuse_median": 0.0,
       "per_bin_mean": [
-        0.002732822732822733,
-        0.025484607984607985,
-        0.03268389018389018,
-        0.048004958004958,
-        0.07095885595885595,
-        0.09670810670810671
+        0.002385114885114885,
+        0.020447052947052947,
+        0.02995337995337995,
+        0.04999278499278499,
+        0.06790653790653792,
+        0.09791181041181041
       ],
       "codebook_threshold": 0.6,
       "bootstrap_stability_ari": 1.0,
@@ -116,19 +116,19 @@
       "collapses": false,
       "shift_value": 0.0,
       "shift_pass": true,
-      "paraphrase_p95": 6.543348874977626,
-      "paraphrase_median": 5.519596027790532,
+      "paraphrase_p95": 6.533806831437267,
+      "paraphrase_median": 5.741796844565643,
       "content_pass": false,
       "triangle_viol": 0.0,
-      "diffuse_median": 3.756796921936602,
+      "diffuse_median": 3.9610811473528953,
       "gamma": 0.1,
       "per_bin_mean": [
-        0.4152391189315542,
-        1.9123626833462246,
-        3.0061603959085432,
-        3.645453912895464,
-        4.187291856733528,
-        4.69640410195474
+        0.4326045552394001,
+        1.88536191649929,
+        3.0874598274179963,
+        3.7339171850467383,
+        4.220336698423402,
+        4.812519713049387
       ]
     }
   },
@@ -143,7 +143,7 @@
       "combined_property": false,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": false,
-      "headline": "shift -6.94e-18 vs paraphrase p95 0 (PASS); Spearman 0.43, top bin COLLAPSES (FAIL); paraphrase median 0 (PASS); triangle 0"
+      "headline": "shift -3.47e-18 vs paraphrase p95 0 (PASS); Spearman 0.37, top bin COLLAPSES (FAIL); paraphrase median 0 (PASS); triangle 0"
     },
     "E10-H55": {
       "verdict": "Confirmed",
@@ -155,7 +155,7 @@
       "combined_property": true,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": true,
-      "headline": "shift 0.000427 vs paraphrase p95 0.00386 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.00161 (PASS); triangle 0"
+      "headline": "shift 0.000466 vs paraphrase p95 0.00385 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.00192 (PASS); triangle 0"
     },
     "E10-H56": {
       "verdict": "Inconclusive",
@@ -167,7 +167,7 @@
       "combined_property": true,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": true,
-      "headline": "shift 0 vs paraphrase p95 0.328 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.0293 (FAIL); triangle 0"
+      "headline": "shift 0 vs paraphrase p95 0.289 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0.046 (FAIL); triangle 0"
     },
     "E10-H57": {
       "verdict": "Inconclusive",
@@ -179,7 +179,7 @@
       "combined_property": true,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": true,
-      "headline": "shift 0 vs paraphrase p95 0.333 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0 (FAIL); triangle 0"
+      "headline": "shift 0 vs paraphrase p95 0.167 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 0 (FAIL); triangle 0"
     },
     "E10-H58": {
       "verdict": "Inconclusive",
@@ -191,7 +191,7 @@
       "combined_property": true,
       "triangle_zero": true,
       "beats_E08_H44_on_combined": true,
-      "headline": "shift 0 vs paraphrase p95 6.54 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 5.52 (FAIL); triangle 0"
+      "headline": "shift 0 vs paraphrase p95 6.53 (PASS); Spearman 1.00, top bin rises (PASS); paraphrase median 5.74 (FAIL); triangle 0"
     }
   },
   "config": {
@@ -220,17 +220,17 @@
       "sigma": 1.0
     },
     "paraphrase_target_cos": 0.875,
-    "paraphrase_realized_cos": 0.8748431004583835,
+    "paraphrase_realized_cos": 0.8749153696000576,
     "paraphrase_draws_per_base": 8,
     "codebook_threshold": 0.6,
     "lam_baseline": 0.25,
     "mono_bar": 0.9,
     "content_frac": 0.1,
-    "device": "NVIDIA RTX 5000 Ada Generation",
+    "device": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition",
     "baselines": {
       "posaug_combined_property": false,
-      "posaug_shift_value": 0.10537151573916279,
-      "posaug_shift_norm": 0.4646518272018017,
+      "posaug_shift_value": 0.10284987071751776,
+      "posaug_shift_norm": 0.4595721855176844,
       "posaug_scramble_spearman": 1.0,
       "naive_combined_property": true,
       "naive_shift_value": 0.0,
@@ -243,11 +243,11 @@
     ],
     "regime": "byte-identical reorder upper bound + pure-shift + embedding paraphrase proxy (true-paraphrase deferred, no API key) + cross-summary diffuse",
     "triangle_rates": {
-      "h54": 0.04,
-      "h55": 0.12,
+      "h54": 0.03333333333333333,
+      "h55": 0.16,
       "h58": 0.0,
       "h56_eqlen": 0.0,
-      "h56_diffuse": 0.21333333333333335,
+      "h56_diffuse": 0.20666666666666667,
       "h57_eqlen": 0.0,
       "h57_diffuse": 0.0
     }

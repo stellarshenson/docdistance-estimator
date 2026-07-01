@@ -103,6 +103,144 @@ def all_but_the_top(emb: dict[str, np.ndarray], k: int = 1) -> dict[str, np.ndar
     return out
 
 
+# --- E11-H55 OPW order-gap: structural (order) distance + crisp per-statement alignment ---
+
+
+# Su & Hua order-preserving Wasserstein defaults (E10/E11-H55)
+OPW_LAMBDA1 = 50.0  # inverse-difference-moment weight
+OPW_LAMBDA2 = 0.1  # entropic regularization
+OPW_SIGMA = 1.0  # Gaussian temporal-prior bandwidth
+
+
+def _round_to_polytope(P: np.ndarray, a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """Project a nonnegative matrix onto the transport polytope U(a, b) (Altschuler et al., 2017).
+
+    Scales rows then columns down to their marginal caps, then adds the rank-one deficit so both
+    marginals hold exactly. This turns the plan into a valid coupling, which guarantees
+    ``(P * D).sum() >= emd2(a, b, D)`` - without it the fixed-iteration Sinkhorn plan meets only the
+    row marginal and its cost can dip below the SMD.
+    """
+    P = P * np.minimum(a / P.sum(1), 1.0)[:, None]
+    P = P * np.minimum(b / P.sum(0), 1.0)[None, :]
+    er = np.maximum(a - P.sum(1), 0.0)  # deficits are >= 0 by construction; clip float noise
+    ec = np.maximum(b - P.sum(0), 0.0)
+    total = er.sum()
+    if total > 1e-300:
+        P = P + np.outer(er, ec) / total
+    return P
+
+
+def _opw_plan(
+    D: np.ndarray,
+    lambda1: float = OPW_LAMBDA1,
+    lambda2: float = OPW_LAMBDA2,
+    sigma: float = OPW_SIGMA,
+    iters: int = 100,
+) -> np.ndarray:
+    """Log-stabilized Sinkhorn OPW coupling for a precomputed ground cost ``D`` (private, folds D).
+
+    The fixed-iteration loop ends on the ``u`` (row) update, so only the row marginal is met; for
+    asymmetric shapes the column marginal is left badly unconverged at the shipped iteration count.
+    The plan is therefore rounded onto U(a, b) so both marginals hold exactly and the plan is a valid
+    coupling.
+    """
+    N, M = D.shape
+    i = (np.arange(1, N + 1) / N)[:, None]
+    j = (np.arange(1, M + 1) / M)[None, :]
+    mid = np.abs(i - j) / np.sqrt(1 / N**2 + 1 / M**2)
+    logP = -(mid**2) / (2 * sigma**2) - np.log(sigma * np.sqrt(2 * np.pi))  # KL temporal band
+    S = lambda1 / ((i - j) ** 2 + 1)  # inverse difference moment
+    logK = logP + (S - D) / lambda2
+    logK = logK - logK.max()  # global shift: transport-invariant, prevents overflow
+    K = np.exp(logK)
+    a, b = np.full(N, 1.0 / N), np.full(M, 1.0 / M)
+    u = np.ones(N) / N
+    for _ in range(iters):
+        v = b / (K.T @ u + 1e-300)
+        u = a / (K @ v + 1e-300)
+    return _round_to_polytope(u[:, None] * K * v[None, :], a, b)
+
+
+def opw_plan(
+    X: np.ndarray,
+    Y: np.ndarray,
+    lambda1: float = OPW_LAMBDA1,
+    lambda2: float = OPW_LAMBDA2,
+    sigma: float = OPW_SIGMA,
+    iters: int = 100,
+) -> np.ndarray:
+    """Order-preserving Sinkhorn coupling ``T`` (shape ``[n_X, n_Y]``) - the plan E11-H55 computes then discards.
+
+    A SOFT/entropic dense coupling (every cell carries mass), unlike the crisp network-simplex
+    :func:`transport_plan`. Good for the aggregate order-gap magnitude, not for crisp per-statement
+    pin-pointing - use :func:`order_alignment` for that.
+    """
+    return _opw_plan(cost_matrix(X, Y), lambda1, lambda2, sigma, iters)
+
+
+def opw_cost(
+    X: np.ndarray,
+    Y: np.ndarray,
+    lambda1: float = OPW_LAMBDA1,
+    lambda2: float = OPW_LAMBDA2,
+    sigma: float = OPW_SIGMA,
+    iters: int = 100,
+) -> float:
+    """Order-preserving transport cost ``(opw_plan * cost_matrix).sum()``."""
+    D = cost_matrix(X, Y)
+    return float((_opw_plan(D, lambda1, lambda2, sigma, iters) * D).sum())
+
+
+def opw_gap(
+    X: np.ndarray,
+    Y: np.ndarray,
+    lambda1: float = OPW_LAMBDA1,
+    lambda2: float = OPW_LAMBDA2,
+    sigma: float = OPW_SIGMA,
+    iters: int = 100,
+) -> float:
+    """Structural (order) distance ``max(0, opw_cost - smd)`` - the E11-H55 order-gap.
+
+    Subtracting SMD cancels the content component, leaving the extra cost the order constraint forces.
+    A translation-invariant SCORE (order-gap >= 0), NOT a metric. The OPW plan is rounded onto the
+    transport polytope U(a, b) (see :func:`_round_to_polytope`), so it is a valid coupling and its cost
+    is bounded below by the SMD; the ``max(0, ...)`` clamp only absorbs LP rounding noise. ``D`` is built
+    once and reused across the OPW cost and the SMD.
+    """
+    D = cost_matrix(X, Y)
+    cost = float((_opw_plan(D, lambda1, lambda2, sigma, iters) * D).sum())
+    content = float(ot.emd2(*_ab(X, Y), D))
+    return max(0.0, cost - content)
+
+
+def _aligned_plan(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    """Exact-EMD coupling with an infinitesimal diagonal tie-break so ties resolve to the in-place map.
+
+    Duplicate or near-duplicate statements make the ground cost degenerate, and the network simplex is
+    then free to pick a swap among equal-cost optimal couplings, inventing displacement on statements
+    that never moved. Adding an ``eps``-scaled positional cost ``|i/n - j/m|`` breaks those ties toward
+    the minimal-shift coupling; ``eps`` is far below any genuine cost gap, so non-tied alignments are
+    unchanged.
+    """
+    D = cost_matrix(X, Y)
+    n, m = D.shape
+    pos = np.abs((np.arange(1, n + 1) / n)[:, None] - (np.arange(1, m + 1) / m)[None, :])
+    eps = 1e-6 * (float(D.max()) + 1.0)
+    return ot.emd(*_ab(X, Y), D + eps * pos)
+
+
+def order_alignment(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    """Per ``X`` statement, its aligned ``Y`` index - the crisp exact-EMD argmax (diagonal tie-break)."""
+    return _aligned_plan(X, Y).argmax(1)
+
+
+def structure_displacement(X: np.ndarray, Y: np.ndarray) -> np.ndarray:
+    """Rank-based position shift from the crisp alignment; ``0`` = in place, nonzero = moved."""
+    align = order_alignment(X, Y)
+    order = np.argsort(np.argsort(align))
+    return order - np.arange(len(order))
+
+
 # --- source-conditioned core: metric selection axis + reranker/NLI grounding residual (D_grd) ---
 
 

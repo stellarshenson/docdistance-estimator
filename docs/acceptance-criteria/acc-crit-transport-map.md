@@ -1,6 +1,6 @@
 # Acceptance Criteria - Transport Map
 
-Optional interpretable output exposing the exact optimal-transport coupling behind the symmetric Statement Mover's Distance - for each statement of A, the statements of B its transport mass flows to, with the mass fraction and the ground cost of each match. Surfaced as the CLI flag `--transport-map-json FILE` and the Python method `DocDistance.distance_with_map`; the raw coupling is `transport_plan(X, Y)`.
+Optional interpretable output exposing the exact optimal-transport coupling behind the symmetric Statement Mover's Distance - for each statement of A, the statements of B its transport mass flows to, with the mass fraction and the ground cost of each match. Surfaced as the CLI flag `--transport-map-json FILE` and the Python method `DocDistance.distance_with_map`; the raw coupling is `transport_plan(X, Y)`. See [Structure Diff](acc-crit-structure-diff.md) for the structural (order) companion that pairs this content map with the OPW order-gap.
 
 - [x] **Core plan** - `transport_plan(X, Y)` returns the exact `ot.emd` coupling, shape `[n_X, n_Y]`, pure numpy, no model load
   - log: 2026-06-22 implemented (v1.0.16)

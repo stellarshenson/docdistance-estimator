@@ -31,6 +31,7 @@ def test_distance_help_has_flags_and_examples():
     assert "--backend" in res.output
     assert "--gpu" in res.output
     assert "--transport-map-json" in res.output
+    assert "--diff-json" in res.output
     assert "Examples" in res.output
 
 
@@ -74,6 +75,46 @@ def test_distance_without_init_exits_with_clear_error(tmp_path):
     res = runner.invoke(app, ["distance", "hello world", "goodbye world"], env=env)
     assert res.exit_code == 1
     assert "not initialized" in res.output
+    settings.reset()
+
+
+def test_distance_diff_json_writes_a_diff_file(monkeypatch, tmp_path):
+    """--diff-json writes a JSON file with the diff keys; embedding is monkeypatched (no model load)."""
+    import numpy as np
+
+    from docdistance import pipeline, settings
+
+    def _emb(n, dim=32, seed=0):
+        rng = np.random.default_rng(seed)
+        x = rng.standard_normal((n, dim)).astype(np.float32)
+        return x / np.linalg.norm(x, axis=1, keepdims=True)
+
+    docs = {
+        "docA": ([f"a{i}" for i in range(4)], _emb(4, seed=1)),
+        "docB": ([f"b{i}" for i in range(3)], _emb(3, seed=2)),
+    }
+    settings.reset()
+    settings.mark_ready("wmd")
+    monkeypatch.setattr(pipeline.DocDistance, "_ensure_base", lambda self: None)
+    monkeypatch.setattr(pipeline.DocDistance, "embed_statements", lambda self, doc: docs[doc])
+
+    out = tmp_path / "diff.json"
+    res = runner.invoke(app, ["distance", "docA", "docB", "--diff-json", str(out)], env=_WIDE)
+    assert res.exit_code == 0, res.output
+    assert out.exists()
+    import json
+
+    diff = json.loads(out.read_text())
+    assert set(diff) == {
+        "smd",
+        "order_gap",
+        "structure_closeness",
+        "anisotropy",
+        "n_statements",
+        "statements",
+    }
+    assert diff["n_statements"] == {"a": 4, "b": 3}
+    assert len(diff["statements"]) == 4
     settings.reset()
 
 

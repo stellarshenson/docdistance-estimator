@@ -160,6 +160,7 @@ def _emit_wrt_source(r, json_out: bool, result_only: bool) -> None:
     '  docdistance distance "first text" "second text" --backend torch\n'
     "  docdistance distance a.md b.md --json\n"
     "  docdistance distance a.md b.md --transport-map-json map.json   [dim]# statement → statement map[/dim]\n"
+    "  docdistance distance a.md b.md --diff-json diff.json   [dim]# semantic + structural diff[/dim]\n"
     "  docdistance distance a.md b.md --result-only"
 )
 def distance(
@@ -189,6 +190,12 @@ def distance(
         help="also write the optimal-transport map (which B statements each A statement's mass flows to, with weights) to this JSON file",
         metavar="FILE",
     ),
+    diff_json: str = typer.Option(
+        None,
+        "--diff-json",
+        help="also write a semantic + structural diff (per A statement: aligned B statement, semantic gap, order displacement) to this JSON file",
+        metavar="FILE",
+    ),
     json_out: bool = typer.Option(False, "--json", help="machine-readable JSON to stdout"),
     result_only: bool = typer.Option(
         False, "--result-only", help="bare SMD scalar to stdout, no clutter"
@@ -211,6 +218,20 @@ def distance(
         _err.print(
             f"[green]transport map written:[/green] {transport_map_json} "
             f"(A {tmap['n_statements']['a']} → B {tmap['n_statements']['b']} statements)"
+        )
+    elif diff_json:
+        from docdistance.pipeline import DocDistance
+
+        result, diff = _run(
+            lambda: DocDistance(backend=backend_value, device=device).distance_with_diff(
+                a, b, anisotropy=anisotropy, threshold=threshold
+            )
+        )
+        Path(diff_json).write_text(json.dumps(diff, indent=2))
+        _err.print(
+            f"[green]diff written:[/green] {diff_json} "
+            f"(smd={diff['smd']}, order_gap={diff['order_gap']}, "
+            f"structure_closeness={diff['structure_closeness']})"
         )
     else:
         from docdistance.pipeline import document_distance

@@ -41,7 +41,7 @@ Three stages; the transport plan is the interpretable by-product.
 
 Both compare two documents; they differ in what the answer tells you and what you must supply.
 
-- **Method 1 - symmetric distance (robust, fast)** - answers *how far apart are A and B?* as one number (a 0..1 closeness plus a similar / not-similar verdict). Sub-millisecond, needs only the two documents, and is a true metric - the distance is symmetric and obeys the triangle inequality, so the numbers are consistent enough to threshold, rank and cache. The production default; use it whenever you need a reliable similarity score - dedup, drift detection, "did this conversion change the meaning?"
+- **Method 1 - symmetric distance (robust, fast)** - answers *how far apart are A and B?* as one number (a 0..1 closeness plus a similar / not-similar verdict). Sub-millisecond, needs only the two documents, and is a true metric - the distance is symmetric and obeys the triangle inequality, so the numbers are consistent enough to threshold, rank and cache. The production default; use it whenever you need a reliable similarity score - dedup, drift detection, "did this conversion change the meaning?" It can also emit a per-statement diff carrying a third, structural read - `structure_closeness` via `--diff-json` / `distance_with_diff` - that separates rearrangement from content drift (see [Structure distance](#structure-distance-experimental) below)
 - **Method 2 - source-conditioned `d(A, B | S)` (slower, experimental)** - answers *why do A and B differ, given a shared source S?* You supply `S`, and instead of one number it returns two axes: a selection axis (did A and B pick different parts of the source?) and a grounding axis (did one drift from the source - dropped content vs unsupported or fabricated content?). It runs a cross-encoder × NLI pass (~seconds on GPU, far slower on CPU). Use it to audit a summary or an extraction against its source, when "how far" is not enough and you need to name the failure
 - **Which to pick** - default to Method 1 for a similarity number; reach for Method 2 only when you hold the shared source and need to know *why* two documents derived from it diverge. Method 2's value is interpretation and ordering the failure modes correctly, not a higher pass rate, and it is validated on a single fixture so far - validate on your own sources first
 
@@ -58,6 +58,7 @@ docdistance --help                             # full reference (or <command> --
 # method 1 - symmetric distance (robust, fast, the default)
 docdistance distance a.md b.md                 # rich verdict (add --json for machine-readable)
 docdistance distance a.md b.md --transport-map-json map.json   # + statement → statement map
+docdistance distance a.md b.md --diff-json diff.json           # + interpretable semantic + structural diff
 
 # method 2 - source-conditioned d(A,B|S) (slower, runs the reranker × NLI grounding)
 docdistance distance-wrt-source a.md b.md --source s.md                       # two-axis verdict
@@ -75,6 +76,10 @@ from docdistance import document_distance, source_conditioned_distance
 docdistance.init("wmd")                                         # provision once (writes docdistance.json)
 r = document_distance("report_v1.md", "report_v2.md")           # method 1
 print(r.closeness, r.verdict)               # 0..1 closeness, "similar" | "not similar"
+
+from docdistance import DocDistance
+result, diff = DocDistance().distance_with_diff("report_v1.md", "report_v2.md")   # method 1 + interpretable diff
+print(diff["smd"], diff["order_gap"], diff["structure_closeness"])   # semantic distance, structural order-gap, 0..1 structure readout
 
 docdistance.init("wmd-wrt-source")                              # + reranker + NLI grounding models
 s = source_conditioned_distance("sum_a.md", "sum_b.md", source="article.md")  # method 2
@@ -119,15 +124,58 @@ print(s.d_sel, s.grd_a, s.grd_b)            # selection divergence + each doc's 
 - **smd** - the distance the map realizes; `weight × cost` summed over all flows equals it
 - **Reading it** - a statement mapped to its counterpart at `weight 1.0` and low `cost` is preserved; high cost or scattered weights flag a statement with no clean equivalent in B
 
+### Diff output
+
+`--diff-json` writes an interpretable document diff - for every statement of A, its aligned B statement with two independent axes side by side: a semantic gap (did the MEANING change?) and an order displacement (did it MOVE?):
+
+```json
+{
+  "smd": 0.286827,
+  "order_gap": 0.041185,
+  "structure_closeness": 0.970878,
+  "anisotropy": false,
+  "n_statements": { "a": 12, "b": 11 },
+  "statements": [
+    {
+      "index": 0,
+      "text": "Among large organizations with more than 1,000 …",
+      "target_index": 0,
+      "target_text": "About 42% of organizations with more than 1,000 …",
+      "semantic_gap": 0.2237,
+      "displacement": 0,
+      "moved": false,
+      "changed": false
+    }
+  ]
+}
+```
+
+- **statements** - one entry per statement of A; `index` / `text` name it, `target_index` / `target_text` are its aligned counterpart in B (crisp exact-EMD alignment, not the soft OPW plan)
+- **semantic_gap** - ground cost √(2 − 2cos) of the aligned pair; `0` = identical meaning, higher = content drifted. `changed` flips true once it clears the change cutoff `DIFF_CHANGED_COST = (1 − threshold)·√2`
+- **displacement** - rank shift of the statement from its aligned position; `0` = in place, nonzero = relocated, and `moved` mirrors it as a boolean
+- **smd** - the top-level semantic distance (content only), order-invariant - the same number `distance` reports
+- **order_gap** - the H55 OPW structural distance (order-gap = OPW cost − SMD), translation-invariant and `>= 0`; `0` = same order
+- **structure_closeness** - `1 − order_gap/√2`, the shipped SOTA 0..1 readout on the same scale as SMD closeness; `1` = same order, falling toward `0` as the arrangement diverges
+- **Reading it** - `semantic_gap` isolates what changed in MEANING, `displacement` isolates what MOVED in order; a statement with `semantic_gap` near 0 but a large `displacement` was preserved yet relocated, while a high `semantic_gap` at `displacement` 0 was rewritten in place
+
 ## Structure distance (experimental)
 
-SMD is position-invariant by design - reorder a document's statements and it barely moves. A research axis adds a second, structure-sensitive distance for telling *content drift* from *rearrangement*. It is a confirmed experiment result (batch E08), not yet wired into the CLI or library.
+SMD is position-invariant by design - reorder a document's statements and it barely moves. A second, structure-sensitive number tells *content drift* from *rearrangement*, and it now ships inside the interpretable diff (`distance_with_diff`, `--diff-json`), reported beside SMD. The shipped mechanism is the OPW order-gap (E11-H55); the earlier position-augmented Wasserstein metric was stress-tested against it and dropped.
 
-- **Position-augmented Wasserstein** - the same statement transport, but the ground cost fuses semantic distance and normalized statement position: `M̃ = √((1−λ)·d_sem² + λ·d_pos²)`, balanced by `λ`. It is *combined with* SMD, not orthogonal to it - `λ=0` is exactly SMD (pure content), `λ>0` turns on order-sensitivity; the positional term reads the statement's index, not its embedding
-- **A true metric, wide range** - the ℓ2 combination of two metrics is a metric, so the distance keeps the triangle inequality (0% violations), is monotone in how much was rearranged, and is defined on unequal-length pairs
-- **Two axes side by side** - report SMD (semantic, order-invariant) and position-augmented Wasserstein (structure-aware); when content is preserved (SMD ≈ 0) but the structural distance is high, the arrangement changed
-- **Structural mapping** - the transport plan is the structural alignment; each statement's induced target position and displacement name the movers - the structural analogue of the transport map
-- **Design and evidence** - the [structure-distance SOTA](docs/solution/wmd-structure-distance-sota.md), the [experiments log](docs/experiments/wmd-structure-distance-experiments.md) (E07 the barycentric read, E08 the metric formulation), and the end-to-end notebook `notebooks/12-kj-structure-distance-e2e.ipynb`
+- **OPW order-gap (H55, shipped)** - `order_gap = OPW − SMD`, the order-preserving Wasserstein cost minus the order-free SMD. Subtracting SMD cancels the content component, so only the extra cost the order constraint forces remains - a faithful reword with order kept reads ~0, a reorder with content kept reads large. Reported as `structure_closeness = 1 − order_gap/√2` on the library's 0..1 closeness scale, the same readout as semantic closeness (`1` = same order)
+- **Content-invariant, translation-invariant** - the reword reads 0.5% of a full-scramble distance (the dropped metric leaked 73.5%), it is monotone in displacement (Spearman 1.00), and it reads fractional statement rank `i/N`, not absolute position, so a uniform shift (a header inserted, everything offset, relative order intact) is invisible. A translation-invariant score, `order_gap >= 0`, not a metric - the entropic OPW carries ~4.5% triangle violations, never invoked for a pairwise arrangement read
+- **Two axes side by side** - the diff pairs semantic distance (SMD, order-invariant) with the structural order-gap; when meaning is preserved (SMD ≈ 0) but `structure_closeness` falls, the arrangement changed and nothing else. Per statement, `semantic_gap` names what changed in MEANING and `displacement` names what MOVED in order - the structural analogue of the transport map, folded into the same diff
+- **The metric that was dropped** - position-augmented Wasserstein (E08-H44) is a true metric, but fuses semantic and positional cost into one distance `√((1−λ)·d_sem² + λ·d_pos²)`, so a faithful reword reads as far as a real reorder (E11) - a metric on the wrong quantity. E11 chose the order-gap and dropped it
+- **Design and evidence** - the [structure-distance SOTA](docs/solution/wmd-structure-distance-sota.md), the [experiments log](docs/experiments/wmd-structure-distance-experiments.md) (E07 the barycentric read, E08 the metric formulation, E10-H55 the order-gap mechanism, E11 the decision), and the end-to-end notebook `notebooks/12-kj-structure-distance-e2e.ipynb`
+
+## Dataset
+
+Both datasets are generated end-to-end from public third-party articles - nothing ships pre-staged, and the whole corpus rebuilds from scratch by running one notebook.
+
+- **Two datasets, one foundation** - a WMD / source-conditioned corpus (the executive summaries E01-E06 consume) and a structure-distance fixture (E07-E11), both derived from the same AWS Bedrock exec-summary corpus
+- **Complete and independent** - `notebooks/11-kj-structure-fixture.ipynb` runs the full pipeline unattended: fetch the source PDFs (`data/external/download-fixtures.py`), convert them to curated text, summarise under the executive-summary gold rules (Bedrock opus / sonnet / haiku), segment into statements, opus-mt back-translate, and assemble the fixture - no external file has to be staged by hand
+- **Reproducible** - the fetch and the generation are cache-backed and deterministic where possible; only the two curated `source-article.md` inputs are hand-reviewed, everything downstream regenerates
+- **Recipe** - [`docs/dataset/dataset-generation-recipe.md`](docs/dataset/dataset-generation-recipe.md) walks the external → interim → processed flow, the gold-rules writing contract, and the from-scratch rebuild
 
 ## Documentation
 
@@ -135,7 +183,7 @@ The SOTA documents explain how it works in detail; this README only introduces i
 
 - `docs/solution/wmd-docdistance-solution-sota.md` - source-free distance: design, mechanism, performance, validation
 - `docs/solution/wmd-source-conditioned-docdistance-solution-sota.md` - source-conditioned distance `d(A,B|S)`: two axes (selection + grounding), design, performance, limitations
-- `docs/solution/wmd-structure-distance-sota.md` - structure-sensitive distance (experimental): position-augmented Wasserstein, theory, the structural mapping, limitations
+- `docs/solution/wmd-structure-distance-sota.md` - structure-sensitive distance (experimental): the OPW order-gap (`OPW − SMD`) and `structure_closeness`, shipped in the diff; theory, the structural mapping, limitations
 - `docs/mmbert-quantization-solution.md` - the INT8 / FP8 statement encoder
 - [*From Word Embeddings To Document Distances*](references/papers/%5Bpaper%5D%20From%20Word%20Embeddings%20To%20Document%20Distances.pdf) - Kusner et al. 2015, the WMD theory ([digest](references/papers/%5Bpaper%20digest%5D%20From%20Word%20Embeddings%20To%20Document%20Distances.md))
 - [*All-but-the-Top: Simple and Effective Postprocessing for Word Representations*](references/papers/%5Bpaper%5D%20All-but-the-Top%3A%20Simple%20and%20Effective%20Postprocessing%20for%20Word%20Representations.pdf) - Mu & Viswanath, ICLR 2018, the anisotropy postprocessing ([digest](references/papers/%5Bpaper%20digest%5D%20All-but-the-Top%3A%20Simple%20and%20Effective%20Postprocessing%20for%20Word%20Representations.md))

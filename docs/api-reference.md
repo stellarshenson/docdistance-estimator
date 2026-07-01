@@ -17,6 +17,7 @@ a leading markdown `# ` title line in a file is stripped so the title is not cou
 | `DocDistance` | `DocDistance(backend="openvino", offline=True, device=None)` | pipeline | construct once, models load lazily on first use, then score many pairs |
 | `DocDistance.distance` | `(a, b, *, anisotropy=False, threshold=0.725)` | `DistanceResult` | symmetric distance on the loaded models |
 | `DocDistance.distance_with_map` | `(a, b, *, anisotropy=False, threshold=0.725)` | `(DistanceResult, dict)` | the distance plus the optimal-transport statement map, one encode pass |
+| `DocDistance.distance_with_diff` | `(a, b, *, anisotropy=False, threshold=0.725)` | `(DistanceResult, dict)` | the distance plus the interpretable semantic + structural diff, one encode pass |
 | `DocDistance.distance_wrt_source` | `(a, b, source, *, anisotropy=True)` | `SourceConditionedResult` | source-conditioned distance, runs the reranker x NLI grounding |
 | `DocDistance.distance_wrt_source_with_map` | `(a, b, source, *, anisotropy=True, top_k=3)` | `(SourceConditionedResult, dict)` | the conditioned result plus the statement → source map, one encode pass |
 | `DocDistance.embed` | `(doc)` | `ndarray [n, dim]` | segment then embed into L2-normalized statement vectors |
@@ -39,6 +40,11 @@ loading. Use these when you hold the embeddings already.
 | `wcd` | `(X, Y)` | `float` | lower bound: mean-pooled cloud distance (whole-doc cosine) |
 | `rwmd` | `(X, Y)` | `float` | lower bound: one-sided relaxation, greedy nearest-statement |
 | `closeness` | `(d)` | `float` | map a distance to 0..1 similarity, `1 − d/√2` |
+| `opw_plan` | `(X, Y)` | `ndarray [n_X, n_Y]` | soft order-preserving Sinkhorn coupling, the dense plan H55 computes then discards (use `transport_plan` for crisp pin-pointing) |
+| `opw_cost` | `(X, Y)` | `float` | order-preserving transport cost `(opw_plan · cost).sum()` |
+| `opw_gap` | `(X, Y)` | `float` | H55 order-gap: structural distance `max(0, opw_cost − smd)`, translation-invariant, `≥ 0` (a score, not a metric) |
+| `order_alignment` | `(X, Y)` | `ndarray [n_X]` | per `X` statement, its aligned `Y` index - crisp exact-EMD argmax with a diagonal tie-break |
+| `structure_displacement` | `(X, Y)` | `ndarray [n_X]` | rank shift from the crisp alignment; `0` = in place, nonzero = moved |
 | `compute_distance` | `(X, Y, *, anisotropy=False, threshold=0.725)` | `DistanceResult` | assemble the full symmetric result from embeddings |
 | `compute_source_conditioned` | `(X, Y, S, *, anisotropy=True, reranker_a=None, reranker_b=None, entail_a=None, entail_b=None)` | `SourceConditionedResult` | assemble the conditioned result; pass the grounding arrays for `grd_a`/`grd_b`/`d_grd` |
 | `grounding_residual` | `(reranker, entail)` | `float` | E03-H11 relevance-gated ungrounded mass `mean_i (1 − entail_i)·(1 − max_j R[i,j])` |
@@ -46,6 +52,7 @@ loading. Use these when you hold the embeddings already.
 
 - **bound chain** - `WCD ≤ RWMD ≤ SMD`, the two cheap bounds bracket the exact distance below
 - **ground cost** - `√(2 − 2cos)` on L2-normalized embeddings, a metric, so SMD is a metric too
+- **structure axis** - `opw_gap` is the H55 structural distance (order-only, content cancelled); `structure_closeness = 1 − opw_gap/√2` puts it on the same 0..1 scale as `closeness` (1 = same order)
 
 ## Result objects
 
@@ -83,7 +90,7 @@ the bare scalar. Logs go to stderr, so stdout carries only the result.
 | Command | Purpose | Key options |
 | --- | --- | --- |
 | `init [MODE]` | provision a mode's models from local / S3 / HuggingFace (the only command that fetches); writes `docdistance.json` | `--source`, `--backend`, `--aws-profile`, `--aws-endpoint-url`, `--region`, `--home` |
-| `distance A B` | symmetric SMD between two documents | `--backend`, `--gpu`, `--anisotropy`, `--threshold`, `--transport-map-json`, `--json`, `--result-only` |
+| `distance A B` | symmetric SMD between two documents | `--backend`, `--gpu`, `--anisotropy`, `--threshold`, `--transport-map-json`, `--diff-json`, `--json`, `--result-only` |
 | `distance-wrt-source A B --source S` | source-conditioned `d(A, B | S)` | `--source/-s` (required), `--backend`, `--gpu`, `--source-map-json`, `--json`, `--result-only` |
 
 ## Examples
@@ -138,6 +145,34 @@ for flow in tmap["flows"]:                        # each statement of A
 
 The low-level `transport_plan(X, Y)` returns the raw `[n_X, n_Y]` coupling if you hold the embeddings
 and want the matrix directly; `distance_with_map` is the text-aware wrapper that pairs it with statements.
+
+Semantic + structural diff - what changed in MEANING vs what MOVED in order:
+
+```python
+from docdistance import DocDistance
+
+dd = DocDistance()
+result, diff = dd.distance_with_diff("report_v1.md", "report_v2.md")
+
+print(diff["smd"])                  # semantic distance: how far the meaning drifted
+print(diff["order_gap"])            # H55 OPW structural distance, translation-invariant, >= 0
+print(diff["structure_closeness"])  # 1 - order_gap/sqrt(2): the 0..1 order readout (1 = same order)
+
+for st in diff["statements"]:       # one record per statement of A
+    print(st["text"], "->", st["target_text"])
+    print("  semantic_gap", st["semantic_gap"], "changed" if st["changed"] else "same meaning")
+    print("  displacement", st["displacement"], "moved" if st["moved"] else "in place")
+```
+
+Each statement carries two independent readings. `semantic_gap` is the aligned-pair ground cost - `0`
+means identical meaning, higher means the content drifted. `displacement` is that statement's rank shift
+under the crisp alignment - `0` means it stayed in place, nonzero means it moved. The axes are
+orthogonal: a statement can keep its meaning yet move (`semantic_gap ≈ 0`, `displacement ≠ 0`), or hold
+its position yet change (`semantic_gap` high, `displacement = 0`). The `changed` flag fires when
+`semantic_gap` clears `DIFF_CHANGED_COST` (the `(1 − threshold)·√2` content cutoff); `moved` fires on
+any nonzero displacement. At the top level, `smd` is the whole-document semantic distance and `order_gap`
+its structural counterpart, with `structure_closeness = 1 − order_gap/√2` reading order on the same 0..1
+scale as `closeness`. The same dict is what the CLI writes with `distance --diff-json FILE`.
 
 Low-level, on embeddings you already hold:
 

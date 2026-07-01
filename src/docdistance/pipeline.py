@@ -20,10 +20,14 @@ from docdistance import config, settings
 from docdistance import distance as _core
 from docdistance.distance import (
     DEFAULT_THRESHOLD,
+    SMD_MAX,
     DistanceResult,
     SourceConditionedResult,
 )
 from docdistance.encoders import Segmenter, load_encoder, load_nli, load_reranker
+
+# per-statement "changed" cutoff: a ground cost above the shipped closeness threshold (heuristic)
+DIFF_CHANGED_COST = (1.0 - DEFAULT_THRESHOLD) * SMD_MAX
 
 
 def _load_body(path: Path) -> str:
@@ -146,6 +150,58 @@ def _build_transport_map(
     }
 
 
+def _build_diff(
+    sa: list[str],
+    ea: np.ndarray,
+    sb: list[str],
+    eb: np.ndarray,
+    *,
+    anisotropy: bool = False,
+) -> dict:
+    """A JSON-serializable semantic + structural diff: per A statement, its aligned B statement.
+
+    Content (``smd``) and structure (``order_gap``, the E11-H55 OPW order-gap) are reported separately;
+    ``structure_closeness`` is the shipped SOTA readout ``closeness(order_gap)`` on the SMD scale
+    (1 = same order). Each statement carries its crisp exact-EMD ``target``, ``semantic_gap`` (ground
+    cost of the match) and rank ``displacement`` from that alignment (the per-statement signal comes from
+    the crisp coupling, not the soft OPW plan). Anisotropy removal is applied as in :func:`_build_transport_map`.
+    """
+    if anisotropy:
+        fixed = _core.all_but_the_top({"a": ea, "b": eb}, k=1)
+        ea, eb = fixed["a"], fixed["b"]
+    cost = _core.cost_matrix(ea, eb)
+    plan = _core.transport_plan(ea, eb)
+    align = _core.order_alignment(ea, eb)  # crisp exact-EMD alignment (diagonal tie-break)
+    order = np.argsort(np.argsort(align))
+    disp = order - np.arange(len(order))  # rank shift; 0 = in place
+    d_smd = float((plan * cost).sum())
+    order_gap = _core.opw_gap(ea, eb)
+    statements = []
+    for i in range(len(sa)):
+        j = int(align[i])
+        gap = round(float(cost[i, j]), 4)
+        statements.append(
+            {
+                "index": i,
+                "text": sa[i],
+                "target_index": j,
+                "target_text": sb[j],
+                "semantic_gap": gap,  # 0 = identical meaning, higher = content drifted
+                "displacement": int(disp[i]),  # position shift; 0 = in place
+                "moved": bool(disp[i] != 0),
+                "changed": bool(gap > DIFF_CHANGED_COST),
+            }
+        )
+    return {
+        "smd": round(d_smd, 6),
+        "order_gap": round(order_gap, 6),
+        "structure_closeness": round(_core.closeness(order_gap), 6),
+        "anisotropy": anisotropy,
+        "n_statements": {"a": len(sa), "b": len(sb)},
+        "statements": statements,
+    }
+
+
 class DocDistance:
     """Reusable pipeline - construct once, then call :meth:`distance` per pair.
 
@@ -240,6 +296,22 @@ class DocDistance:
         result = _core.compute_distance(ea, eb, anisotropy=anisotropy, threshold=threshold)
         tmap = _build_transport_map(sa, ea, sb, eb, anisotropy=anisotropy)
         return result, tmap
+
+    def distance_with_diff(
+        self,
+        a: str | Path,
+        b: str | Path,
+        *,
+        anisotropy: bool = False,
+        threshold: float = DEFAULT_THRESHOLD,
+    ) -> tuple[DistanceResult, dict]:
+        """The symmetric distance result and the semantic + structural diff, sharing one encode pass."""
+        settings.require_ready("wmd")
+        sa, ea = self.embed_statements(a)
+        sb, eb = self.embed_statements(b)
+        result = _core.compute_distance(ea, eb, anisotropy=anisotropy, threshold=threshold)
+        diff = _build_diff(sa, ea, sb, eb, anisotropy=anisotropy)
+        return result, diff
 
     def distance_wrt_source(
         self,

@@ -24,10 +24,15 @@
     clear of the text.
   Theme: docdistance brand - navy #023474 + teal/cyan #019ca5 (light);
     off-white #e8f4f6 + bright cyan #3bd6e0 (dark). Dual-theme via prefers-color-scheme.
+  Node dots carry a subtle hue variation within the teal family: node (base teal),
+    node-b (slightly bluer), node-c (slightly greener) - 2 of each shade per cloud,
+    mirrored left-right, both light and dark variants.
 
   === GRID ===
-  viewBox: 1200 x 300  (ratio 4:1, wide banner; rendered at width=100% in README)
-  Outer margins: x=80 left / x=1120 right; y=40 top / y=260 bottom
+  viewBox: 75 71 1050 214  (ratio ~4.9:1, wide banner; content-fitted with ~40px
+    padding all round; rendered at width=100% in README). Internal coordinates below
+    are unchanged; the viewBox just frames the content box x=115..1085, y=111..245.
+  Content bounds (dots to dots): x=115..1085, y=111..245; centre (600,178)
   Centre line: x=600
 
   Horizontal zones:
@@ -65,13 +70,15 @@
   contain: header > wordmark, tagline
   v-stack: wordmark (y=185) above tagline (y=225), both centred on x=600
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid meet">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="75 71 1050 214" preserveAspectRatio="xMidYMid meet">
   <style>
     .fg-1 { fill: #023474; }
     .fg-2 { fill: #0a3b7d; }
     .fg-3 { fill: #3d6494; }
     .fg-accent { fill: #0a6b78; }
     .node { fill: #019ca5; }
+    .node-b { fill: #018caf; }
+    .node-c { fill: #14a596; }
     .transport { stroke: #019ca5; }
     .transport-head { fill: #06a1ac; }
     @media (prefers-color-scheme: dark) {
@@ -80,6 +87,8 @@
       .fg-3 { fill: #8fb5c4; }
       .fg-accent { fill: #6fd0dc; }
       .node { fill: #3bd6e0; }
+      .node-b { fill: #3bc8eb; }
+      .node-c { fill: #4bdccd; }
       .transport { stroke: #3bd6e0; }
       .transport-head { fill: #5fe0ea; }
     }
@@ -88,25 +97,25 @@
   <!-- guide grid omitted for production banner; full grid documented in header comment -->
 
   <g id="background">
-    <rect x="0" y="0" width="1200" height="300" fill="transparent"/>
+    <rect x="75" y="71" width="1050" height="214" fill="transparent"/>
   </g>
 
   <g id="nodes">
     <g id="cloud-left">
-      <circle class="node" cx="150.0" cy="118.0" r="7.0"/>
+      <circle class="node-b" cx="150.0" cy="118.0" r="7.0"/>
       <circle class="node" cx="122.0" cy="158.0" r="7.0"/>
-      <circle class="node" cx="200.0" cy="150.0" r="7.0"/>
+      <circle class="node-c" cx="200.0" cy="150.0" r="7.0"/>
       <circle class="node" cx="152.0" cy="196.0" r="7.0"/>
-      <circle class="node" cx="210.0" cy="196.0" r="7.0"/>
-      <circle class="node" cx="178.0" cy="238.0" r="7.0"/>
+      <circle class="node-b" cx="210.0" cy="196.0" r="7.0"/>
+      <circle class="node-c" cx="178.0" cy="238.0" r="7.0"/>
     </g>
     <g id="cloud-right">
-      <circle class="node" cx="1050.0" cy="118.0" r="7.0"/>
+      <circle class="node-b" cx="1050.0" cy="118.0" r="7.0"/>
       <circle class="node" cx="1078.0" cy="158.0" r="7.0"/>
-      <circle class="node" cx="1000.0" cy="150.0" r="7.0"/>
+      <circle class="node-c" cx="1000.0" cy="150.0" r="7.0"/>
       <circle class="node" cx="1048.0" cy="196.0" r="7.0"/>
-      <circle class="node" cx="990.0" cy="196.0" r="7.0"/>
-      <circle class="node" cx="1022.0" cy="238.0" r="7.0"/>
+      <circle class="node-b" cx="990.0" cy="196.0" r="7.0"/>
+      <circle class="node-c" cx="1022.0" cy="238.0" r="7.0"/>
     </g>
   </g>
 
